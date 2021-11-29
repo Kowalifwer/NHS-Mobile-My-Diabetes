@@ -7,6 +7,7 @@ import Home from './screens/Home';
 import ProfileSetup from './screens/ProfileSetup';
 import Register from './screens/Register';
 import Authentication from './screens/Authentication';
+import Email from "./screens/Email";
 
 const Stack = createStackNavigator();
 
@@ -55,6 +56,13 @@ function App() {
             headerShown: false,
           }}
           component={Authentication}
+        />
+        <Stack.Screen
+          name="Email"
+          options={{
+            headerShown: false,
+          }}
+          component={Email}
         />
 
       </Stack.Navigator>

@@ -140,7 +140,12 @@ export default function Home({ navigation, route }) {
                     title='Go to Authentication'
                     color='#761076'
                     onPressFunction={() => navigation.navigate("Authentication")}
-                    />
+                />
+                <CustomButton
+                    title='Go to Email'
+                    color='#761076'
+                    onPressFunction={() => navigation.navigate("Email")}
+                />
             </View>        
         </View>
     )

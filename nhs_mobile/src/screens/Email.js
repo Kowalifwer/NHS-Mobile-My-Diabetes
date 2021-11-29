@@ -18,18 +18,16 @@ import {
 export default function Email() {
     return (
         <View>
-        <Button
-            onPress={() => MailComposer.composeAsync({
-    body: "this is a test",
-    recipients: ["c@llens.email"],
-    })}
-    color="#ff0f00"
-    title="Compose Email"
-    />
+            <Button
+                onPress={() => MailComposer.composeAsync({
+                    body: "this is a test",
+                    recipients: ["c@llens.email"],
+                })}
+                color="#ff0f00"
+                title="Compose Email"
+            />
 
-    <StatusBar
-        style="auto"
-    />
-    </View>
-        )
+            <StatusBar style="auto" />
+        </View>
+    )
 }

@@ -1,0 +1,1 @@
+user_struct = {name: "", age: "", height: "", weight: ""}

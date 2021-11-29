@@ -137,9 +137,9 @@ export default function Home({ navigation, route }) {
                     onPressFunction={() => navigation.navigate("ProfileSetup")}
                 />
                 <CustomButton
-                    title='Dummy button'
+                    title='Go to Authentication'
                     color='#761076'
-                    onPressFunction={() => console.log("D U M M Y")}
+                    onPressFunction={() => navigation.navigate("Authentication")}
                     />
             </View>        
         </View>

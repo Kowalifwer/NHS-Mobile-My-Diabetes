@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import ProfileSetup from './screens/ProfileSetup';
 import Register from './screens/Register';
+import Authentication from './screens/Authentication';
 
 const Stack = createStackNavigator();
 
@@ -47,6 +48,13 @@ function App() {
             headerShown: false,
           }}
           component={Register}
+        />
+        <Stack.Screen
+          name="Authentication"
+          options={{
+            headerShown: false,
+          }}
+          component={Authentication}
         />
 
       </Stack.Navigator>

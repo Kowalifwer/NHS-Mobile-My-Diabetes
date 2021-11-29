@@ -2,7 +2,9 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     CustomFont: {
-        fontFamily: 'DancingScript-Regular'
+        fontFamily: 'AbrilFatface',
+        color: 'blue',
+        fontWeight: '300',
     },
     ButtonText: {
         fontFamily: 'AbrilFatface-Regular',
@@ -11,5 +13,17 @@ export default StyleSheet.create({
     },
     Body: {
         backgroundColor: '#0080ff',
+    },
+    InputField: {
+        width: 500,
+        borderWidth: 1,
+        borderColor: '#555',
+        borderRadius: 10,
+        height: 40,
+        backgroundColor: '#ffffff',
+        textAlign: 'center',
+        fontSize: 20,
+        marginTop: 10,
+        marginBottom: 10,
     }
 });

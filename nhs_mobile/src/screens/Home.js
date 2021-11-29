@@ -18,10 +18,10 @@ export default function Home({ navigation, route }) {
     const [stored_user, setStoredUser] = useState(user_struct)
 
     useEffect(() => {
-        getData();
+        getUserData();
     }, []);
 
-    const getData = () => {
+    const getUserData = () => {
         console.log(dynamic_user)
         
         try {
@@ -39,7 +39,7 @@ export default function Home({ navigation, route }) {
         }
     }
 
-    const updateData = async () => {
+    const updateUserData = async () => {
         console.log("UPDATE DATA")
         console.log(dynamic_user)
         if (Object.values(dynamic_user).every(x => x === null || x === '')) {
@@ -50,12 +50,12 @@ export default function Home({ navigation, route }) {
                 console.log(dynamic_user)
                 var user = {...stored_user} //create a safe copy of the local storage user object
                 for (const key of Object.keys(user)) { //go over every existing record, and replace it ONLY if the current form input is NOT empty.
-                    if (key in dynamic_user) 
+                    if (key in dynamic_user && dynamic_user[key].length > 1) 
                         user[key] = dynamic_user[key]
                 }
 
                 await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
-                getData()
+                getUserData()
                 console.log("Data updated")
                 Alert.alert('Success!', 'Your data has been updated.');
             } catch (error) {
@@ -64,10 +64,11 @@ export default function Home({ navigation, route }) {
         }
     }
 
-    const removeData = async () => {
+    const removeUserData = async () => {
         try {
+            console.log("CLEARED UserData - output below")
+            getUserData()
             await AsyncStorage.removeItem("UserData");
-            console.log("CLEARED UserData")
             navigation.navigate('ProfileSetup');
         } catch (error) {
             console.log(error);
@@ -81,7 +82,7 @@ export default function Home({ navigation, route }) {
                 Welcome {stored_user.name} !
             </Text>
             <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                Your age is {stored_user.age}
+                You are {stored_user.age} years old.
             </Text>
             <Text style={[GlobalStyle.CustomFont,styles.text]}>
                 Your height is {stored_user.height} cm
@@ -89,42 +90,58 @@ export default function Home({ navigation, route }) {
             <Text style={[GlobalStyle.CustomFont,styles.text]}>
                 Your weight is {stored_user.weight} kg
             </Text>
-
+            <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                Your blood type is {stored_user.blood_type}
+            </Text>
             <TextInput
-                style={styles.input}
+                style={GlobalStyle.InputField}
                 placeholder= {"Update your name (currently: '" + stored_user.name + "')"}
-                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
+                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])} //updating the dict
             />
             <TextInput
-                style={styles.input}
+                style={GlobalStyle.InputField}
                 placeholder={"Update your age (currently: " + stored_user.age + " years old)"}
                 onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
             />
             <TextInput
-                style={styles.input}
+                style={GlobalStyle.InputField}
                 placeholder={"Update your height (currently: " + stored_user.height + " cm)"}
                 onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
             />
             <TextInput
-                style={styles.input}
+                style={GlobalStyle.InputField}
                 placeholder={"Update your weight (currently: " + stored_user.weight + " kg)"}
                 onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
+            />
+            <TextInput
+                style={GlobalStyle.InputField}
+                placeholder='Update your blood typet'
+                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
             />
             <CustomButton
                 title='Update'
                 color='#ff7f00'
-                onPressFunction={updateData}
+                onPressFunction={updateUserData}
             />
             <CustomButton
                 title='Remove'
                 color='#f40100'
-                onPressFunction={removeData}
+                onPressFunction={removeUserData}
             />
-            <CustomButton
-                title='Navigate to Profile Setup page directly'
-                color='#761076'
-                onPressFunction={() => navigation.navigate("ProfileSetup")}
-            />
+
+            <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+                <CustomButton
+                    title='Navigate to Profile Setup page directly'
+                    color='#761076'
+                    onPressFunction={() => navigation.navigate("ProfileSetup")}
+                />
+                <CustomButton
+                    title='Dummy button'
+                    color='#761076'
+                    onPressFunction={() => console.log("D U M M Y")}
+                    />
+            </View>        
         </View>
     )
 }
@@ -139,16 +156,4 @@ const styles = StyleSheet.create({
         fontSize: 40,
         margin: 10,
     },
-    input: {
-        width: 500,
-        borderWidth: 1,
-        borderColor: '#555',
-        borderRadius: 10,
-        height: 40,
-        backgroundColor: '#ffffff',
-        textAlign: 'center',
-        fontSize: 20,
-        marginTop: 10,
-        marginBottom: 10,
-    }
 })

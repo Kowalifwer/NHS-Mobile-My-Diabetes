@@ -17,10 +17,10 @@ export default function Register({ navigation }) {
     const [age, setAge] = useState('');
 
     useEffect(() => {
-        getData();
+        getUserData();
     }, []);
 
-    const getData = () => {
+    const getUserData = () => {
         try {
             AsyncStorage.getItem('UserData')
                 .then(value => {

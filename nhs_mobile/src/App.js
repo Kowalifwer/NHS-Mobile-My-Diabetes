@@ -48,6 +48,7 @@ function App() {
           }}
           component={Register}
         />
+
       </Stack.Navigator>
     </NavigationContainer>
   )

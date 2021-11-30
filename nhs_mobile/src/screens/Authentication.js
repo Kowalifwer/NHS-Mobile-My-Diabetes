@@ -10,7 +10,8 @@ import {
   Button,
   SafeAreaView, 
   TouchableHighlight, 
-  Alert, 
+  Alert,
+  ScrollView,
   StatusBar as RnStatusBar,
 } from 'react-native';
 
@@ -88,42 +89,49 @@ export default function Authentication({ navigation, route }) {
 
   return (
     <SafeAreaView>
-      <Header></Header>
-      <View style={styles.container}>
-        <Text>
-          {isBiometricSupported
-            ? 'Your device is compatible with Biomeeeeeeeetrics'
-            : 'Face or Fingerprint scanner is available on this device'}
-        </Text>
+        <ScrollView>
+            <Header></Header>
+            <View style={styles.container}>
+                <Text>
+                {isBiometricSupported
+                    ? 'Your device is compatible with Biomeeeeeeeetrics'
+                    : 'Face or Fingerprint scanner is available on this device'}
+                </Text>
 
-        <TouchableHighlight
-          style={{
-            height: 60,
-        }}
-      >
-        <Button
-          title="Login with Biometrics"
-          color="#fe7005"
-          onPress={handleBiometricAuth}
-        />
-      </TouchableHighlight>
-
-      <StatusBar style="auto" />
-    </View>
-
-    <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
-        <View style={{display: 'flex', flexDirection: 'row'}}>
-            <CustomButton
-                title='Navigate to Homepage directly'
-                color='#761076'
-                onPressFunction={() => navigation.navigate("Home")}
-            />
-            <CustomButton
-                title='Go to ProfileSetup'
-                color='#761076'
-                onPressFunction={() => navigation.navigate("ProfileSetup")}
+                <TouchableHighlight
+                style={{
+                    height: 60,
+                }}
+            >
+                <Button
+                title="Login with Biometrics"
+                color="#fe7005"
+                onPress={handleBiometricAuth}
                 />
-        </View>
+            </TouchableHighlight>
+
+            <StatusBar style="auto" />
+            </View>
+
+            <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
+                <View style={{display: 'flex', flexDirection: 'column'}}>
+                    <CustomButton
+                        title='Go to Homepage directly'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Home")}
+                    />
+                    <CustomButton
+                        title='Go to ProfileSetup'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("ProfileSetup")}
+                    />
+                    <CustomButton
+                            title='Go to Email'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Email")}
+                    />
+                </View>
+        </ScrollView>
   </SafeAreaView>
 
 

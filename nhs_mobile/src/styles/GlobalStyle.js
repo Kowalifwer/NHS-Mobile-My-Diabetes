@@ -15,7 +15,7 @@ export default StyleSheet.create({
         backgroundColor: '#0080ff',
     },
     InputField: {
-        width: 500,
+        width: 350,
         borderWidth: 1,
         borderColor: '#555',
         borderRadius: 10,
@@ -25,5 +25,6 @@ export default StyleSheet.create({
         fontSize: 20,
         marginTop: 10,
         marginBottom: 10,
-    }
+        paddingBottom: 5,
+    },
 });

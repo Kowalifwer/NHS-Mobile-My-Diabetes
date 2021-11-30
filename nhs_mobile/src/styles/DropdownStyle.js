@@ -1,19 +1,12 @@
-user_struct = {name: "", age: "", height: "", weight: "", blood_type: ""}
 
-diary_dict = {}
-diry_paths = {}
-
-dropdown_schema = {
-    showArrowIcon: true,
-    showTickIcon: true,
-    label: 'title',
-    value: 'val',
+import { StyleSheet } from 'react-native';
+export default StyleSheet.create({
     style: {
         backgroundColor: "white",
         borderWidth: 1,
         borderColor: "black",
         borderRadius: 10,
-        minwidth: 300,
+        width: 350,
         minHeight: 40,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -23,7 +16,7 @@ dropdown_schema = {
         paddingBottom: 5,
     },
     containerStyle: {
-        width: 300,
+        width: 350,
     },
     placeholderStyle: {
         color: "grey",
@@ -50,4 +43,4 @@ dropdown_schema = {
     selectedItemLabelStyle: {
         fontWeight: "bold",
     }
-}
+})

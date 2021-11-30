@@ -5,12 +5,15 @@ import {
     Text,
     TextInput,
     Alert,
+    SafeAreaView, 
+    ScrollView,
 } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
-
+import DropdownStyle from '../styles/DropdownStyle';
 import user_struct from '../global_structures.js'
 
 
@@ -49,60 +52,92 @@ export default function ProfileSetup({ navigation }) {
             console.log('You have an empty field!')
         }
     }
-
+      
+      const [blood_type_open, setOpen] = useState(false);
+      const [blood_type_value, setValue] = useState(null);
+      const [blood_type, setBloodType] = useState([
+        {label: 'A', value: 'A'},
+        {label: 'B', value: 'B'},
+        {label: 'O', value: 'O'},
+        {label: 'AB', value: 'AB'}
+      ])
 
     return (
-        <View style={styles.body} >
-            <Header></Header>
-            <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                Async Storage Test...
-            </Text>
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder='Enter your name'
-                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
-            />
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder='Enter your age'
-                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
-            />
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder='Enter your height (cm)'
-                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
-            />
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder='Enter your weight (kg)'
-                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
-            />
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder='Enter your blood typet'
-                onChangeText={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
-            />
-            <CustomButton
-                title='Setup your profile!'
-                color='#1eb900'
-                onPressFunction={setData}
-            />
-
-            <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
-                <CustomButton
-                    title='Navigate to Homepage directly'
-                    color='#761076'
-                    onPressFunction={() => navigation.navigate("Home")}
-                />
-                <CustomButton
-                    title='Go to Authentication'
-                    color='#761076'
-                    onPressFunction={() => navigation.navigate("Authentication")}
+        <SafeAreaView>
+            <ScrollView >
+                <View style={styles.body}>
+                    <Header></Header>
+                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                        Profile setup page. (Local storage fully setup)
+                    </Text>
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your name'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
                     />
-            </View>
-            
-        </View>
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your age'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
+                    />
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your height (cm)'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
+                    />
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your weight (kg)'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
+                    />
+                    <DropDownPicker
+                        style={DropdownStyle.style}
+                        containerStyle={DropdownStyle.containerStyle}
+                        placeholderStyle={DropdownStyle.placeholderStyle}
+                        textStyle={DropdownStyle.textStyle}
+                        labelStyle={DropdownStyle.labelStyle}
+                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                        showArrowIcon={true}
+                        showTickIcon={true}
+                        placeholder="Select your blood group"
+                        open={blood_type_open}
+                        value={blood_type_value}
+                        items={blood_type}
+                        setOpen={setOpen}
+                        setValue={setValue}
+                        setItems={setBloodType}
+                        onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
+                    />
+                    <CustomButton
+                        style={{marginTop: 40}}
+                        title='Setup your profile!'
+                        color='#1eb900'
+                        onPressFunction={setData}
+                    />
+
+                    <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
+                    <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
+                        <CustomButton
+                            title='Go to Homepage directly'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Home")}
+                        />
+                        <CustomButton
+                            title='Go to Authentication'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Authentication")}
+                        />
+                        <CustomButton
+                            title='Go to Email'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Email")}
+                        />
+                    </View>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 

@@ -1,5 +1,5 @@
 image:
-    node:latest
+    node:8.15.0
 
 stages:
     - installation

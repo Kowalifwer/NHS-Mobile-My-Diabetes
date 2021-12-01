@@ -1,5 +1,5 @@
 image:
-    node:8.15.0
+    node:latest
 
 stages:
     - installation
@@ -19,5 +19,6 @@ build-job:
         - docker
     script:
         - npm install
+        - cd nhs_mobile
         - expo start
         - echo "Built project successfully"

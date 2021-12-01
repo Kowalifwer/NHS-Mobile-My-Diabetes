@@ -23,6 +23,7 @@ build-job:
         - npm install
         - echo $PWD
         - cd nhs_mobile
+        - npm install
         - echo $PWD
         - expo start
         - echo "Built project successfully"

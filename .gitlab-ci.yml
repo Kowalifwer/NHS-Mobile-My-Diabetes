@@ -1,0 +1,20 @@
+stages:
+    - installation
+    - build
+
+installing-dependencies:
+    stage: installation
+    tags: 
+        - docker
+    script:
+        - npm install
+        - echo "Managed to install correctly"
+
+build-job:
+    stage: build
+    tags: 
+        - docker
+    script:
+        - npm install
+        - expo start
+        - echo "Built project successfully"

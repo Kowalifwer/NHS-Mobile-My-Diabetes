@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import ProfileSetup from './screens/ProfileSetup';
 import ProfileUpdate from './screens/ProfileUpdate';
-import Register from './screens/Register';
 import Authentication from './screens/Authentication';
 import Email from "./screens/Email";
 import BarcodeScanner from "./screens/BarcodeScanner";
@@ -52,13 +51,6 @@ function App() {
             headerShown: false,
           }}
           component={Home}
-        />
-        <Stack.Screen
-          name="Register"
-          options={{
-            headerShown: false,
-          }}
-          component={Register}
         />
         <Stack.Screen
           name="Authentication"

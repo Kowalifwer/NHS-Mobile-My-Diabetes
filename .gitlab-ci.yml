@@ -19,6 +19,8 @@ build-job:
         - docker
     script:
         - npm install
+        - echo $PWD
         - cd nhs_mobile
+        - echo $PWD
         - expo start
         - echo "Built project successfully"

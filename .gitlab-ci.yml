@@ -19,6 +19,7 @@ build-job:
     tags: 
         - docker
     script:
+        - npm install -g expo-cli
         - npm install
         - echo $PWD
         - cd nhs_mobile

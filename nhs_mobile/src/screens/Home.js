@@ -8,6 +8,7 @@ import {
     TextInput,
     SafeAreaView,
     ScrollView,
+    StatusBar
 } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
@@ -18,7 +19,6 @@ import DropdownStyle from '../styles/DropdownStyle';
 
 
 export default function Home({ navigation, route }) {
-    const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [stored_user, setStoredUser] = useState(user_struct)
 
     useEffect(() => {
@@ -26,12 +26,9 @@ export default function Home({ navigation, route }) {
     }, []);
 
     const getUserData = () => {
-        console.log(dynamic_user)
-        
         try {
             AsyncStorage.getItem('UserData')
                 .then(value => {
-                    
                     if (value != null) {
                         let user = JSON.parse(value);
                         console.log(user);
@@ -48,139 +45,64 @@ export default function Home({ navigation, route }) {
         }
     }
 
-    const updateUserData = async () => {
-        console.log("UPDATE DATA")
-        console.log(dynamic_user)
-        if (Object.values(dynamic_user).every(x => x === null || x === '')) {
-            Alert.alert('Warning!', 'Please write your data.')
-            console.log("All fields empty!")
-        } else {
-            try {
-                console.log(dynamic_user)
-                var user = {...stored_user} //create a safe copy of the local storage user object
-                for (const key of Object.keys(user)) { //go over every existing record, and replace it ONLY if the current form input is NOT empty.
-                    console.log(key)
-                    if (key in dynamic_user && dynamic_user[key].length > 0) 
-                        user[key] = dynamic_user[key]
-                }
-                await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
-                getUserData()
-                console.log("Data updated")
-                Alert.alert('Success!', 'Your data has been updated.');
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }
-
-    const removeUserData = async () => {
+    var clearAll = async () => {
         try {
-            console.log("CLEARED UserData - output below")
-            getUserData()
-            await AsyncStorage.removeItem("UserData");
-            navigation.navigate('ProfileSetup');
-        } catch (error) {
-            console.log(error);
+          await AsyncStorage.clear()
+          console.log('Cleared.')
+        } catch(e) {
+          // clear error
         }
-    }
-
-    const [blood_type_open, setOpen] = useState(false);
-    const [blood_type_value, setValue] = useState(null);
-    const [blood_type, setBloodType] = useState([
-        {label: 'A', value: 'A'},
-        {label: 'B', value: 'B'},
-        {label: 'O', value: 'O'},
-        {label: 'AB', value: 'AB'}
-    ])
+        
+        Alert.alert('All local data wiped. You need to setup profile again.')
+        getUserData()
+        navigation.navigate("Authentication")
+      }
 
     return (
         <SafeAreaView style={styles.body}>
             <ScrollView>
                 <View style={styles.body}>
                     <Header></Header>
+                    <Text style={[GlobalStyle.CustomFont,styles.text,{fontSize: 50, color: "lime"}]}>
+                        Homepage
+                    </Text>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
                         Welcome {stored_user.name} !
                     </Text>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        You are {stored_user.age} years old.
+                        What would you like to do ?
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your height is {stored_user.height} cm
-                    </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your weight is {stored_user.weight} kg
-                    </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your blood type is {stored_user.blood_type}
-                    </Text>
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder= {"Update your name"}
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])} //updating the dict
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder={"Update your age"}
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder={"Update your height"}
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder={"Update your weight"}
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
-                    />
-                    <DropDownPicker
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
-                        placeholder="Update your blood type"
-                        open={blood_type_open}
-                        value={blood_type_value}
-                        items={blood_type}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setBloodType}
-                        onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
-                    />
-                    <CustomButton
-                        style={{marginTop: 40}}
-                        title='Update'
-                        color='#ff7f00'
-                        onPressFunction={updateUserData}
-                    />
-                    <CustomButton
-                        title='Delete Profile'
-                        color='#f40100'
-                        onPressFunction={removeUserData}
-                    />
 
-                    <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
-                            title='Go to Profile Setup page directly'
+                            title='View/Update your profile'
                             color='#761076'
-                            onPressFunction={() => navigation.navigate("ProfileSetup")}
+                            onPressFunction={() => navigation.navigate("ProfileUpdate")}
                         />
                         <CustomButton
-                            title='Go to Authentication'
+                            title='Setup email recipients'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("EmailSetup")}
+                        />
+                        <CustomButton
+                            title='Send an email'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Email")}
+                        />
+                        <CustomButton
+                            title='Authenticate yourself'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Authentication")}
                         />
                         <CustomButton
-                            title='Go to Email'
+                            title='Read a barcode'
                             color='#761076'
-                            onPressFunction={() => navigation.navigate("Email")}
+                            onPressFunction={() => navigation.navigate("BarcodeScanner")}
+                        />
+                        <CustomButton
+                            title='Wipe all local data (warning)'
+                            color='red'
+                            onPressFunction={clearAll}
                         />
                     </View>
                 </View>
@@ -196,7 +118,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#e9c5b4',
     },
     text: {
-        fontSize: 40,
+        fontSize: 25,
         margin: 10,
+        textAlign: 'center',
     },
 })

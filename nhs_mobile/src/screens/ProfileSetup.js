@@ -68,7 +68,7 @@ export default function ProfileSetup({ navigation }) {
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Profile setup page. (Local storage fully setup)
+                        Profile setup page.
                     </Text>
                     <TextInput
                         style={GlobalStyle.InputField}
@@ -91,6 +91,7 @@ export default function ProfileSetup({ navigation }) {
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
                     <DropDownPicker
+                        dropDownDirection="BOTTOM"
                         style={DropdownStyle.style}
                         containerStyle={DropdownStyle.containerStyle}
                         placeholderStyle={DropdownStyle.placeholderStyle}
@@ -117,22 +118,11 @@ export default function ProfileSetup({ navigation }) {
                         onPressFunction={setData}
                     />
 
-                    <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
                             title='Go to Homepage directly'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
-                        />
-                        <CustomButton
-                            title='Go to Authentication'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Authentication")}
-                        />
-                        <CustomButton
-                            title='Go to Email'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Email")}
                         />
                     </View>
                 </View>
@@ -150,5 +140,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 30,
         marginBottom: 130,
+        textAlign: "center",
     },
 })

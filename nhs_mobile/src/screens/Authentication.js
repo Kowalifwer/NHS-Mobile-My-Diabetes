@@ -88,11 +88,14 @@ export default function Authentication({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.body}>
         <ScrollView>
             <Header></Header>
-            <View style={styles.container}>
-                <Text>
+            <View style={styles.body}>
+                <Text style={[GlobalStyle.CustomFont,styles.text,{fontSize: 50, color: "lime"}]}>
+                      Authentication page
+                </Text>
+                <Text style={[GlobalStyle.CustomFont,styles.text]}>
                 {isBiometricSupported
                     ? 'Your device is compatible with Biomeeeeeeeetrics'
                     : 'Face or Fingerprint scanner is available on this device'}
@@ -103,39 +106,30 @@ export default function Authentication({ navigation, route }) {
                     height: 60,
                 }}
             >
-                <Button
-                title="Login with Biometrics"
-                color="#fe7005"
-                onPress={handleBiometricAuth}
+                <CustomButton
+                  title="Login with Biometrics"
+                  color="#fe7005"
+                  onPressFunction={handleBiometricAuth}
                 />
             </TouchableHighlight>
 
             <StatusBar style="auto" />
-            </View>
+            
 
-            <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20}]}>Navigation section (testing)</Text>
-                <View style={{display: 'flex', flexDirection: 'column'}}>
-                    <CustomButton
-                        title='Go to Homepage directly'
-                        color='#761076'
-                        onPressFunction={() => navigation.navigate("Home")}
-                    />
-                    <CustomButton
-                        title='Go to ProfileSetup'
-                        color='#761076'
-                        onPressFunction={() => navigation.navigate("ProfileSetup")}
-                    />
-                    <CustomButton
-                            title='Go to Email'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Email")}
-                    />
-                </View>
+            <Text style={[GlobalStyle.CustomFont, styles.text, {marginTop: 40, fontSize: 20, marginHorizontal: 20}]}>IF Authentication does not work - use button below to bypass authentication</Text>
+            <View style={{display: 'flex', flexDirection: 'column', marginTop: 50,}}>
+                <CustomButton
+                  title='Go to Profile Setup page directly'
+                  color='#761076'
+                  onPressFunction={() => navigation.navigate("Home")}
+                />
+            </View>
+          </View>
         </ScrollView>
   </SafeAreaView>
 
 
-    // <View style={styles.container}>
+    // <View style={styles.body}>
     //   <Text style={styles.text}>peepeepoopoo</Text>
     //   <Button 
     //   color="#ff0000" 
@@ -147,11 +141,14 @@ export default function Authentication({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: RnStatusBar.currentHeight,
-    flex: 1,
-    paddingLeft: 20,
-    paddingRight: 20,
+  body: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: '#e9c5b4',
   },
-  
-});
+  text: {
+      fontSize: 40,
+      margin: 10,
+      textAlign: 'center',
+  },
+})

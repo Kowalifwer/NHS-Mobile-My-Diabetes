@@ -5,9 +5,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import ProfileSetup from './screens/ProfileSetup';
+import ProfileUpdate from './screens/ProfileUpdate';
 import Register from './screens/Register';
 import Authentication from './screens/Authentication';
 import Email from "./screens/Email";
+import BarcodeScanner from "./screens/BarcodeScanner";
+import EmailSetup from "./screens/EmailSetup";
 
 const Stack = createStackNavigator();
 
@@ -32,6 +35,13 @@ function App() {
         <Stack.Screen
           name="ProfileSetup"
           component={ProfileSetup}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ProfileUpdate"
+          component={ProfileUpdate}
           options={{
             headerShown: false,
           }}
@@ -63,6 +73,20 @@ function App() {
             headerShown: false,
           }}
           component={Email}
+        />
+        <Stack.Screen
+          name="BarcodeScanner"
+          options={{
+            headerShown: false,
+          }}
+          component={BarcodeScanner}
+        />
+        <Stack.Screen
+          name="EmailSetup"
+          options={{
+            headerShown: false,
+          }}
+          component={EmailSetup}
         />
 
       </Stack.Navigator>

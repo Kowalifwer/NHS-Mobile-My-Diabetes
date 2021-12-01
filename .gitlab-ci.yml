@@ -1,29 +1,21 @@
-image:
-    node:14.0.0
-
+image: node:alpine
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - ~/.npm
+    - .jest
 stages:
-    - installation
-    - build
-
-installing-dependencies:
-    stage: installation
-    tags: 
-        - docker
-    script:
-        - npm install -g expo-cli
-        - npm install
-        - echo "Managed to install correctly"
-
-build-job:
-    stage: build
-    tags: 
-        - docker
-    script:
-        - npm install -g expo-cli
-        - npm install
-        - echo $PWD
-        - cd nhs_mobile
-        - npm install
-        - echo $PWD
-        - expo start
-        - echo "Built project successfully"
+  - test
+  - deploy
+before_script:
+  - npm ci
+jest-tests:
+  stage: test
+  script:
+    - npx jest --ci
+expo-deployments:
+  stage: deploy
+  script:
+    - apk add --no-cache bash
+    - npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+    - npx expo publish --non-interactive

@@ -10,6 +10,7 @@ installing-dependencies:
     tags: 
         - docker
     script:
+        - npm install -g expo-cli
         - npm install
         - echo "Managed to install correctly"
 

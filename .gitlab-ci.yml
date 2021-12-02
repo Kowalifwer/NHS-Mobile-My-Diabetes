@@ -34,5 +34,6 @@ publish-job:
         - npm install -g expo-cli
         - cd nhs_mobile
         - npm install
+        - expo login -u keivan.s10@gmail.com -p Test1234
         - expo publish
         - echo "Built project successfully"

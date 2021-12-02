@@ -15,16 +15,16 @@ stages:
 #        - npm install
 #        - echo "Managed to install correctly"
 
-build-job:
-    stage: build
-    tags: 
-        - docker
-    script:
-        - npm install -g expo-cli
-        - cd nhs_mobile
-        - npm install
-        - expo start
-        - echo "Built project successfully"
+#build-job:
+#    stage: build
+#    tags: 
+#        - docker
+#    script:
+#        - npm install -g expo-cli
+#        - cd nhs_mobile
+#        - npm install
+#        - expo start
+#        - echo "Built project successfully"
 
 publish-job:
     stage: publish

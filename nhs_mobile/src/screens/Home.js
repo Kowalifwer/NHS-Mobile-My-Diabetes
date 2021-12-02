@@ -30,7 +30,7 @@ export default function Home({ navigation, route }) {
             AsyncStorage.getItem('UserData')
                 .then(value => {
                     if (value != null) {
-                        let user = JSON.parse(value));
+                        let user = JSON.parse(value);
                         console.log(user);
                         setStoredUser(user)
                         return user

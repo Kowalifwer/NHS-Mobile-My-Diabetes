@@ -2,17 +2,18 @@ image:
     node:14.0.0
 
 stages:
-    - installation
+#    - installation
     - build
+    - publish
 
-installing-dependencies:
-    stage: installation
-    tags: 
-        - docker
-    script:
-        - npm install -g expo-cli
-        - npm install
-        - echo "Managed to install correctly"
+#installing-dependencies:
+#    stage: installation
+#    tags: 
+#        - docker
+#    script:
+#        - npm install -g expo-cli
+#        - npm install
+#        - echo "Managed to install correctly"
 
 build-job:
     stage: build
@@ -23,4 +24,15 @@ build-job:
         - cd nhs_mobile
         - npm install
         - expo start
+        - echo "Built project successfully"
+
+publish-job:
+    stage: publish
+    tags:
+        - docker
+    script:
+        - npm install -g expo-cli
+        - cd nhs_mobile
+        - npm install
+        - expo publish
         - echo "Built project successfully"

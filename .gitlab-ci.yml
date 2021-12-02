@@ -2,32 +2,23 @@ image:
     node:14.0.0
 
 stages:
-#    - installation
-    - build
-    - publish
+    - prebuild
+    - deploy
 
-#installing-dependencies:
-#    stage: installation
-#    tags: 
-#        - docker
-#    script:
-#        - npm install -g expo-cli
-#        - npm install
-#        - echo "Managed to install correctly"
+prebuild-job:
+    stage: prebuild
+    tags: 
+        - docker
+    script:
+        - npm install -g expo-cli
+        - cd nhs_mobile
+        - npm install
+        - expo login -u keivan.s10@gmail.com -p Test1234
+        - expo prebuilt
+        - echo "Built project successfully"
 
-#build-job:
-#    stage: build
-#    tags: 
-#        - docker
-#    script:
-#        - npm install -g expo-cli
-#        - cd nhs_mobile
-#        - npm install
-#        - expo start
-#        - echo "Built project successfully"
-
-publish-job:
-    stage: publish
+deploy-job:
+    stage: deploy
     tags:
         - docker
     script:
@@ -36,4 +27,4 @@ publish-job:
         - npm install
         - expo login -u keivan.s10@gmail.com -p Test1234
         - expo publish
-        - echo "Built project successfully"
+        - echo "Published project successfully"

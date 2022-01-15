@@ -21,6 +21,10 @@ export default function Home({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [stored_user, setStoredUser] = useState(user_struct)
 
+
+    //PUSH TEST 
+
+    
     useEffect(() => {
         getUserData();
     }, []);

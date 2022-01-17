@@ -30,6 +30,7 @@ export default function Authentication({ navigation, route }) {
 
   const fallBackToDefaultAuth = () => {
     console.log('fall back to password authentication');
+
   };
 
   const alertComponent = (title, mess, btnTxt, btnFunc) => {
@@ -76,7 +77,7 @@ export default function Authentication({ navigation, route }) {
     const biometricAuth = await LocalAuthentication.authenticateAsync({
       promptMessage: 'Login with Biometrics',
       cancelLabel: 'Cancel',
-      disableDeviceFallback: true,
+      disableDeviceFallback: false,
     });
     // Log the user in on success
     if (biometricAuth) navigation.navigate("ProfileSetup");
@@ -97,7 +98,7 @@ export default function Authentication({ navigation, route }) {
                 </Text>
                 <Text style={[GlobalStyle.CustomFont,styles.text]}>
                 {isBiometricSupported
-                    ? 'Your device is compatible with Biomeeeeeeeetrics'
+                    ? 'Your device is compatible with Biometrics'
                     : 'Face or Fingerprint scanner is available on this device'}
                 </Text>
 

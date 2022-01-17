@@ -51,5 +51,7 @@
 	<false/>
   <key>UIStatusBarStyle</key>
   <string>UIStatusBarStyleDefault</string>
+  <key>NSFaceIDUsageDescription</key>
+<string>This app uses Face ID to authenticate the user for Medical Data protection reasons.</string>
 </dict>
 </plist>

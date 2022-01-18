@@ -10,10 +10,21 @@ import Authentication from './screens/Authentication';
 import Email from "./screens/Email";
 import BarcodeScanner from "./screens/BarcodeScanner";
 import EmailSetup from "./screens/EmailSetup";
+import Convert from './screens/Convert';
+import { useFonts } from 'expo-font';
 
 const Stack = createStackNavigator();
 
 function App() {
+
+  const [loaded] = useFonts({
+    AbrilFatface: require('../assets/AbrilFatface.ttf'),
+  });
+  
+  if (!loaded) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -79,6 +90,13 @@ function App() {
             headerShown: false,
           }}
           component={EmailSetup}
+        />
+        <Stack.Screen
+          name="Convert"
+          options={{
+            headerShown: false,
+          }}
+          component={Convert}
         />
 
       </Stack.Navigator>

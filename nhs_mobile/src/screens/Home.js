@@ -17,7 +17,6 @@ import user_struct from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
 
-
 export default function Home({ navigation, route }) {
     const [stored_user, setStoredUser] = useState(user_struct)
 
@@ -103,6 +102,11 @@ export default function Home({ navigation, route }) {
                             title='Wipe all local data (warning)'
                             color='red'
                             onPressFunction={clearAll}
+                        />
+                        <CustomButton
+                            title='Convert'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Convert")}
                         />
                     </View>
                 </View>

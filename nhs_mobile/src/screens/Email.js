@@ -17,17 +17,58 @@ import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
 import user_struct from '../global_structures.js'
+import * as Print from 'expo-print';
 
 export default function Email({navigation}) {
+
+    DropDownPicker.setListMode("SCROLLVIEW");
     const [selected, setSelectedRecipient] = useState("")
+    const [filePath, setfilePath] = useState("");
 
     const [email_open, setOpen] = useState(false);
     const [email_value, setValue] = useState(null);
     const [email, setEmail] = useState([])
 
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pdf Content</title>
+        <style>
+            body {
+                font-size: 16px;
+                color: rgb(255, 196, 0);
+            }
+            h1 {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Hello, UppLabs!</h1>
+    </body>
+    </html>
+    `
+
+    const printToFile = async () => {
+        // On iOS/android prints the given html. On web prints the HTML from the current page.
+        const { uri } = await Print.printToFileAsync({
+          htmlContent
+        });
+        console.log('File has been saved to:', uri);
+        
+        //await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+        return uri;
+      }
+
     useEffect(() => {
         getUserData();
+        printToFile().then((value) => setfilePath(value));
+        console.log('hi is:', filePath)
     }, []);
+
 
     const getData = async () => {
         try {
@@ -84,7 +125,8 @@ export default function Email({navigation}) {
                     <CustomButton
                         onPressFunction={() => MailComposer.composeAsync({
                             recipients: [selected],
-                            subject: "Test email"
+                            subject: "Test email",
+                            attachments: [filePath],
                         })}
                         color="#ff0f00"
                         title="Compose Email"

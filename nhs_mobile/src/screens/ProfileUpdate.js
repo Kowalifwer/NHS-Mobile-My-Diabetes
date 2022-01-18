@@ -22,9 +22,6 @@ export default function Home({ navigation, route }) {
     const [stored_user, setStoredUser] = useState(user_struct)
 
 
-    //PUSH TEST 
-
-    
     useEffect(() => {
         getUserData();
     }, []);

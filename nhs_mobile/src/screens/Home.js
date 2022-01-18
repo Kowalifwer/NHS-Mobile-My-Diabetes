@@ -103,11 +103,6 @@ export default function Home({ navigation, route }) {
                             color='red'
                             onPressFunction={clearAll}
                         />
-                        <CustomButton
-                            title='Convert'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Convert")}
-                        />
                     </View>
                 </View>
             </ScrollView>      

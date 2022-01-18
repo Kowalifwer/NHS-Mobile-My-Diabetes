@@ -93,32 +93,39 @@ export default function Email({navigation}) {
 
     const composeMail = async() => {
 
-        const { uri2 } = await Print.printToFileAsync({
+        //makes html code to pdf and saves to Filesystem Cache Directory
+        
+        const  { uri }  = await Print.printToFileAsync({
             htmlContent
-        })
+        });
+        
 
         /*
         const { uri } = await FileSystem.downloadAsync(
             'http://techslides.com/demos/sample-videos/small.mp4',
             FileSystem.documentDirectory + 'any.mp4'
-          )/*.then(({ uri }) => {
+          )
+          
+          /*.then(({ uri }) => {
               console.log('yooo' ,uri)
           }
           
           );*/
 
-        console.log('this is uri2 ', uri2);
+        //console.log('this is uri ', uri);
        // console.log('this is uri ', uri);
        // console.log('Doc dir has been saved to:', FileSystem.documentDirectory);
        // console.log('cache dir has been saved to:', FileSystem.cacheDirectory);
        // console.log(FileSystem.documentDirectory + 'example');
-
+       
         try{
+            console.log('this is uri ', uri);
             let emailResult = await MailComposer.composeAsync({
                 recipients: [selected],
                 subject: 'Test email',
-                attachments: [uri2],
+                attachments: [uri],
             });
+            console.log('email result: ', emailResult.status);
         } catch (e) {
             console.log(e);
         }

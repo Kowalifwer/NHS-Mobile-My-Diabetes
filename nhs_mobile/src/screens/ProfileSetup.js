@@ -20,6 +20,7 @@ import user_struct from '../global_structures.js'
 export default function ProfileSetup({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
 
+    DropDownPicker.setListMode("SCROLLVIEW");
     useEffect(() => {
         getUserData();
     }, []);

@@ -18,12 +18,12 @@ import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
 import user_struct from '../global_structures.js'
 import * as Print from 'expo-print';
+import * as FileSystem from 'expo-file-system';
 
 export default function Email({navigation}) {
 
     DropDownPicker.setListMode("SCROLLVIEW");
     const [selected, setSelectedRecipient] = useState("")
-    const [filePath, setfilePath] = useState("");
 
     const [email_open, setOpen] = useState(false);
     const [email_value, setValue] = useState(null);
@@ -51,7 +51,7 @@ export default function Email({navigation}) {
     </body>
     </html>
     `
-
+/*
     const printToFile = async () => {
         // On iOS/android prints the given html. On web prints the HTML from the current page.
         const { uri } = await Print.printToFileAsync({
@@ -62,11 +62,10 @@ export default function Email({navigation}) {
         //await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
         return uri;
       }
+    */
 
     useEffect(() => {
         getUserData();
-        printToFile().then((value) => setfilePath(value));
-        console.log('hi is:', filePath)
     }, []);
 
 
@@ -89,6 +88,39 @@ export default function Email({navigation}) {
             }
         } catch(e) {
         // error reading value
+        }
+    }
+
+    const composeMail = async() => {
+
+        const { uri2 } = await Print.printToFileAsync({
+            htmlContent
+        })
+
+        /*
+        const { uri } = await FileSystem.downloadAsync(
+            'http://techslides.com/demos/sample-videos/small.mp4',
+            FileSystem.documentDirectory + 'any.mp4'
+          )/*.then(({ uri }) => {
+              console.log('yooo' ,uri)
+          }
+          
+          );*/
+
+        console.log('this is uri2 ', uri2);
+       // console.log('this is uri ', uri);
+       // console.log('Doc dir has been saved to:', FileSystem.documentDirectory);
+       // console.log('cache dir has been saved to:', FileSystem.cacheDirectory);
+       // console.log(FileSystem.documentDirectory + 'example');
+
+        try{
+            let emailResult = await MailComposer.composeAsync({
+                recipients: [selected],
+                subject: 'Test email',
+                attachments: [uri2],
+            });
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -123,11 +155,7 @@ export default function Email({navigation}) {
                     />
 
                     <CustomButton
-                        onPressFunction={() => MailComposer.composeAsync({
-                            recipients: [selected],
-                            subject: "Test email",
-                            attachments: [filePath],
-                        })}
+                        onPressFunction={() => composeMail()}
                         color="#ff0f00"
                         title="Compose Email"
                     />

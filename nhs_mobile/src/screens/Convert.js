@@ -19,6 +19,9 @@ import {
 
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import * as MailComposer from 'expo-mail-composer';
+
 
 export default function Convert({ navigation, route }) {
     
@@ -65,6 +68,29 @@ const printToFile = async () => {
 
 printToFile().then((value) => console.log(value))
 */
+
+const composeMail = async() => {
+        
+  const { uri } = await FileSystem.downloadAsync(
+    'http://techslides.com/demos/sample-videos/small.mp4',
+    FileSystem.documentDirectory + 'small.mp4'
+  )
+
+  console.log('File has been saved to:', uri);
+  try{
+
+      let emailResult = await MailComposer.composeAsync({
+          //recipients: [selected],
+          subject: "Test email",
+          attachments: [uri],
+      });
+      console.log('File2 has been saved to:', uri);
+  } catch (e) {
+      console.log(e);
+  }
+}
+
+composeMail();
 
   return (
     <SafeAreaView style={styles.body}>

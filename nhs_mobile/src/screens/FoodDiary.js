@@ -15,53 +15,50 @@ import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
 import user_struct from '../global_structures.js'
+import food_diary_entry from '../global_structures.js'
 
 
 export default function FoodDiary({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
+    const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
 
     useEffect(() => {
-        getUserData();
-    }, []);
+        getOrCreateFoodDiary();
+    }, []); // don't know what this is doing
 
-    const getUserData = () => {
+    const getOrCreateFoodDiary = async () => {
         try {
-            AsyncStorage.getItem('FoodDiary')
-                .then(value => {
-                    if (value == null) { //in case user profile is already setup.
-                        console.log("food diary does not exist yet");
-                    }
-                })
+            const food_diary = await AsyncStorage.getItem('FoodDiary');
+            if (food_diary == null) {
+                console.log("food diary does not exist yet");
+                AsyncStorage.setItem("FoodDiary", JSON.stringify([]));
+                console.log("created empty food diary");
+            }
+            else {
+                console.log(food_diary);
+            }
         } catch (error) {
             console.log("food diary getItem error");
             console.log(error);
         }
     }
 
-    const setData = async () => {
-        if (Object.values(dynamic_user).every(x => x !== '')) {
+    const appendToDiary = async () => {
+        if (Object.values(diary_entry).some(x => x !== '')) {
             try {
-                console.log(dynamic_user)
-                await AsyncStorage.setItem('UserData', JSON.stringify(dynamic_user));
-                navigation.navigate('Home');
+                const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
+                diary.push(diary_entry);
+                await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
+                console.log("appended to diary: ", diary_entry);
+                navigation.navigate("Home");
             } catch (error) {
                 console.log(error);
             }
-
         } else {
-            Alert.alert('Warning!', 'Please write your data.')
-            console.log('You have an empty field!')
+            Alert.alert("put data")
+            console.log("empty field in form")
         }
     }
-      
-      const [blood_type_open, setOpen] = useState(false);
-      const [blood_type_value, setValue] = useState(null);
-      const [blood_type, setBloodType] = useState([
-        {label: 'A', value: 'A'},
-        {label: 'B', value: 'B'},
-        {label: 'O', value: 'O'},
-        {label: 'AB', value: 'AB'}
-      ])
 
     return (
         <SafeAreaView>
@@ -69,56 +66,34 @@ export default function FoodDiary({ navigation }) {
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Profile setup page.
+                        Food Diary page
                     </Text>
                     <TextInput
                         style={GlobalStyle.InputField}
-                        placeholder='Enter your name'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
+                        placeholder='date'
+                        onChangeText={(value) => setDiaryEntry(state => ({ ...state, ["date"]:value }), [])}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
-                        placeholder='Enter your age'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
+                        placeholder='meal'
+                        onChangeText={(value) => setDiaryEntry(state => ({ ...state, ["meal"]:value }), [])}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
-                        placeholder='Enter your height (cm)'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
+                        placeholder='time'
+                        onChangeText={(value) => setDiaryEntry(state => ({ ...state, ["time"]:value }), [])}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
-                        placeholder='Enter your weight (kg)'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
-                    />
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
-                        placeholder="Select your blood group"
-                        open={blood_type_open}
-                        value={blood_type_value}
-                        items={blood_type}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setBloodType}
-                        onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
+                        placeholder='food'
+                        onChangeText={(value) => setDiaryEntry(state => ({ ...state, ["food"]:value }), [])}
                     />
                     <CustomButton
                         style={{marginTop: 40}}
-                        title='Setup your profile!'
+                        title='add to diary'
                         color='#1eb900'
-                        onPressFunction={setData}
+                        onPressFunction={appendToDiary}
                     />
-
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
                             title='Go to Homepage directly'

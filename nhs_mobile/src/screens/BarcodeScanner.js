@@ -79,7 +79,6 @@ export default function BarcodeScanner({ navigation }) {
     }
 
     return (
-        <SafeAreaView>
             <View style={styles.body}>
                 <BarCodeScanner
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -128,7 +127,6 @@ export default function BarcodeScanner({ navigation }) {
                     />
                 </View>
             </View>
-        </SafeAreaView>
     );
 
 }

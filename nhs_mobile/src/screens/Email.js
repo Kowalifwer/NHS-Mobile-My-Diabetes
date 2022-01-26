@@ -23,7 +23,7 @@ import * as FileSystem from 'expo-file-system';
 export default function Email({navigation}) {
 
     DropDownPicker.setListMode("SCROLLVIEW");
-    const [selected, setSelectedRecipient] = useState("")
+    const [selected, setSelectedRecipient] = useState(null)
 
     const [email_open, setOpen] = useState(false);
     const [email_value, setValue] = useState(null);
@@ -34,7 +34,8 @@ export default function Email({navigation}) {
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+        <meta http-equiv="content-type" content = "attachment; filename=somecustomname.pdf">
         <title>Pdf Content</title>
         <style>
             body {
@@ -95,37 +96,18 @@ export default function Email({navigation}) {
 
         //makes html code to pdf and saves to Filesystem Cache Directory
         
-        const  { uri }  = await Print.printToFileAsync({
-            htmlContent
+        const file_object = await Print.printToFileAsync({
+            html: htmlContent,
         });
-        
-
-        /*
-        const { uri } = await FileSystem.downloadAsync(
-            'http://techslides.com/demos/sample-videos/small.mp4',
-            FileSystem.documentDirectory + 'any.mp4'
-          )
-          
-          /*.then(({ uri }) => {
-              console.log('yooo' ,uri)
-          }
-          
-          );*/
-
-        //console.log('this is uri ', uri);
-       // console.log('this is uri ', uri);
-       // console.log('Doc dir has been saved to:', FileSystem.documentDirectory);
-       // console.log('cache dir has been saved to:', FileSystem.cacheDirectory);
-       // console.log(FileSystem.documentDirectory + 'example');
        
         try{
-            console.log('this is uri ', uri);
+            // console.log(file_object.base64);
             let emailResult = await MailComposer.composeAsync({
-                recipients: [selected],
+                recipients: (selected != null) ? [selected] : [],
                 subject: 'Test email',
-                attachments: [uri],
+                attachments: [file_object.uri],
             });
-            console.log('email result: ', emailResult.status);
+            (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
         } catch (e) {
             console.log(e);
         }

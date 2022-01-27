@@ -86,15 +86,6 @@ export default function Home({ navigation, route }) {
         }
     }
 
-    const [blood_type_open, setOpen] = useState(false);
-    const [blood_type_value, setValue] = useState(null);
-    const [blood_type, setBloodType] = useState([
-        {label: 'A', value: 'A'},
-        {label: 'B', value: 'B'},
-        {label: 'O', value: 'O'},
-        {label: 'AB', value: 'AB'}
-    ])
-
     return (
         <SafeAreaView style={styles.body}>
             <ScrollView>
@@ -138,27 +129,7 @@ export default function Home({ navigation, route }) {
                         placeholder={"Update your weight"}
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
-                        placeholder="Update your blood type"
-                        open={blood_type_open}
-                        value={blood_type_value}
-                        items={blood_type}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setBloodType}
-                        onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
-                    />
+            
                     <CustomButton
                         style={{marginTop: 40}}
                         title='Update Profile'

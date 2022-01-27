@@ -10,15 +10,16 @@ import {
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import ConditionalProfileView from '../components/ConditionalProfileView';
 import Header from '../components/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js'
-
+import {user_struct} from '../global_structures.js'
 
 export default function ProfileSetup({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
+    console.log("xd")
 
     DropDownPicker.setListMode("SCROLLVIEW");
     useEffect(() => {
@@ -54,43 +55,41 @@ export default function ProfileSetup({ navigation }) {
         }
     }
       
-      const [blood_type_open, setOpen] = useState(false);
-      const [blood_type_value, setValue] = useState(null);
-      const [blood_type, setBloodType] = useState([
-        {label: 'A', value: 'A'},
-        {label: 'B', value: 'B'},
-        {label: 'O', value: 'O'},
-        {label: 'AB', value: 'AB'}
+      const [health_type_open, setOpen] = useState(false);
+      const [health_type_value, setValue] = useState(null);
+      const [health_type, setHealthType] = useState([
+        {label: 'I manage my diabetes through diet only or I have pre-diabetes', value: '1'},
+        {label: 'I only take tablets for my diabetes', value: '2'},
+        {label: 'I inject insulin for my diabetes', value: '3'},
+        {label: '--Deselect--', value: '4'},
       ])
 
     return (
         <SafeAreaView>
-            <ScrollView >
+            <ScrollView>
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
                         Profile setup page.
                     </Text>
+                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                        Note that you do not need to fill all the fields. It is recommended though since it will allow us to prefil data for you in other places,
+                        such as any documents or diaries that you create within the app.
+                    </Text>
+
+                    <Text style={[GlobalStyle.CustomFont,styles.text]}> Please enter your NHS number. If you dont have an NHS number - leave this blank please :)</Text>
+
                     <TextInput
                         style={GlobalStyle.InputField}
-                        placeholder='Enter your name'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
+                        placeholder='Enter your NHS Number'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Enter your age'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Enter your height (cm)'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Enter your weight (kg)'
-                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
-                    />
+
+                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                        Please describe which of the options from the list below applies to you the most.
+                        Please try to give the most accurate answer, as this decision will tailor how the application will assist you with your diabetes.
+                    </Text>
+
                     <DropDownPicker
                         dropDownDirection="BOTTOM"
                         style={DropdownStyle.style}
@@ -103,21 +102,17 @@ export default function ProfileSetup({ navigation }) {
                         selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
                         showArrowIcon={true}
                         showTickIcon={true}
-                        placeholder="Select your blood group"
-                        open={blood_type_open}
-                        value={blood_type_value}
-                        items={blood_type}
+                        placeholder="Please select what applies to you the most"
+                        open={health_type_open}
+                        value={health_type_value}
+                        items={health_type}
                         setOpen={setOpen}
                         setValue={setValue}
-                        setItems={setBloodType}
-                        onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
+                        setItems={setHealthType}
+                        onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["health_type"]:value }), [])}
                     />
-                    <CustomButton
-                        style={{marginTop: 40}}
-                        title='Setup your profile!'
-                        color='#1eb900'
-                        onPressFunction={setData}
-                    />
+
+                    <ConditionalProfileView account_type = {health_type_value} set_data_function={setData}/>
 
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton

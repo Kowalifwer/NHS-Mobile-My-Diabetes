@@ -24,7 +24,7 @@ const ConditionalProfileView = props => {
     switch (account_type) {
     case "1":
     case "2":
-        return <View>
+        return <View style={styles.body}>
                 <TextInput
                     style={GlobalStyle.InputField}
                     placeholder='Enter your name'
@@ -63,10 +63,10 @@ const ConditionalProfileView = props => {
             {label: '4', value: '4'},
             {label: '5 or more', value: '5'}
         ])
-        return <View>
+        return <View style={styles.body}>
                     <DropDownPicker
                         dropDownDirection="BOTTOM"
-                        style={[DropdownStyle.style, {marginTop: 20, marginBottom: 200}]}
+                        style={[DropdownStyle.style, {marginTop: 20}]}
                         containerStyle={DropdownStyle.containerStyle}
                         placeholderStyle={DropdownStyle.placeholderStyle}
                         textStyle={DropdownStyle.textStyle}
@@ -87,12 +87,7 @@ const ConditionalProfileView = props => {
                     />
 
                     {daily_injections_value != null && //MAKE SURE USER SPECIFIES HOW MANY TIMES THEY INJECT DAILY - THEN MOVE ONTO THE REST.
-                        <View>
-                            <TextInput
-                            style={GlobalStyle.InputField}
-                            placeholder='Enter your name'
-                            onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
-                            />
+                        <View style={[styles.body, {marginTop: 50}]}>
                             <TextInput
                                 style={GlobalStyle.InputField}
                                 placeholder='Enter your name'
@@ -122,13 +117,25 @@ const ConditionalProfileView = props => {
                             />
                         </View>
                     }
-
-            
-    </View>
+                </View>
     default:
         console.log("None")
         return null;
     }
 };
+
+const styles = StyleSheet.create({
+    body: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#e9c5b4',
+    },
+    text: {
+        fontSize: 30,
+        marginBottom: 130,
+        textAlign: "center",
+    },
+})
+
 
 export default ConditionalProfileView;

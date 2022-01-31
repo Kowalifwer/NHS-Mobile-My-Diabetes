@@ -11,7 +11,7 @@ import Email from "./screens/Email";
 import BarcodeScanner from "./screens/BarcodeScanner";
 import EmailSetup from "./screens/EmailSetup";
 import { useFonts } from 'expo-font';
-import FoodDiary from './screens/FoodDiary';
+import FoodDiary from './screens/diaries/FoodDiary';
 import Diaries from './screens/Diaries';
 
 const Stack = createStackNavigator();

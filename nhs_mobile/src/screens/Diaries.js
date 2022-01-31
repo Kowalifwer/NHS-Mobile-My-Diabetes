@@ -9,7 +9,7 @@ import {
     ScrollView,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import FoodDiary from './FoodDiary';
+import FoodDiary from './diaries/FoodDiary';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
 import ConditionalProfileView from '../components/ConditionalProfileView';
@@ -21,18 +21,6 @@ import {diary_list} from '../global_structures.js'
 
 export default function Diaries({ navigation }) {
     console.log(diary_list)
-    const diary_buttons = diary_list.map((item, i) =>
-        <CustomButton
-            key={i}
-            onPressFunction={() => {
-                navigation.navigate(item.screen_name)
-            }}
-            color="#761076"
-            title={item.verbose_name}
-            style={GlobalStyle.button_style}
-        />
-    )
-    console.log(diary_buttons)
 
     return (
         <SafeAreaView style={styles.body}>
@@ -45,7 +33,27 @@ export default function Diaries({ navigation }) {
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
                         Here you can view your diaries and make changes to them.
                     </Text>
-                    {diary_buttons}
+
+                    {diary_list.map((item, i) =>
+                        <CustomButton
+                            key={i}
+                            onPressFunction={() => {
+                                navigation.navigate(item.screen_name)
+                            }}
+                            color="#761076"
+                            title={item.verbose_name}
+                            style={GlobalStyle.button_style}
+                        />
+                    )}
+
+                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 200}}>
+                        <CustomButton
+                            title='Go to Homepage directly'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Home")}
+                        />
+                    </View>
+
                 </View>
             </ScrollView>
         </SafeAreaView>

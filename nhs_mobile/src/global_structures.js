@@ -9,6 +9,8 @@ user_struct = {
     // Option 1  – I manage my diabetes through diet only or I have pre-diabetes  
     // Option 2 – I only take tablets for my diabetes
     // Option 3 – I inject insulin for my diabetes  
+    daily_injections: "",
+
 }
 
 //Stores the data for 1 entry in the foor diary. The equivalent in LocalStorage is 'FoodDiary'. 'FoodDiary' in LocalStorage is an array of all the entries logged by the user.

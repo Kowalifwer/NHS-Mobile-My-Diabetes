@@ -65,7 +65,7 @@ export default function ProfileSetup({ navigation }) {
       ])
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.body}>
             <ScrollView>
                 <View style={styles.body}>
                     <Header></Header>
@@ -77,7 +77,7 @@ export default function ProfileSetup({ navigation }) {
                         such as any documents or diaries that you create within the app.
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}> Please enter your NHS number. If you dont have an NHS number - leave this blank please :)</Text>
+                    <Text style={{fontSize: 20, margin: 5, color: "#FF00FF"}}> Please enter your NHS number. If you dont have an NHS number - leave this blank please :)</Text>
 
                     <TextInput
                         style={GlobalStyle.InputField}
@@ -85,7 +85,7 @@ export default function ProfileSetup({ navigation }) {
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])}
                     />
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={{fontSize: 20, margin: 5, color: "#FF00FF"}}>
                         Please describe which of the options from the list below applies to you the most.
                         Please try to give the most accurate answer, as this decision will tailor how the application will assist you with your diabetes.
                     </Text>
@@ -112,9 +112,9 @@ export default function ProfileSetup({ navigation }) {
                         onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["health_type"]:value }), [])}
                     />
 
-                    <ConditionalProfileView account_type = {health_type_value} set_data_function={setData}/>
+                    <ConditionalProfileView style={styles.body} account_type = {health_type_value} setData={setData} setDynamicUser={setDynamicUser}/>
 
-                    <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
+                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 200}}>
                         <CustomButton
                             title='Go to Homepage directly'
                             color='#761076'

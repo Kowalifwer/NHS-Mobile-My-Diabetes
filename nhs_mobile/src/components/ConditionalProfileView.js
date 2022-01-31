@@ -19,35 +19,36 @@ const ConditionalProfileView = props => {
     let {setDynamicUser} = props;
     let {account_type} = props;
     //a shared view that is used in multiple control flows
-    const shared_view = () => {return(<View style={[styles.body, {marginTop: 50}]}>
-                        <TextInput
-                            style={GlobalStyle.InputField}
-                            placeholder='Enter your name'
-                            onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
-                        />
-                        <TextInput
-                            style={GlobalStyle.InputField}
-                            placeholder='Enter your age'
-                            onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
-                        />
-                        <TextInput
-                            style={GlobalStyle.InputField}
-                            placeholder='Enter your height (cm)'
-                            onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
-                        />
-                        <TextInput
-                            style={GlobalStyle.InputField}
-                            placeholder='Enter your weight (kg)'
-                            onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
-                        />
+    const shared_view = () => {
+        return(<View style={[styles.body, {marginTop: 50}]}>
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your name'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
+                    />
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your age'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
+                    />
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your height (cm)'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
+                    />
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Enter your weight (kg)'
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
+                    />
 
-                        <CustomButton
-                            style={{marginTop: 40}}
-                            title='Setup your profile!'
-                            color='#1eb900'
-                            onPressFunction={setData}
-                        />
-                    </View>)}
+                    <CustomButton
+                        style={{marginTop: 40}}
+                        title='Setup your profile!'
+                        color='#1eb900'
+                        onPressFunction={setData}
+                    />
+                </View>)}
 
     switch (account_type) {
     case "1":

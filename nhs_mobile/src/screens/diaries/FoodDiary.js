@@ -15,7 +15,7 @@ import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
 import DropdownStyle from '../../styles/DropdownStyle';
 import user_struct from '../../global_structures.js'
-import food_diary_entry from '../../global_structures.js'
+import {food_diary_entry,health_type_reverse_lookup} from '../../global_structures.js'
 
 
 export default function FoodDiary({ navigation, route }) {
@@ -67,7 +67,8 @@ export default function FoodDiary({ navigation, route }) {
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
                         {/* how you can fetch parameters from the navigator */}
-                        Food Diary page. Your daily injections: {route.params?.daily_injections} 
+                        Food Diary page. Your daily injections: {route.params?.daily_injections}.
+                        Your selected status: {health_type_reverse_lookup[route.params?.health_type]}
                     </Text>
                     <TextInput
                         style={GlobalStyle.InputField}

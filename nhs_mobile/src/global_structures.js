@@ -1,3 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//global structures
 //Stores user profile data. The equivalent in LocalStorage is 'UserData'
 const user_struct = {
     nhs_number: "",
@@ -41,7 +44,16 @@ const diary_list = [ //make sure to define screen_name here, to match the names 
     //add other diaries here
 ]
 
-export {diary_list, food_diary_entry, user_struct}
+const health_type_reverse_lookup = { //reverse lookup for health type, into readable form.
+    1: "I manage my diabetes through diet only or I have pre-diabetes",
+    2: "I only take tablets for my diabetes",
+    3: "I inject insulin for my diabetes",
+}
+
+
+//global functions
+
+export {diary_list, food_diary_entry, user_struct, health_type_reverse_lookup}
 // diary_paths = {}
 
 // {item: "", brand: "", amount: ""}

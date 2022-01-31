@@ -76,7 +76,9 @@ export default function Home({ navigation, route }) {
                         <CustomButton
                             title='View/Update your profile'
                             color='#761076'
-                            onPressFunction={() => navigation.navigate("ProfileUpdate")}
+                            onPressFunction={() => navigation.navigate("ProfileUpdate", {
+                                stored_user: stored_user,
+                            })}
                         />
                         <CustomButton
                             title='Setup email recipients'

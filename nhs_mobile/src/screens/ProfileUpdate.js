@@ -12,7 +12,7 @@ import {
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
-import user_struct from '../global_structures.js';
+import {user_struct, health_type_reverse_lookup} from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
 
@@ -107,6 +107,12 @@ export default function Home({ navigation, route }) {
                     </Text>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
                         Your NHS number is {stored_user.nhs_number} kg
+                    </Text>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
+                        Your diabetes status is: {health_type_reverse_lookup[route.params?.stored_user.health_type]}
+                    </Text>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
+                        Your daily number of injections is {route.params?.stored_user.daily_injections}
                     </Text>
 
                     <TextInput

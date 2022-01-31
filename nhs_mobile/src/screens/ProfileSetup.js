@@ -40,19 +40,14 @@ export default function ProfileSetup({ navigation }) {
     }
 
     const setData = async () => {
-        if (Object.values(dynamic_user).every(x => x !== '')) {
-            try {
-                console.log(dynamic_user)
-                await AsyncStorage.setItem('UserData', JSON.stringify(dynamic_user));
-                navigation.navigate('Home');
-            } catch (error) {
-                console.log(error);
-            }
-
-        } else {
-            Alert.alert('Warning!', 'Please write your data.')
-            console.log('You have an empty field!')
+        try {
+            console.log(dynamic_user)
+            await AsyncStorage.setItem('UserData', JSON.stringify(dynamic_user));
+            navigation.navigate('Home');
+        } catch (error) {
+            console.log(error);
         }
+
     }
       
       const [health_type_open, setOpen] = useState(false);

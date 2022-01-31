@@ -21,7 +21,6 @@ export default function Home({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [stored_user, setStoredUser] = useState(user_struct)
 
-
     useEffect(() => {
         getUserData();
     }, []);
@@ -107,8 +106,9 @@ export default function Home({ navigation, route }) {
                         Your weight is {stored_user.weight} kg
                     </Text>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your blood type is {stored_user.blood_type}
+                        Your NHS number is {stored_user.nhs_number} kg
                     </Text>
+
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder= {"Update your name"}
@@ -128,6 +128,11 @@ export default function Home({ navigation, route }) {
                         style={GlobalStyle.InputField}
                         placeholder={"Update your weight"}
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
+                    />
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder= {"Update your NHS number"}
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])} //updating the dict
                     />
             
                     <CustomButton

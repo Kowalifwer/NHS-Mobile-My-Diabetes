@@ -18,7 +18,7 @@ import user_struct from '../../global_structures.js'
 import food_diary_entry from '../../global_structures.js'
 
 
-export default function FoodDiary({ navigation }) {
+export default function FoodDiary({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
 
@@ -66,7 +66,8 @@ export default function FoodDiary({ navigation }) {
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Food Diary page
+                        {/* how you can fetch parameters from the navigator */}
+                        Food Diary page. Your daily injections: {route.params?.daily_injections} 
                     </Text>
                     <TextInput
                         style={GlobalStyle.InputField}

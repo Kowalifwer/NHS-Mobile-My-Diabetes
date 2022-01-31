@@ -34,11 +34,15 @@ export default function Diaries({ navigation }) {
                         Here you can view your diaries and make changes to them.
                     </Text>
 
+                    {/* we can iterate over a list of diaries here (once we have them) and create buttons that link to their respective screens */}
                     {diary_list.map((item, i) =>
                         <CustomButton
                             key={i}
                             onPressFunction={() => {
-                                navigation.navigate(item.screen_name)
+                                
+                                navigation.navigate(item.screen_name, { // we can pass paramters to the .navigate function here, such as the number of insulin readings etc.. to then use in the respective Diary screen.
+                                    daily_injections: Math.floor(Math.random() * 8),
+                                })
                             }}
                             color="#761076"
                             title={item.verbose_name}

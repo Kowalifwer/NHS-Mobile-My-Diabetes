@@ -61,7 +61,7 @@ export default function FoodDiary({ navigation }) {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.body}> 
             <ScrollView >
                 <View style={styles.body}>
                     <Header></Header>

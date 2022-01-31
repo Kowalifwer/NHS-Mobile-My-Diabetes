@@ -17,11 +17,22 @@ import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
-import {user_struct} from '../global_structures.js'
+import {diary_list} from '../global_structures.js'
 
 export default function Diaries({ navigation }) {
-    const [dynamic_user, setDynamicUser] = useState(user_struct)
-    console.log("xd")
+    console.log(diary_list)
+    const diary_buttons = diary_list.map((item, i) =>
+        <CustomButton
+            key={i}
+            onPressFunction={() => {
+                navigation.navigate(item.screen_name)
+            }}
+            color="#761076"
+            title={item.verbose_name}
+            style={GlobalStyle.button_style}
+        />
+    )
+    console.log(diary_buttons)
 
     return (
         <SafeAreaView style={styles.body}>
@@ -34,11 +45,7 @@ export default function Diaries({ navigation }) {
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
                         Here you can view your diaries and make changes to them.
                     </Text>
-                    <CustomButton
-                            title="Food Diary"
-                            color="#761076"
-                            onPressFunction={() => navigation.navigate("FoodDiary")}
-                    />
+                    {diary_buttons}
                 </View>
             </ScrollView>
         </SafeAreaView>

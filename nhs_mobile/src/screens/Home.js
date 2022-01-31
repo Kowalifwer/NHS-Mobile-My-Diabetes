@@ -13,7 +13,7 @@ import {
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
-import user_struct from '../global_structures.js';
+import {user_struct} from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
 

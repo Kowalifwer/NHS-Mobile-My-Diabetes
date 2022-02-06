@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from "react-dom";
 import {
     View,
     StyleSheet,
@@ -21,6 +22,12 @@ import food_diary_entry from '../global_structures.js'
 export default function FoodDiary({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
+    const [food_input_components, setFoodInputComponents] = useState([]); // this part makes it so when you edit food_inputs it gets re-rendered instantly
+    const [foods, setFoods] = useState([]);
+
+    console.log("This is the food diary on creation: ");
+    console.log(diary_entry);
+    console.log("/////////////////");
 
     useEffect(() => {
         getOrCreateFoodDiary();
@@ -46,6 +53,7 @@ export default function FoodDiary({ navigation }) {
     const appendToDiary = async () => {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
+                diary_entry["food"] = food_input_components.map((component) => component.dict)
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
                 diary.push(diary_entry);
                 await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
@@ -59,6 +67,39 @@ export default function FoodDiary({ navigation }) {
             console.log("empty field in form")
         }
     }
+
+    // this is the food input which gets added to the page when user clicks the + button
+    class FoodInputComponent extends React.Component {
+        constructor() {
+            super();
+            this.dict = {name: "", brand: "", amount: ""};
+        }
+
+        render() {
+            return (
+                <View>
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Food Name'
+                        onChangeText={(value) => {
+                            this.dict["name"] = value
+                        }}
+                    />
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Brand'
+                        onChangeText={(value) => {
+                            this.dict["brand"] = value
+                        }}
+                    />
+                </View>
+            );
+        }
+    }
+
+    function addFoodInputComponent() {
+        setFoodInputComponents(food_input_components => [...food_input_components, new FoodInputComponent()]);
+    } // maybe this will work ??
 
     return (
         <SafeAreaView>
@@ -83,11 +124,10 @@ export default function FoodDiary({ navigation }) {
                         placeholder='time'
                         onChangeText={(value) => setDiaryEntry(state => ({ ...state, ["time"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='food'
-                        onChangeText={(value) => setDiaryEntry(state => ({ ...state, ["food"]:value }), [])}
-                    />
+
+                    <CustomButton onPressFunction={addFoodInputComponent} title="+"/>
+                    {food_input_components.map((input_component) => input_component.render())}
+
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'

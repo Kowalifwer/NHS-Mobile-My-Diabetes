@@ -15,19 +15,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js'
-import food_diary_entry from '../global_structures.js'
+import user_struct from '../global_structures.js';
+import food_diary_entry from '../global_structures.js';
+import NumberInput from '../components/NumberInput';
 
 
 export default function FoodDiary({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
     const [food_input_components, setFoodInputComponents] = useState([]); // this part makes it so when you edit food_inputs it gets re-rendered instantly
-    const [foods, setFoods] = useState([]);
-
-    console.log("This is the food diary on creation: ");
-    console.log(diary_entry);
-    console.log("/////////////////");
 
     useEffect(() => {
         getOrCreateFoodDiary();
@@ -91,6 +87,9 @@ export default function FoodDiary({ navigation }) {
                         onChangeText={(value) => {
                             this.dict["brand"] = value
                         }}
+                    />
+                    <NumberInput
+                        label="Weight or Amount"
                     />
                 </View>
             );

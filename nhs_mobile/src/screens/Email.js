@@ -25,6 +25,7 @@ export default function Email({navigation}) {
     DropDownPicker.setListMode("SCROLLVIEW");
     const [selected, setSelectedRecipient] = useState("")
     const [selectedDiary, setSelectedDiary] = useState("")
+    const [htmlContent, setHtmlContent] = useState("");
 
     const [email_open, setEmailOpen] = useState(false);
     const [email_value, setEmailValue] = useState(null);
@@ -37,7 +38,7 @@ export default function Email({navigation}) {
     const [diaryItems, setDiaryItems] = useState([
         {label: 'Blood Pressure', value: 'Blood Pressure'},
         {label: 'Food Diary', value: 'Food Diary'},
-        {label: 'Glucode Diary', value: 'Glucode Diary'}
+        {label: 'Glucose Diary', value: 'Glucose Diary'}
     ]);
 
     // For DropDownPicker to close a picker when another opened
@@ -49,10 +50,44 @@ export default function Email({navigation}) {
         setEmailOpen(false);
     }, []);
 
+    //BLOOD PRESSURE JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data.
+    const bloodPressure = [{
+        "date": "15/01/2021",
+        "morning": {"arm": "left",
+                    "sys1": {"bp": 148, "time": "11:00"},
+                    "sys2": {"bp": 117, "time": "11:30"},
+                    "dia1": {"bp": 90, "time": "11:00"},
+                    "dia2": {"bp": 76, "time": "11:30"},
+                    "sys_avg": 132,
+                    "dia_avg": 83},
+        "evening": {"arm": "right",
+                    "sys1": {"bp": 141, "time": "16:00"},
+                    "sys2": {"bp": 110, "time": "16:30"},
+                    "dia1": {"bp": 86, "time": "16:00"},
+                    "dia2": {"bp": 70, "time": "16:30"},
+                    "sys_avg": 126,
+                    "dia_avg": 78}
+    },
+    {
+        "date": "16/01/2021",
+        "morning": {"arm": "right",
+                    "sys1": {"bp": 11248, "time": "11:00"},
+                    "sys2": {"bp": 11327, "time": "11:30"},
+                    "dia1": {"bp": 2130, "time": "11:00"},
+                    "dia2": {"bp": 71236, "time": "11:30"},
+                    "sys_avg": 21412,
+                    "dia_avg": 234},
+        "evening": {"arm": "left",
+                    "sys1": {"bp": 123, "time": "16:00"},
+                    "sys2": {"bp": 134, "time": "16:30"},
+                    "dia1": {"bp": 8232, "time": "16:00"},
+                    "dia2": {"bp": 72442, "time": "16:30"},
+                    "sys_avg": 124124,
+                    "dia_avg": 23}
+    }]
 
-    //Will be changed to not populate this page with lots of sccript information later. Currently optimising for blood pressure diary
-    /*
-    const htmlContent = `
+    // Blood Pressure Diary HTML
+    const bloodpressureHTML = `
     <!DOCTYPE html>
     <html lang="en">
     
@@ -61,8 +96,12 @@ export default function Email({navigation}) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${selectedDiary}</title>
         <style>
-            table, th, tr {
+            table, th, tr, td {
                 border:1px solid black;
+            }
+
+            td {
+                text-align: center;
             }
         </style>
     </head>
@@ -97,7 +136,6 @@ export default function Email({navigation}) {
         
         </table>
         
-        
         <br>
         <!--Average Results Table-->
         <p>Average Results Table</p>
@@ -114,46 +152,13 @@ export default function Email({navigation}) {
             <tbody id="averageResults"></tbody>
         
         </table>
-    
+        
         <script>
-            //BLOOD PRESSURE JSON
-            var bloodPressure = [{
-                "date": "15/01/2021",
-                "morning": {"arm": "left",
-                            "sys1": {"bp": 148, "time": "11:00"},
-                            "sys2": {"bp": 117, "time": "11:30"},
-                            "dia1": {"bp": 90, "time": "11:00"},
-                            "dia2": {"bp": 76, "time": "11:30"},
-                            "sys_avg": 132,
-                            "dia_avg": 83},
-                "evening": {"arm": "right",
-                            "sys1": {"bp": 141, "time": "16:00"},
-                            "sys2": {"bp": 110, "time": "16:30"},
-                            "dia1": {"bp": 86, "time": "16:00"},
-                            "dia2": {"bp": 70, "time": "16:30"},
-                            "sys_avg": 126,
-                            "dia_avg": 78}
-            },
-            {
-                "date": "16/01/2021",
-                "morning": {"arm": "right",
-                            "sys1": {"bp": 11248, "time": "11:00"},
-                            "sys2": {"bp": 11327, "time": "11:30"},
-                            "dia1": {"bp": 2130, "time": "11:00"},
-                            "dia2": {"bp": 71236, "time": "11:30"},
-                            "sys_avg": 21412,
-                            "dia_avg": 234},
-                "evening": {"arm": "left",
-                            "sys1": {"bp": 123, "time": "16:00"},
-                            "sys2": {"bp": 134, "time": "16:30"},
-                            "dia1": {"bp": 8232, "time": "16:00"},
-                            "dia2": {"bp": 72442, "time": "16:30"},
-                            "sys_avg": 124124,
-                            "dia_avg": 23}
-            }]
+
+            //BLOOD PRESSURE JSON        
+            const bloodPressure = ${JSON.stringify(bloodPressure)};
             
-            // needs slash star when fixed 
-            
+            /*
             (((Object.keys(jcontent[0].morning).length)-3)/2)+1              
             
             Iterates for amount of rows for sys and dia results. Since the amount of sys and dia results will vary depending on amount user inputs. 
@@ -161,44 +166,32 @@ export default function Email({navigation}) {
             Next, divided by 2 since there are multiple fields for a result (sys1 and dia1 equate to 2 fields but in reality they only take 1 row). 
             Addition of 1 is for index through the array easier.
             
-            // need star slash when fixed
+            */
             
             // Daily Results Scripting
             var dailyResults = document.getElementById('dailyResults');
             
+            //Loops through each day in the JSON
             for (var day=0; day <bloodPressure.length; day++) {
+
+                // Get Morning information from JSON and plots into daily results table
                 for (var morn=1; morn < (((Object.keys(bloodPressure[day].morning).length)-3)/2)+1; morn++) {
                     var sys = "sys";
-                      var dia = "dia";
-                      var sysX = sys + morn;
-                      var diaX = dia + morn;
-                    
-                    var row = `<tr>
-                                <td>${bloodPressure[day].date}</td>
-                                <td>${bloodPressure[day].morning[sysX].time}</td>
-                                <td>Morning</td>
-                                <td>${bloodPressure[day].morning[sysX].bp}</td>
-                                <td>${bloodPressure[day].morning[diaX].bp}</td>
-                                <td>${bloodPressure[day].morning.arm}</td>
-                              </tr>`
-                  dailyResults.innerHTML += row
+                    var dia = "dia";
+                    var sysX = sys + morn;
+                    var diaX = dia + morn;
+
+                    dailyResults.innerHTML += '<tr>'+ '<td>' + bloodPressure[day].date + '</td>' + '<td>' + bloodPressure[day].morning[sysX].time + '</td>' + '<td>Morning</td>' + '<td>' + bloodPressure[day].morning[sysX].bp + '</td>' + '<td>' + bloodPressure[day].morning[diaX].bp + '</td>' + '<td>' + bloodPressure[day].morning.arm + '</td>' + '</tr>'
                 }
-                
+
+                // Get Evening information from JSON and plots into daily results table
                 for (var eveng=1; eveng < (((Object.keys(bloodPressure[day].evening).length)-3)/2)+1; eveng++) {
                     var sys = "sys";
                       var dia = "dia";
                       var sysX = sys + eveng;
                       var diaX = dia + eveng;
-                    
-                    var row = `<tr>
-                                <td>${bloodPressure[day].date}</td>
-                                <td>${bloodPressure[day].evening[sysX].time}</td>
-                                <td>Evening</td>
-                                <td>${bloodPressure[day].evening[sysX].bp}</td>
-                                <td>${bloodPressure[day].evening[diaX].bp}</td>
-                                <td>${bloodPressure[day].evening.arm}</td>
-                                </tr>`
-                  dailyResults.innerHTML += row
+
+                  dailyResults.innerHTML += '<tr>' + '<td>' + bloodPressure[day].date + '</td>' + '<td>' + bloodPressure[day].evening[sysX].time + '</td>' + '<td>Evening</td>' + '<td>' + bloodPressure[day].evening[sysX].bp + '</td>' + '<td>' + bloodPressure[day].evening[diaX].bp + '</td>' + '<td>' + bloodPressure[day].evening.arm + '</td>' + '</tr>'
                 }
                 
             }
@@ -207,24 +200,26 @@ export default function Email({navigation}) {
             var averageResults = document.getElementById('averageResults');
             
             for (var day=0; day <bloodPressure.length; day++) {
-    
-                    var row = `<tr>
-                                <td>${bloodPressure[day].date}</td>
-                                  <td>${bloodPressure[day].morning.sys_avg}</td>
-                                <td>${bloodPressure[day].morning.dia_avg}</td>
-                                <td>${bloodPressure[day].evening.sys_avg}</td>
-                                <td>${bloodPressure[day].evening.dia_avg}</td>
-                              </tr>`
-                  averageResults.innerHTML += row
+
+                  averageResults.innerHTML += '<tr>' + '<td>' + bloodPressure[day].date + '</td>' + '<td>' + bloodPressure[day].morning.sys_avg + '</td>' + '<td>' + bloodPressure[day].morning.dia_avg + '</td>' + '<td>' + bloodPressure[day].evening.sys_avg + '</td>' + '<td>' + bloodPressure[day].evening.dia_avg + '</td>' + '</tr>'
             }
-            
+
         </script>
-    
+
     </body>
     
     </html>
 `
-*/
+    function changeHtmlContent() {
+        console.log("at this moment the slected diary is" + selectedDiary);
+
+        if (selectedDiary === "Blood Pressure") {
+            setHtmlContent(bloodpressureHTML);
+        } else {
+            //console.log("at this moment the slected diary is" + selectedDiary);
+            setHtmlContent("hi");
+        }
+    }
 
 
     /*
@@ -319,7 +314,7 @@ export default function Email({navigation}) {
                         setOpen={setDiaryOpen}
                         setValue={setDiaryValue}
                         setItems={setDiaryItems}
-                        onChangeValue={value => setSelectedDiary(value)}
+                        onChangeValue={value => setSelectedDiary(value) && changeHtmlContent()}
                     />
 
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>

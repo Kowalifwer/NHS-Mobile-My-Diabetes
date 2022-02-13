@@ -12,6 +12,7 @@ import BarcodeScanner from "./screens/BarcodeScanner";
 import EmailSetup from "./screens/EmailSetup";
 import { useFonts } from 'expo-font';
 import FoodDiary from './screens/FoodDiary';
+import BPDiary from './screens/BPDiary';
 
 const Stack = createStackNavigator();
 
@@ -98,6 +99,13 @@ function App() {
           }}
           component={FoodDiary}
         />
+        <Stack.Screen
+          name="BPDiary"
+          options={{
+            headerShown: false,
+          }}
+          component={BPDiary}
+        />        
       </Stack.Navigator>
     </NavigationContainer>
   )

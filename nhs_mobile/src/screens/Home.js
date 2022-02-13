@@ -104,6 +104,11 @@ export default function Home({ navigation, route }) {
                             onPressFunction={() => navigation.navigate("FoodDiary")}
                         />
                         <CustomButton
+                            title="Blood Pressure Diary"
+                            color="#761076"
+                            onPressFunction={() => navigation.navigate("BPDiary")}
+                        />                        
+                        <CustomButton
                             title='Wipe all local data (warning)'
                             color='red'
                             onPressFunction={clearAll}

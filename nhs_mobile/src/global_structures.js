@@ -1,5 +1,6 @@
 user_struct = {name: "", age: "", height: "", weight: "", blood_type: ""}
 food_diary_entry = {date: "", meal: "", time: "", food: [], water: "", kcal: "", fat: "", carb: "", sugar: "", protein: ""}
+bp_diary_entry = {date: "", readings: [], systolic_avg: "", diastolic_avg: ""}
 
 
 diary_dict = {}

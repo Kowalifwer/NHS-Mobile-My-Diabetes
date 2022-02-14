@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 //global structures
 //Stores user profile data. The equivalent in LocalStorage is 'UserData'
 const user_struct = {
@@ -27,6 +25,13 @@ const food_diary_entry = {
     carb: "",
     sugar: "",
     protein: ""
+}
+
+const bp_diary_entry = {
+    date: "",
+    readings: [],
+    systolic_avg: "",
+    diastolic_avg: ""
 }
 
 const food_diary = {screen_name: "FoodDiary", verbose_name: "Food Diary", entries: []} //food diary

@@ -305,19 +305,19 @@ export default function Email({navigation}) {
 
         //makes html code to pdf and saves to Filesystem Cache Directory
         
-        const  { uri }  = await Print.printToFileAsync({
-            htmlContent
+        const file_object = await Print.printToFileAsync({
+            html: htmlContent,
         });
         
        
         try{
-            console.log('this is uri ', uri);
+            // console.log(file_object.base64);
             let emailResult = await MailComposer.composeAsync({
-                recipients: [selected],
+                recipients: (selected != null) ? [selected] : [],
                 subject: 'Test email',
-                attachments: [uri],
+                attachments: [file_object.uri],
             });
-            console.log('email result: ', emailResult.status);
+            (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
         } catch (e) {
             console.log(e);
         }

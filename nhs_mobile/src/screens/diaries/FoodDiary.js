@@ -11,18 +11,18 @@ import {
     Button,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from '../components/Header';
-import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js';
-import food_diary_entry from '../global_structures.js';
-import FoodInputComponent from '../components/FoodInputComponent';
+import Header from '../../components/Header';
+import GlobalStyle from '../../styles/GlobalStyle';
+import DropdownStyle from '../../styles/DropdownStyle';
+import user_struct from '../../global_structures.js'
+import {food_diary_entry,health_type_reverse_lookup} from '../../global_structures.js'
+import FoodInputComponent from '../../components/FoodInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
-export default function FoodDiary({ navigation }) {
+export default function FoodDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
     const [food_input_components, setFoodInputComponents] = useState([new FoodInputComponent()]); // this part makes it so when you edit food_inputs it gets re-rendered instantly
     
@@ -73,12 +73,14 @@ export default function FoodDiary({ navigation }) {
     } // maybe this will work ??
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.body}> 
             <ScrollView keyboardShouldPersistTaps="handheld">
-                <View style={styles.body} key={"????"}>
+                <View style={styles.body}>
                     <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont, styles.text]}>
-                        Food Diary page
+                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                        {/* how you can fetch parameters from the navigator */}
+                        Food Diary page. Your daily injections: {route.params?.daily_injections}.
+                        Your selected status: {health_type_reverse_lookup[route.params?.health_type]}
                     </Text>
 
                     {showDatePicker && (

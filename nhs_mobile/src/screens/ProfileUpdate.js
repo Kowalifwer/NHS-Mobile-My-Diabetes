@@ -12,7 +12,7 @@ import {
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
-import user_struct from '../global_structures.js';
+import {user_struct, health_type_reverse_lookup} from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
 
@@ -20,7 +20,6 @@ import DropdownStyle from '../styles/DropdownStyle';
 export default function Home({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [stored_user, setStoredUser] = useState(user_struct)
-
 
     useEffect(() => {
         getUserData();
@@ -86,15 +85,6 @@ export default function Home({ navigation, route }) {
         }
     }
 
-    const [blood_type_open, setOpen] = useState(false);
-    const [blood_type_value, setValue] = useState(null);
-    const [blood_type, setBloodType] = useState([
-        {label: 'A', value: 'A'},
-        {label: 'B', value: 'B'},
-        {label: 'O', value: 'O'},
-        {label: 'AB', value: 'AB'}
-    ])
-
     return (
         <SafeAreaView style={styles.body}>
             <ScrollView>
@@ -116,8 +106,15 @@ export default function Home({ navigation, route }) {
                         Your weight is {stored_user.weight} kg
                     </Text>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your blood type is {stored_user.blood_type}
+                        Your NHS number is {stored_user.nhs_number} kg
                     </Text>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
+                        Your diabetes status is: {health_type_reverse_lookup[route.params?.stored_user.health_type]}
+                    </Text>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
+                        Your daily number of injections is {route.params?.stored_user.daily_injections}
+                    </Text>
+
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder= {"Update your name"}
@@ -138,27 +135,12 @@ export default function Home({ navigation, route }) {
                         placeholder={"Update your weight"}
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
-                        placeholder="Update your blood type"
-                        open={blood_type_open}
-                        value={blood_type_value}
-                        items={blood_type}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setBloodType}
-                        onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["blood_type"]:value }), [])}
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder= {"Update your NHS number"}
+                        onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])} //updating the dict
                     />
+            
                     <CustomButton
                         style={{marginTop: 40}}
                         title='Update Profile'

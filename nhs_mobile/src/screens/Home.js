@@ -13,7 +13,7 @@ import {
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
-import user_struct from '../global_structures.js';
+import {user_struct} from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
 
@@ -76,7 +76,9 @@ export default function Home({ navigation, route }) {
                         <CustomButton
                             title='View/Update your profile'
                             color='#761076'
-                            onPressFunction={() => navigation.navigate("ProfileUpdate")}
+                            onPressFunction={() => navigation.navigate("ProfileUpdate", {
+                                stored_user: stored_user,
+                            })}
                         />
                         <CustomButton
                             title='Setup email recipients'
@@ -99,9 +101,9 @@ export default function Home({ navigation, route }) {
                             onPressFunction={() => navigation.navigate("BarcodeScanner")}
                         />
                         <CustomButton
-                            title="Food Diary"
+                            title="My Diaries"
                             color="#761076"
-                            onPressFunction={() => navigation.navigate("FoodDiary")}
+                            onPressFunction={() => navigation.navigate("Diaries")}
                         />
                         <CustomButton
                             title='Wipe all local data (warning)'

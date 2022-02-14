@@ -9,16 +9,16 @@ import {
     ScrollView,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from '../components/Header';
-import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js'
-import food_diary_entry from '../global_structures.js'
+import Header from '../../components/Header';
+import GlobalStyle from '../../styles/GlobalStyle';
+import DropdownStyle from '../../styles/DropdownStyle';
+import user_struct from '../../global_structures.js'
+import {food_diary_entry,health_type_reverse_lookup} from '../../global_structures.js'
 
 
-export default function FoodDiary({ navigation }) {
+export default function FoodDiary({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
 
@@ -61,12 +61,14 @@ export default function FoodDiary({ navigation }) {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.body}> 
             <ScrollView >
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Food Diary page
+                        {/* how you can fetch parameters from the navigator */}
+                        Food Diary page. Your daily injections: {route.params?.daily_injections}.
+                        Your selected status: {health_type_reverse_lookup[route.params?.health_type]}
                     </Text>
                     <TextInput
                         style={GlobalStyle.InputField}

@@ -8,7 +8,8 @@ import {
     Alert,
     SafeAreaView, 
     ScrollView,
-    StatusBar
+    StatusBar,
+    Button
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
@@ -25,12 +26,17 @@ export default function Email({navigation}) {
     DropDownPicker.setListMode("SCROLLVIEW");
     const [selected, setSelectedRecipient] = useState("")
     const [selectedDiary, setSelectedDiary] = useState("")
-    const [htmlContent, setHtmlContent] = useState("");
+    let htmlContent = "";
 
     const [email_open, setEmailOpen] = useState(false);
     const [email_value, setEmailValue] = useState(null);
     const [email, setEmail] = useState([]);
 
+    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]);
+    //const [bloodPressureDiaryJSON, setBloodPressureDiaryJSON] = useState([]); Will be uncommented and worked on when Blood Pressure Diary Implemented.
+    //const [glucoseDiaryJSON, setGlucoseDiaryJSON] = useState([]); Will be uncommented and worked on when Glucose Diary Implemented.
+
+    // Used for DropDownPicker. Automatically closes and opens picker depending on these values.
     const [diary_open, setDiaryOpen] = useState(false);
     const [diary_value, setDiaryValue] = useState(null);
 
@@ -51,7 +57,7 @@ export default function Email({navigation}) {
     }, []);
 
     //BLOOD PRESSURE JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data.
-    const bloodPressure = [{
+    const bloodPressureDiaryJSON = [{
         "date": "15/01/2021",
         "morning": {"arm": "left",
                     "sys1": {"bp": 148, "time": "11:00"},
@@ -86,6 +92,11 @@ export default function Email({navigation}) {
                     "dia_avg": 23}
     }]
 
+    //other Diary HTML
+
+    const foodHTML = `PLACEHOLDER FOR FOOD DIARY HTML`
+    const glucoseHTML = `PLACEHOLDER FOR GLUCOSE DIARY HTML`
+
     // Blood Pressure Diary HTML
     const bloodpressureHTML = `
     <!DOCTYPE html>
@@ -107,6 +118,7 @@ export default function Email({navigation}) {
     </head>
     
     <body>
+        <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM BLOOD PRESSURE DIARY TO BE IMPLEMENTED </h3>
         <h1>Diary: ${selectedDiary}</h1>
         <h1>NHS Number: TO BE IMPLEMENTED </h1>
         <h1>Date Generated: <span id="date"></span></h1>
@@ -156,7 +168,7 @@ export default function Email({navigation}) {
         <script>
 
             //BLOOD PRESSURE JSON        
-            const bloodPressure = ${JSON.stringify(bloodPressure)};
+            const bloodPressure = ${JSON.stringify(bloodPressureDiaryJSON)};
             
             /*
             (((Object.keys(jcontent[0].morning).length)-3)/2)+1              
@@ -210,19 +222,21 @@ export default function Email({navigation}) {
     
     </html>
 `
+    // Changes htmlContent variable depending on what diary is selected to be sent
     function changeHtmlContent() {
-        console.log("at this moment the slected diary is" + selectedDiary);
 
-        if (selectedDiary === "Blood Pressure") {
-            setHtmlContent(bloodpressureHTML);
+        if (selectedDiary == "Blood Pressure") {
+            htmlContent = bloodpressureHTML;
+        } else if (selectedDiary == "Food Diary") {
+            htmlContent = foodHTML;
+        } else if (selectedDiary == "Glucose Diary") {
+            htmlContent = glucoseHTML;
         } else {
-            //console.log("at this moment the slected diary is" + selectedDiary);
-            setHtmlContent("hi");
+            htmlContent = "SOMETHING WENT WRONG"
         }
     }
 
-
-    /*
+    /* 
     // To share the pdf file
     const printToFile = async () => {
         // On iOS/android prints the given html. On web prints the HTML from the current page.
@@ -238,21 +252,44 @@ export default function Email({navigation}) {
 
     useEffect(() => {
         getUserData();
+   //     getFoodDiaryData();
     }, []);
 
-
-    const getData = async () => {
+    // General function to get Data from AsyncStorage. Depending on variable passed it will get data on different listings in AsyncStorage.
+    const getData = async (jsonDataType) => {
         try {
-          const jsonValue = await AsyncStorage.getItem('EmailData')
+          const jsonValue = await AsyncStorage.getItem(jsonDataType)
           return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
           // error reading value
         }
     }
 
+    
+    /* TO BE WORKED ON
+    // Gets JSON data of the Food Diary from AsyncStorage
+    const getFoodDiaryData = async() => {
+        try {
+            var foodDiary = await getData('FoodDiary');
+            console.log(foodDiary)
+            setFoodDiaryJSON([]);
+
+            //Adds each item in array to variable foodDiaryJSON by looping through
+            for (var i =0; i< foodDiary.length; i++) {
+                setFoodDiaryJSON(state =>, [])
+            }
+        } catch (e) {
+            // error reading value
+        }
+    }
+    */
+
+
+
+    // Gets email recepients AsyncStorage
     const getUserData = async () => {
         try {
-            var recipients = await getData();
+            var recipients = await getData('EmailData');
             console.log(recipients)
             setEmail([]);
             for (var i = 0; i < recipients.length; i++) {
@@ -263,6 +300,7 @@ export default function Email({navigation}) {
         }
     }
 
+    /*
     const composeMail = async() => {
 
         //makes html code to pdf and saves to Filesystem Cache Directory
@@ -280,6 +318,29 @@ export default function Email({navigation}) {
                 attachments: [uri],
             });
             console.log('email result: ', emailResult.status);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    */
+
+    const composeMail = async() => {
+        //makes html code to pdf and saves to Filesystem Cache Directory
+        
+        changeHtmlContent();
+
+        const file_object = await Print.printToFileAsync({
+            html: htmlContent,
+        });
+       
+        try{
+            // console.log(file_object.base64);
+            let emailResult = await MailComposer.composeAsync({
+                recipients: (selected != null) ? [selected] : [],
+                subject: 'Test email',
+                attachments: [file_object.uri],
+            });
+            (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
         } catch (e) {
             console.log(e);
         }
@@ -314,7 +375,7 @@ export default function Email({navigation}) {
                         setOpen={setDiaryOpen}
                         setValue={setDiaryValue}
                         setItems={setDiaryItems}
-                        onChangeValue={value => setSelectedDiary(value) && changeHtmlContent()}
+                        onChangeValue={value => setSelectedDiary(value)}
                     />
 
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>

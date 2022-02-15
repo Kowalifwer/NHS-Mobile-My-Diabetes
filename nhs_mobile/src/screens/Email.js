@@ -32,7 +32,7 @@ export default function Email({navigation}) {
     const [email_value, setEmailValue] = useState(null);
     const [email, setEmail] = useState([]);
 
-    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]);
+    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]); Will be uncommented and worked on when Food Diary Implemented.
     //const [bloodPressureDiaryJSON, setBloodPressureDiaryJSON] = useState([]); Will be uncommented and worked on when Blood Pressure Diary Implemented.
     //const [glucoseDiaryJSON, setGlucoseDiaryJSON] = useState([]); Will be uncommented and worked on when Glucose Diary Implemented.
 
@@ -93,7 +93,6 @@ export default function Email({navigation}) {
     }]
 
     //other Diary HTML
-
     const foodHTML = `PLACEHOLDER FOR FOOD DIARY HTML`
     const glucoseHTML = `PLACEHOLDER FOR GLUCOSE DIARY HTML`
 
@@ -105,7 +104,7 @@ export default function Email({navigation}) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${selectedDiary}</title>
+        <title>Blood Pressure Diary</title>
         <style>
             table, th, tr, td {
                 border:1px solid black;
@@ -119,7 +118,7 @@ export default function Email({navigation}) {
     
     <body>
         <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM BLOOD PRESSURE DIARY TO BE IMPLEMENTED </h3>
-        <h1>Diary: ${selectedDiary}</h1>
+        <h1>Diary: Blood Pressure</h1>
         <h1>NHS Number: TO BE IMPLEMENTED </h1>
         <h1>Date Generated: <span id="date"></span></h1>
     
@@ -223,19 +222,18 @@ export default function Email({navigation}) {
     </html>
 `
     // Changes htmlContent variable depending on what diary is selected to be sent
-    function changeHtmlContent() {
-
-        if (selectedDiary == "Blood Pressure") {
+    function changeHtmlContent(index) {
+        
+        if (selectedDiary[index] == "Blood Pressure") {
             htmlContent = bloodpressureHTML;
-        } else if (selectedDiary == "Food Diary") {
+        } else if (selectedDiary[index] == "Food Diary") {
             htmlContent = foodHTML;
-        } else if (selectedDiary == "Glucose Diary") {
+        } else if (selectedDiary[index] == "Glucose Diary") {
             htmlContent = glucoseHTML;
         } else {
             htmlContent = "SOMETHING WENT WRONG"
         }
     }
-
     /* 
     // To share the pdf file
     const printToFile = async () => {
@@ -264,7 +262,6 @@ export default function Email({navigation}) {
           // error reading value
         }
     }
-
     
     /* TO BE WORKED ON
     // Gets JSON data of the Food Diary from AsyncStorage
@@ -284,8 +281,6 @@ export default function Email({navigation}) {
     }
     */
 
-
-
     // Gets email recepients AsyncStorage
     const getUserData = async () => {
         try {
@@ -300,45 +295,42 @@ export default function Email({navigation}) {
         }
     }
 
-    /*
+    //Composes Email based on diary chosen by user
     const composeMail = async() => {
 
-        //makes html code to pdf and saves to Filesystem Cache Directory
-        
-        const file_object = await Print.printToFileAsync({
-            html: htmlContent,
-        });
-        
-       
-        try{
-            // console.log(file_object.base64);
-            let emailResult = await MailComposer.composeAsync({
-                recipients: (selected != null) ? [selected] : [],
-                subject: 'Test email',
-                attachments: [file_object.uri],
+        let pdfURIS = [];
+
+        //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each and appends the URI to an array of URIs to be used as an attachement
+        for (let i=0; i<selectedDiary.length; i++) {
+            changeHtmlContent(i);
+            
+            //makes html code to pdf and saves to Filesystem Cache Directory
+            const file_object = await Print.printToFileAsync({
+                html: htmlContent,
             });
-            (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
-        } catch (e) {
-            console.log(e);
+
+            var fURI = file_object.uri;
+            //console.log("file location is " + file_object.uri);
+            pdfURIS.push(fURI);
+            
         }
-    }
-    */
 
-    const composeMail = async() => {
-        //makes html code to pdf and saves to Filesystem Cache Directory
-        
-        changeHtmlContent();
+        // Formats URIS depending on diaries chosen by user
+        if (pdfURIS.length == 1) {
+            URIS = [pdfURIS[0]]
+        } else if (pdfURIS.length == 2) {
+            URIS = [pdfURIS[0], pdfURIS[1]]
+        } else {
+            URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2]]
+        };
 
-        const file_object = await Print.printToFileAsync({
-            html: htmlContent,
-        });
-       
+        // This section composes the email with the recepient, email subject and attachemments
         try{
-            // console.log(file_object.base64);
             let emailResult = await MailComposer.composeAsync({
                 recipients: (selected != null) ? [selected] : [],
                 subject: 'Test email',
-                attachments: [file_object.uri],
+                attachments: URIS,
+                
             });
             (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
         } catch (e) {
@@ -353,9 +345,12 @@ export default function Email({navigation}) {
                     <Header></Header>
 
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Select which diary to send to a doctor from your diary list
+                        Select which diary(s) to send to a doctor from your diary list
                     </Text>
                     <DropDownPicker
+                        multiple={true}
+                        min={0}
+                        max={3}
                         dropDownDirection="BOTTOM"
                         style={DropdownStyle.style}
                         containerStyle={DropdownStyle.containerStyle}
@@ -376,6 +371,7 @@ export default function Email({navigation}) {
                         setValue={setDiaryValue}
                         setItems={setDiaryItems}
                         onChangeValue={value => setSelectedDiary(value)}
+                        zIndex={2000}
                     />
 
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
@@ -402,6 +398,7 @@ export default function Email({navigation}) {
                         setValue={setEmailValue}
                         setItems={setEmail}
                         onChangeValue={value => setSelectedRecipient(value)}
+                        zIndex={1000}
                     />
 
                     <CustomButton

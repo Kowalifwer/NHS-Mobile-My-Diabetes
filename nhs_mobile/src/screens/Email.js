@@ -295,6 +295,59 @@ export default function Email({navigation}) {
         }
     }
 
+    /* TO BE WORKED ON
+    const JSONtoCSV = (JSONData, filename) => {
+    
+        var arrDATA = JSONData;
+        var CSV = [];
+        console.log(typeof(CSV));
+
+        // specific to blood pressure diary right now. Will change function to be functional for other diaries later
+        var header1ROW = ["Date","Time","Period","Systolic","Diastolic","Arm"];
+        var header2ROW = "Date, Morning Average Systolic, Evening Average Systolic, Evening Average Diastolic";
+
+        //CSV += header1ROW + "\r\n";
+
+        CSV.push(header1ROW);
+       // console.log("type is" + typeof(CSV));
+
+        //console.log(CSV);
+        
+        for (var day=0; day <arrDATA.length; day++) {
+            var row = [];
+
+            for (var morn=1; morn < (((Object.keys(arrDATA[day].morning).length)-3)/2)+1; morn++) {
+
+                var sys = "sys";
+                var dia = "dia";
+                var sysX = sys + morn;
+                var diaX = dia + morn;
+
+                //row.push(['"' + arrDATA[day].date + '",' + '"' + arrDATA[day].morning[sysX].time + '",' + '"Morning",' + '"' + arrDATA[day].morning[sysX].bp + '",' + '"' + arrDATA[day].morning[diaX].bp + '",' + '"' + arrDATA[day].morning.arm + '"']);
+                row.push(arrDATA[day].date + "," + arrDATA[day].morning[sysX].time + "," + "Morning" + "," + arrDATA[day].morning[sysX].bp + ","  + arrDATA[day].morning[diaX].bp + "," + arrDATA[day].morning.arm);
+            }
+
+            for (var eveng=1; eveng < (((Object.keys(arrDATA[day].morning).length)-3)/2)+1; eveng++) {
+
+                var sys = "sys";
+                var dia = "dia";
+                var sysX = sys + eveng;
+                var diaX = dia + eveng;
+
+                //row.push(['"' + arrDATA[day].date + '",' + '"' + arrDATA[day].evening[sysX].time + '",' + '"Evening",' + '"' + arrDATA[day].evening[sysX].bp + '",' + '"' + arrDATA[day].evening[diaX].bp + '",' + '"' + arrDATA[day].evening.arm + '"']);
+                row.push(arrDATA[day].date + "," + arrDATA[day].evening[sysX].time + "," + '"Evening",' + "," + arrDATA[day].evening[sysX].bp + "," + arrDATA[day].evening[diaX].bp + "," + arrDATA[day].evening.arm);
+            }
+
+            //Adds each row to the CSV File
+            //CSV += row;
+            CSV.push(row);
+
+           //console.log(typeof(CSV));
+           console.log(CSV);
+        }
+    }
+    */
+
     //Composes Email based on diary chosen by user
     const composeMail = async() => {
 
@@ -406,6 +459,14 @@ export default function Email({navigation}) {
                         color="#ff0f00"
                         title="Compose Email"
                     />
+                    {/* TO BE WORKED ON FOR JSON TO EXCEL
+                    <CustomButton
+                        onPressFunction={() => JSONtoCSV(bloodPressureDiaryJSON,"bloodpressurediary")}
+                        color="#ff0f00"
+                        title="Convert to CSV"
+                    />
+                    */}
+                    
 
                     <StatusBar style="auto" />
 

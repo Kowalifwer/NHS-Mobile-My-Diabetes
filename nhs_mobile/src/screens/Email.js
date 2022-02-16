@@ -22,9 +22,11 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import XLSX from 'xlsx';
 
-export default function Email({navigation}) {
+export default function Email({navigation, route}) {
 
     DropDownPicker.setListMode("SCROLLVIEW");
+    
+    const stored_user = route.params?.stored_user //can access all current user data from this variable.
     const [selected, setSelectedRecipient] = useState("")
     const [selectedDiary, setSelectedDiary] = useState("")
     let htmlContent = "";
@@ -122,7 +124,7 @@ export default function Email({navigation}) {
     <body>
         <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM BLOOD PRESSURE DIARY TO BE IMPLEMENTED </h3>
         <h1>Diary: Blood Pressure</h1>
-        <h1>NHS Number: TO BE IMPLEMENTED </h1>
+        <h1>NHS Number: ${stored_user.nhs_number} </h1>
         <h1>Date Generated: <span id="date"></span></h1>
     
         <script>

@@ -17,9 +17,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js'
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import XLSX from 'xlsx';
 
 export default function Email({navigation}) {
 
@@ -28,6 +29,8 @@ export default function Email({navigation}) {
     const [selectedDiary, setSelectedDiary] = useState("")
     let htmlContent = "";
 
+    let excelURIS = new Object();
+    
     const [email_open, setEmailOpen] = useState(false);
     const [email_value, setEmailValue] = useState(null);
     const [email, setEmail] = useState([]);
@@ -294,28 +297,25 @@ export default function Email({navigation}) {
         // error reading value
         }
     }
-
-    /* TO BE WORKED ON
+    
+    // specific to blood pressure diary right now. Will change function to be functional for other diaries later
     const JSONtoCSV = (JSONData, filename) => {
     
         var arrDATA = JSONData;
         var CSV = [];
-        console.log(typeof(CSV));
+        var CSV2 = [];
 
-        // specific to blood pressure diary right now. Will change function to be functional for other diaries later
+        //header for blood pressure 
         var header1ROW = ["Date","Time","Period","Systolic","Diastolic","Arm"];
-        var header2ROW = "Date, Morning Average Systolic, Evening Average Systolic, Evening Average Diastolic";
-
-        //CSV += header1ROW + "\r\n";
+        var header2ROW = ["Date", "Morning Average Systolic", "Evening Average Systolic", "Evening Average Diastolic"];
 
         CSV.push(header1ROW);
-       // console.log("type is" + typeof(CSV));
+        CSV2.push(header2ROW);
 
-        //console.log(CSV);
-        
+        //Loops for each day in the JSON
         for (var day=0; day <arrDATA.length; day++) {
-            var row = [];
 
+            // Get a row of Morning information from JSON and adds it in the CSV Array
             for (var morn=1; morn < (((Object.keys(arrDATA[day].morning).length)-3)/2)+1; morn++) {
 
                 var sys = "sys";
@@ -323,35 +323,72 @@ export default function Email({navigation}) {
                 var sysX = sys + morn;
                 var diaX = dia + morn;
 
-                //row.push(['"' + arrDATA[day].date + '",' + '"' + arrDATA[day].morning[sysX].time + '",' + '"Morning",' + '"' + arrDATA[day].morning[sysX].bp + '",' + '"' + arrDATA[day].morning[diaX].bp + '",' + '"' + arrDATA[day].morning.arm + '"']);
-                row.push(arrDATA[day].date + "," + arrDATA[day].morning[sysX].time + "," + "Morning" + "," + arrDATA[day].morning[sysX].bp + ","  + arrDATA[day].morning[diaX].bp + "," + arrDATA[day].morning.arm);
+                CSV.push([arrDATA[day].date, arrDATA[day].morning[sysX].time, "Morning", arrDATA[day].morning[sysX].bp, arrDATA[day].morning[diaX].bp, arrDATA[day].morning.arm])   
             }
-
-            for (var eveng=1; eveng < (((Object.keys(arrDATA[day].morning).length)-3)/2)+1; eveng++) {
+            
+            // Get a row of Evening information from JSON and adds it in the CSV Array
+            for (var eveng=1; eveng < (((Object.keys(arrDATA[day].evening).length)-3)/2)+1; eveng++) {
 
                 var sys = "sys";
                 var dia = "dia";
                 var sysX = sys + eveng;
                 var diaX = dia + eveng;
 
-                //row.push(['"' + arrDATA[day].date + '",' + '"' + arrDATA[day].evening[sysX].time + '",' + '"Evening",' + '"' + arrDATA[day].evening[sysX].bp + '",' + '"' + arrDATA[day].evening[diaX].bp + '",' + '"' + arrDATA[day].evening.arm + '"']);
-                row.push(arrDATA[day].date + "," + arrDATA[day].evening[sysX].time + "," + '"Evening",' + "," + arrDATA[day].evening[sysX].bp + "," + arrDATA[day].evening[diaX].bp + "," + arrDATA[day].evening.arm);
+                CSV.push([arrDATA[day].date, arrDATA[day].evening[sysX].time,"Evening", arrDATA[day].evening[sysX].bp, arrDATA[day].evening[diaX].bp, arrDATA[day].evening.arm]);
             }
-
-            //Adds each row to the CSV File
-            //CSV += row;
-            CSV.push(row);
-
-           //console.log(typeof(CSV));
-           console.log(CSV);
         }
+
+        for (var day=0; day < arrDATA.length; day++) {
+            CSV2.push([arrDATA[day].date, arrDATA[day].morning.sys_avg, arrDATA[day].morning.dia_avg, arrDATA[day].evening.sys_avg, arrDATA[day].evening.dia_avg]);
+        }
+    
+        //Creates excel document from CSV above
+
+        var wb = XLSX.utils.book_new(); //creates work book
+
+        var ws = XLSX.utils.json_to_sheet(CSV); //creates work sheet with data from variable CSV
+        var ws2 = XLSX.utils.json_to_sheet(CSV2); //creates work sheet with data from variable CSV2
+        
+        XLSX.utils.book_append_sheet(wb,ws, "Blood Pressure Daily Results"); //appends worksheet (ws) to the workbook and gives the sheet a name
+        XLSX.utils.book_append_sheet(wb,ws2, "Blood Pressure Average Results"); //appends worksheet (ws2) to the workbook and gives the sheet a name
+        
+        //writes data to work book
+        const wbout = XLSX.write(wb, {
+            type: 'base64',
+            bookType: 'xlsx'
+        });
+
+        //creates uri for file created
+
+        const uri = FileSystem.cacheDirectory + 'BloodPressureDiary.xlsx';
+        
+        FileSystem.writeAsStringAsync(uri, wbout, {
+            encoding: FileSystem.EncodingType.Base64
+          });
+
+        /*
+         //For sharing. NOT NEEDED RIGHT NOW
+        Sharing.shareAsync(uri, {
+        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        dialogTitle: 'MyWater data',
+        UTI: 'com.microsoft.excel.xlsx'
+        });
+        */
+
+        //apppends bloood pressure uri to excelURIS object to be used in composeMail function
+        excelURIS["bloodpressure"] = uri;        
     }
-    */
 
     //Composes Email based on diary chosen by user
     const composeMail = async() => {
 
+        //only working for bloodpressure diary at the moment
+        JSONtoCSV(bloodPressureDiaryJSON,"bloodpressurediary");
+
         let pdfURIS = [];
+        let URIS = [];
+        var eURi = [];
+        var bloodPressureSelected = false;
 
         //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each and appends the URI to an array of URIs to be used as an attachement
         for (let i=0; i<selectedDiary.length; i++) {
@@ -363,18 +400,27 @@ export default function Email({navigation}) {
             });
 
             var fURI = file_object.uri;
-            //console.log("file location is " + file_object.uri);
             pdfURIS.push(fURI);
             
         }
 
-        // Formats URIS depending on diaries chosen by user
+        //if bloodpressure in selecteddiary then add excel uri to URIS
+        URIS.push(excelURIS.bloodpressure);
+
+        for (var index in selectedDiary) {
+            if (selectedDiary[index] == "Blood Pressure") {
+                eURi.push(excelURIS.bloodpressure)
+                bloodPressureSelected = true;
+            }
+        }
+
+        // Formats URIS depending on diaries chosen by user. Oriented to work with blood pressure diary right now.
         if (pdfURIS.length == 1) {
-            URIS = [pdfURIS[0]]
+            bloodPressureSelected ? URIS = [pdfURIS[0], eURi[0]] : URIS = [pdfURIS[0]]
         } else if (pdfURIS.length == 2) {
-            URIS = [pdfURIS[0], pdfURIS[1]]
+            bloodPressureSelected ? URIS = [pdfURIS[0], pdfURIS[1], eURi[0]] : URIS = [pdfURIS[0], pdfURIS[1]]
         } else {
-            URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2]]
+            bloodPressureSelected ? URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2], eURi[0]] : URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2]]
         };
 
         // This section composes the email with the recepient, email subject and attachemments
@@ -466,7 +512,6 @@ export default function Email({navigation}) {
                         title="Convert to CSV"
                     />
                     */}
-                    
 
                     <StatusBar style="auto" />
 

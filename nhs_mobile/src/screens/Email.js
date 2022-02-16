@@ -17,9 +17,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js'
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import XLSX from 'xlsx';
 
 export default function Email({navigation}) {
 
@@ -28,11 +29,13 @@ export default function Email({navigation}) {
     const [selectedDiary, setSelectedDiary] = useState("")
     let htmlContent = "";
 
+    let excelURIS = new Object();
+    
     const [email_open, setEmailOpen] = useState(false);
     const [email_value, setEmailValue] = useState(null);
     const [email, setEmail] = useState([]);
 
-    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]);
+    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]); Will be uncommented and worked on when Food Diary Implemented.
     //const [bloodPressureDiaryJSON, setBloodPressureDiaryJSON] = useState([]); Will be uncommented and worked on when Blood Pressure Diary Implemented.
     //const [glucoseDiaryJSON, setGlucoseDiaryJSON] = useState([]); Will be uncommented and worked on when Glucose Diary Implemented.
 
@@ -93,7 +96,6 @@ export default function Email({navigation}) {
     }]
 
     //other Diary HTML
-
     const foodHTML = `PLACEHOLDER FOR FOOD DIARY HTML`
     const glucoseHTML = `PLACEHOLDER FOR GLUCOSE DIARY HTML`
 
@@ -105,7 +107,7 @@ export default function Email({navigation}) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${selectedDiary}</title>
+        <title>Blood Pressure Diary</title>
         <style>
             table, th, tr, td {
                 border:1px solid black;
@@ -119,7 +121,7 @@ export default function Email({navigation}) {
     
     <body>
         <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM BLOOD PRESSURE DIARY TO BE IMPLEMENTED </h3>
-        <h1>Diary: ${selectedDiary}</h1>
+        <h1>Diary: Blood Pressure</h1>
         <h1>NHS Number: TO BE IMPLEMENTED </h1>
         <h1>Date Generated: <span id="date"></span></h1>
     
@@ -223,19 +225,18 @@ export default function Email({navigation}) {
     </html>
 `
     // Changes htmlContent variable depending on what diary is selected to be sent
-    function changeHtmlContent() {
-
-        if (selectedDiary == "Blood Pressure") {
+    function changeHtmlContent(index) {
+        
+        if (selectedDiary[index] == "Blood Pressure") {
             htmlContent = bloodpressureHTML;
-        } else if (selectedDiary == "Food Diary") {
+        } else if (selectedDiary[index] == "Food Diary") {
             htmlContent = foodHTML;
-        } else if (selectedDiary == "Glucose Diary") {
+        } else if (selectedDiary[index] == "Glucose Diary") {
             htmlContent = glucoseHTML;
         } else {
             htmlContent = "SOMETHING WENT WRONG"
         }
     }
-
     /* 
     // To share the pdf file
     const printToFile = async () => {
@@ -264,7 +265,6 @@ export default function Email({navigation}) {
           // error reading value
         }
     }
-
     
     /* TO BE WORKED ON
     // Gets JSON data of the Food Diary from AsyncStorage
@@ -284,8 +284,6 @@ export default function Email({navigation}) {
     }
     */
 
-
-
     // Gets email recepients AsyncStorage
     const getUserData = async () => {
         try {
@@ -299,46 +297,139 @@ export default function Email({navigation}) {
         // error reading value
         }
     }
+    
+    // specific to blood pressure diary right now. Will change function to be functional for other diaries later
+    const JSONtoCSV = (JSONData, filename) => {
+    
+        var arrDATA = JSONData;
+        var CSV = [];
+        var CSV2 = [];
 
-    /*
-    const composeMail = async() => {
+        //header for blood pressure 
+        var header1ROW = ["Date","Time","Period","Systolic","Diastolic","Arm"];
+        var header2ROW = ["Date", "Morning Average Systolic", "Evening Average Systolic", "Evening Average Diastolic"];
 
-        //makes html code to pdf and saves to Filesystem Cache Directory
-        
-        const file_object = await Print.printToFileAsync({
-            html: htmlContent,
-        });
-        
-       
-        try{
-            // console.log(file_object.base64);
-            let emailResult = await MailComposer.composeAsync({
-                recipients: (selected != null) ? [selected] : [],
-                subject: 'Test email',
-                attachments: [file_object.uri],
-            });
-            (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
-        } catch (e) {
-            console.log(e);
+        CSV.push(header1ROW);
+        CSV2.push(header2ROW);
+
+        //Loops for each day in the JSON
+        for (var day=0; day <arrDATA.length; day++) {
+
+            // Get a row of Morning information from JSON and adds it in the CSV Array
+            for (var morn=1; morn < (((Object.keys(arrDATA[day].morning).length)-3)/2)+1; morn++) {
+
+                var sys = "sys";
+                var dia = "dia";
+                var sysX = sys + morn;
+                var diaX = dia + morn;
+
+                CSV.push([arrDATA[day].date, arrDATA[day].morning[sysX].time, "Morning", arrDATA[day].morning[sysX].bp, arrDATA[day].morning[diaX].bp, arrDATA[day].morning.arm])   
+            }
+            
+            // Get a row of Evening information from JSON and adds it in the CSV Array
+            for (var eveng=1; eveng < (((Object.keys(arrDATA[day].evening).length)-3)/2)+1; eveng++) {
+
+                var sys = "sys";
+                var dia = "dia";
+                var sysX = sys + eveng;
+                var diaX = dia + eveng;
+
+                CSV.push([arrDATA[day].date, arrDATA[day].evening[sysX].time,"Evening", arrDATA[day].evening[sysX].bp, arrDATA[day].evening[diaX].bp, arrDATA[day].evening.arm]);
+            }
         }
-    }
-    */
 
-    const composeMail = async() => {
-        //makes html code to pdf and saves to Filesystem Cache Directory
+        for (var day=0; day < arrDATA.length; day++) {
+            CSV2.push([arrDATA[day].date, arrDATA[day].morning.sys_avg, arrDATA[day].morning.dia_avg, arrDATA[day].evening.sys_avg, arrDATA[day].evening.dia_avg]);
+        }
+    
+        //Creates excel document from CSV above
+
+        var wb = XLSX.utils.book_new(); //creates work book
+
+        var ws = XLSX.utils.json_to_sheet(CSV); //creates work sheet with data from variable CSV
+        var ws2 = XLSX.utils.json_to_sheet(CSV2); //creates work sheet with data from variable CSV2
         
-        changeHtmlContent();
-
-        const file_object = await Print.printToFileAsync({
-            html: htmlContent,
+        XLSX.utils.book_append_sheet(wb,ws, "Blood Pressure Daily Results"); //appends worksheet (ws) to the workbook and gives the sheet a name
+        XLSX.utils.book_append_sheet(wb,ws2, "Blood Pressure Average Results"); //appends worksheet (ws2) to the workbook and gives the sheet a name
+        
+        //writes data to work book
+        const wbout = XLSX.write(wb, {
+            type: 'base64',
+            bookType: 'xlsx'
         });
-       
+
+        //creates uri for file created
+
+        const uri = FileSystem.cacheDirectory + 'BloodPressureDiary.xlsx';
+        
+        FileSystem.writeAsStringAsync(uri, wbout, {
+            encoding: FileSystem.EncodingType.Base64
+          });
+
+        /*
+         //For sharing. NOT NEEDED RIGHT NOW
+        Sharing.shareAsync(uri, {
+        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        dialogTitle: 'MyWater data',
+        UTI: 'com.microsoft.excel.xlsx'
+        });
+        */
+
+        //apppends bloood pressure uri to excelURIS object to be used in composeMail function
+        excelURIS["bloodpressure"] = uri;        
+    }
+
+    //Composes Email based on diary chosen by user
+    const composeMail = async() => {
+
+        //only working for bloodpressure diary at the moment
+        JSONtoCSV(bloodPressureDiaryJSON,"bloodpressurediary");
+
+        let pdfURIS = [];
+        let URIS = [];
+        var eURi = [];
+        var bloodPressureSelected = false;
+
+        //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each and appends the URI to an array of URIs to be used as an attachement
+        for (let i=0; i<selectedDiary.length; i++) {
+            changeHtmlContent(i);
+            
+            //makes html code to pdf and saves to Filesystem Cache Directory
+            const file_object = await Print.printToFileAsync({
+                html: htmlContent,
+            });
+
+            var fURI = file_object.uri;
+            pdfURIS.push(fURI);
+            
+        }
+
+        //if bloodpressure in selecteddiary then add excel uri to URIS
+        URIS.push(excelURIS.bloodpressure);
+
+        for (var index in selectedDiary) {
+            if (selectedDiary[index] == "Blood Pressure") {
+                eURi.push(excelURIS.bloodpressure)
+                bloodPressureSelected = true;
+            }
+        }
+
+        // Formats URIS depending on diaries chosen by user. Oriented to work with blood pressure diary right now.
+        if (pdfURIS.length == 1) {
+            bloodPressureSelected ? URIS = [pdfURIS[0], eURi[0]] : URIS = [pdfURIS[0]]
+        } else if (pdfURIS.length == 2) {
+            bloodPressureSelected ? URIS = [pdfURIS[0], pdfURIS[1], eURi[0]] : URIS = [pdfURIS[0], pdfURIS[1]]
+        } else {
+            bloodPressureSelected ? URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2], eURi[0]] : URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2]]
+        };
+
+        // This section composes the email with the recepient, email subject and attachemments
         try{
-            // console.log(file_object.base64);
             let emailResult = await MailComposer.composeAsync({
                 recipients: (selected != null) ? [selected] : [],
                 subject: 'Test email',
-                attachments: [file_object.uri],
+                attachments: URIS,
+                
             });
             (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
         } catch (e) {
@@ -353,9 +444,12 @@ export default function Email({navigation}) {
                     <Header></Header>
 
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Select which diary to send to a doctor from your diary list
+                        Select which diary(s) to send to a doctor from your diary list
                     </Text>
                     <DropDownPicker
+                        multiple={true}
+                        min={0}
+                        max={3}
                         dropDownDirection="BOTTOM"
                         style={DropdownStyle.style}
                         containerStyle={DropdownStyle.containerStyle}
@@ -376,6 +470,7 @@ export default function Email({navigation}) {
                         setValue={setDiaryValue}
                         setItems={setDiaryItems}
                         onChangeValue={value => setSelectedDiary(value)}
+                        zIndex={2000}
                     />
 
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
@@ -402,6 +497,7 @@ export default function Email({navigation}) {
                         setValue={setEmailValue}
                         setItems={setEmail}
                         onChangeValue={value => setSelectedRecipient(value)}
+                        zIndex={1000}
                     />
 
                     <CustomButton
@@ -409,6 +505,13 @@ export default function Email({navigation}) {
                         color="#ff0f00"
                         title="Compose Email"
                     />
+                    {/* TO BE WORKED ON FOR JSON TO EXCEL
+                    <CustomButton
+                        onPressFunction={() => JSONtoCSV(bloodPressureDiaryJSON,"bloodpressurediary")}
+                        color="#ff0f00"
+                        title="Convert to CSV"
+                    />
+                    */}
 
                     <StatusBar style="auto" />
 

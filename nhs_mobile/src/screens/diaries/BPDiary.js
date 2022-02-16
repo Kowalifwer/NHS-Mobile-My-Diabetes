@@ -17,7 +17,7 @@ import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
 import DropdownStyle from '../../styles/DropdownStyle';
 import user_struct from '../../global_structures.js';
-import food_diary_entry from '../../global_structures.js';
+import {food_diary_entry,bp_diary_entry} from '../../global_structures.js';
 import BPInputComponent from '../../components/BPInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
 

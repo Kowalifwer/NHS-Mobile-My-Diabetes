@@ -59,7 +59,7 @@ const health_type_reverse_lookup = { //reverse lookup for health type, into read
 
 //global functions
 
-export {diary_list, food_diary_entry, user_struct, health_type_reverse_lookup}
+export {diary_list, food_diary_entry, bp_diary_entry, user_struct, health_type_reverse_lookup}
 // diary_paths = {}
 
 // {item: "", brand: "", amount: ""}

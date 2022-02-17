@@ -23,15 +23,23 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function BPDiary({ navigation }) {
+    const input_data_struct = {time: "", arm: "", systolic: "", diastolic: ""}
     const [diary_entry, setDiaryEntry] = useState(bp_diary_entry)
-    const [bp_input_components, setBPInputComponents] = useState([new BPInputComponent()]);
-    
+
+    const [n_inputs, setNInputs] = useState(1);
+    const[bp_input_components_data, setBPComponentsData] = useState([{index:1, time: "", arm: "", systolic: "", diastolic: ""}]);
+    const [bp_input_components, setBPInputComponents] = useState([<BPInputComponent key={n_inputs} id={n_inputs} setBPComponentsData={setBPComponentsData} />]);
+
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
 
     useEffect(() => {
         getOrCreateBPDiary();
     }, []); // don't know what this is doing
+
+    useEffect(() => {
+        setBPComponentsData(state => ([...state, {index:n_inputs+1, time: "", arm: "", systolic: "", diastolic: ""}]) )
+    }, [n_inputs]);
 
     const getOrCreateBPDiary = async () => {
         try {
@@ -52,8 +60,7 @@ export default function BPDiary({ navigation }) {
     const appendToDiary = async () => {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
-                const readings = bp_input_components.map((component) => component.dict);
-                diary_entry["readings"] = readings
+                console.log(bp_input_components_data)
                 // diary_entry["systolic_avg"] = readings.map((entry) => entry["systolic"])
                 console.log(readings.map((entry) => entry["systolic"]))
                 const diary = JSON.parse(await AsyncStorage.getItem('BPDiary'))
@@ -70,7 +77,9 @@ export default function BPDiary({ navigation }) {
     }
 
     function addBPInputComponent() {
-        setBPInputComponents(bp_input_components => [...bp_input_components, new BPInputComponent()]);
+        console.log(bp_input_components_data)
+        console.log(bp_input_components)
+        setNInputs(n_inputs + 1);
     } // maybe this will work ??
 
     return (
@@ -102,9 +111,10 @@ export default function BPDiary({ navigation }) {
 
                     <Text>Blood Pressure</Text>
 
-                    {bp_input_components.map((input_component) => input_component.render())}
+                    {bp_input_components_data.map((input_component) => <BPInputComponent key={input_component.index} id={input_component.index} setBPComponentsData={setBPComponentsData}/>)}
+
                     <CustomButton 
-                        onPressFunction={addBPInputComponent}
+                        onPressFunction={() => addBPInputComponent()}
                         title="Enter another reading"
                         color="#008c8c"    
                     />

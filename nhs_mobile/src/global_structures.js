@@ -43,7 +43,6 @@ const exercise_diary = {screen_name: "ExerciseDiary", verbose_name: "Exercise Di
 const diary_list = [ //make sure to define screen_name here, to match the names of the screens in the App.js - this is used to render this component.
     food_diary,
     bp_diary,
-
     //diaries below are not linked, just test placeholders
     // render_test_diary,
     // sleep_diary,

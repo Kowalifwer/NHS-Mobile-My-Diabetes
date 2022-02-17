@@ -28,7 +28,6 @@ export default function BPDiary({ navigation }) {
 
     const [n_inputs, setNInputs] = useState(1);
     const[bp_input_components_data, setBPComponentsData] = useState([{index:1, time: "", arm: "", systolic: "", diastolic: ""}]);
-    const [bp_input_components, setBPInputComponents] = useState([<BPInputComponent key={n_inputs} id={n_inputs} setBPComponentsData={setBPComponentsData} />]);
 
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)

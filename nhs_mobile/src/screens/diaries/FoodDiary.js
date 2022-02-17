@@ -17,14 +17,20 @@ import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
 import DropdownStyle from '../../styles/DropdownStyle';
 import user_struct from '../../global_structures.js'
-import {food_diary_entry,health_type_reverse_lookup} from '../../global_structures.js'
+import {food_diary_entry, health_type_reverse_lookup} from '../../global_structures.js'
 import FoodInputComponent from '../../components/FoodInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import BarcodeScanner from '../BarcodeScanner';
 
 export default function FoodDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
-    const [food_input_components, setFoodInputComponents] = useState([new FoodInputComponent()]); // this part makes it so when you edit food_inputs it gets re-rendered instantly
+    
+    const [scanned_food_entries, setScannedFoodEntries] = useState([]);
+    const [barcode_open, setBarcodeOpen] = useState(false);
+
+    const [n_inputs, setNInputs] = useState(0);
+
+    const [food_input_components, setFoodInputComponents] = useState([]); // this part makes it so when you edit food_inputs it gets re-rendered instantly
     
     const [date, setDate] = useState(new Date())
     const [time, setTime] = useState(date)
@@ -34,6 +40,10 @@ export default function FoodDiary({ navigation, route }) {
     useEffect(() => {
         getOrCreateFoodDiary();
     }, []); // don't know what this is doing
+
+    useEffect(() => {
+        setFoodInputComponents(food_input_components => [...food_input_components, new FoodInputComponent({key:n_inputs, barcode_open:barcode_open, setBarcodeOpen:setBarcodeOpen})]);
+    }, [n_inputs]);
 
     const getOrCreateFoodDiary = async () => {
         try {
@@ -69,7 +79,7 @@ export default function FoodDiary({ navigation, route }) {
     }
 
     function addFoodInputComponent() {
-        setFoodInputComponents(food_input_components => [...food_input_components, new FoodInputComponent()]);
+        setNInputs(n_inputs + 1);
     } // maybe this will work ??
 
     return (

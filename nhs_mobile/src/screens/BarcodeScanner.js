@@ -18,16 +18,17 @@ import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
 import user_struct from '../global_structures.js'
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import {object_is_empty} from '../global_structures.js';
 
-export default function BarcodeScanner({ navigation }) {
+export default function BarcodeScanner({ navigation, props }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [product_data, setProductData] = useState(null);
 
     const fetch_product_data = async (ean_barcode) => { //Fetch the product data from the open food facts API.
-
-        return await fetch(`https://world.openfoodfacts.org/api/v0/product/${ean_barcode}.json`)
+        const url = `https://world.openfoodfacts.org/api/v0/product/${ean_barcode}.json`;
+        return await fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data["status"] == 1) {
@@ -42,7 +43,9 @@ export default function BarcodeScanner({ navigation }) {
                     nutriscore_score: data["product"]["nutriscore_score"],
                     nutriscore_grade: data["product"]["nutriscore_grade"],
                     nova_score: data["product"]["nova_group"],
-                    url: `https://world.openfoodfacts.org/product/${ean_barcode}`,
+                    product_url: `https://world.openfoodfacts.org/product/${ean_barcode}`,
+                    api_url: url,
+                    ean_barcode: ean_barcode,
                     nutrients: data["product"]["nutriments"],
                 }
             }
@@ -53,7 +56,6 @@ export default function BarcodeScanner({ navigation }) {
             
         })
         .catch(error => {throw new Error(error);})
-
     }
 
     // useEffect(() => {return}, [product_data]) //rerender when product data updates.
@@ -68,7 +70,7 @@ export default function BarcodeScanner({ navigation }) {
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        fetch_product_data(data).then(result => {setProductData(result); console.log(product_data); setModalVisible(true)}).catch(error => Alert.alert(error.message))
+        fetch_product_data(data).then(result => {setProductData(result); setModalVisible(true)}).catch(error => Alert.alert(error.message))
     };
 
     if (hasPermission === null) {
@@ -83,7 +85,7 @@ export default function BarcodeScanner({ navigation }) {
                 <BarCodeScanner
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                     style={StyleSheet.absoluteFillObject}
-                    barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr, BarCodeScanner.Constants.BarCodeType.ean13]}
+                    barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13]}
                 />
 
                 <View style={{display: 'flex', flexDirection: 'column', height: "100%", justifyContent: "flex-end", paddingBottom: 20}}>
@@ -108,11 +110,12 @@ export default function BarcodeScanner({ navigation }) {
                                 <Text>{product_data.countries}</Text>
                                 <Text>{product_data.image_nutrition}</Text>
 
+                                {console.log(object_is_empty(product_data.nutrients))}
+
                                 <CustomButton
                                     title="Close product"
                                     onPressFunction={() => setModalVisible(!modalVisible)}
-                                >
-                                </CustomButton>
+                                />
                             </View>
                         }
                             

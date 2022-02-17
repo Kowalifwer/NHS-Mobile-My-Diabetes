@@ -9,13 +9,13 @@ import {
     ScrollView,
 } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
-
+import BarcodeScanner from '../screens/BarcodeScanner';
 
 // this is the food input which gets added to the page when user clicks the + button
 class FoodInputComponent extends React.Component {
-    constructor() {
-        super();
-        this.dict = {name: "", brand: "", amount: ""};
+    constructor(props) {
+        super(props);
+        this.dict = {name: "", brand: "", amount: "", scanned_item_object: {}};
     }
 
     render() {
@@ -30,6 +30,8 @@ class FoodInputComponent extends React.Component {
                     multiline={true}
                     numberOfLines={1}
                 />
+                {this.props.barcode_open && <BarcodeScanner/>}
+                {this.props.setBarcodeOpen}
                 <TextInput
                     style={GlobalStyle.InputField}
                     placeholder='Brand'

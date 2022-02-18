@@ -49,6 +49,9 @@ const BPInputComponent = props => {
                 title="Enter Time"
                 color="#008c8c"
             />
+            <Text style={[GlobalStyle.CustomFont]}>
+                Blood Pressure Reading {id+1}
+            </Text>
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder='arm'

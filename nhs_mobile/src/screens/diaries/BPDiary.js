@@ -36,7 +36,7 @@ export default function BPDiary({ navigation }) {
     }, []); // don't know what this is doing
 
     useEffect(() => {
-        setBPComponentsData(state => ([...state, {index:n_inputs, time: "", arm: "", systolic: "", diastolic: ""}]) )
+        setBPComponentsData(state => ([...state, {index:n_inputs, time: "", arm: "", systolic: "", diastolic: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
     }, [n_inputs]);
 
     const getOrCreateBPDiary = async () => {
@@ -61,13 +61,10 @@ export default function BPDiary({ navigation }) {
             try {
                 let systolic_avg = bp_input_components_data.reduce((total, next) => total + next.systolic, 0) / bp_input_components_data.length
                 let diastolic_avg = bp_input_components_data.reduce((total,next) => total + next.diastolic, 0) / bp_input_components_data.length
-                // setDiaryEntry(state => ({...state, systolic_avg: systolic_avg, diastolic_avg: diastolic_avg, readings: bp_input_components_data}))
                 let final_entry = {...diary_entry, systolic_avg: systolic_avg, diastolic_avg: diastolic_avg, readings: bp_input_components_data}
                 console.log("systolic avg: ", systolic_avg);
                 console.log("diastolic avg: ", diastolic_avg);
                 console.log(final_entry)
-                // diary_entry["systolic_avg"] = readings.map((entry) => entry["systolic"])
-                // console.log(readings.map((entry) => entry["systolic"]))#
                 const diary = JSON.parse(await AsyncStorage.getItem('BPDiary'))
                 diary.push(final_entry);
                 console.log(diary)

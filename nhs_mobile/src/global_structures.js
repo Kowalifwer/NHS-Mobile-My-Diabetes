@@ -58,8 +58,15 @@ const health_type_reverse_lookup = { //reverse lookup for health type, into read
 
 
 //global functions
+const object_is_empty = (obj) => {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 
-export {diary_list, food_diary_entry, bp_diary_entry, user_struct, health_type_reverse_lookup}
+export {diary_list, food_diary_entry, bp_diary_entry, user_struct, health_type_reverse_lookup, object_is_empty}
 // diary_paths = {}
 
 // {item: "", brand: "", amount: ""}

@@ -17,6 +17,7 @@ const FoodInputComponent = (props) => {
         
     return (
         <View>
+            <Text>Diary data for food item {id+1}</Text>
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder='Food Name'

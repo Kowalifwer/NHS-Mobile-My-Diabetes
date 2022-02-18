@@ -68,10 +68,11 @@ export default function FoodDiary({ navigation, route }) {
     const appendToDiary = async () => {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
-                diary_entry["food"] = food_input_components.map((component) => component.dict)
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
-                diary.push(diary_entry);
+                if (food_input_components_data.length > 0) 
+                    diary.push(food_input_components_data);
                 await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
+                console.log(diary);
                 navigation.navigate("Home");
             } catch (error) {
                 console.log(error);

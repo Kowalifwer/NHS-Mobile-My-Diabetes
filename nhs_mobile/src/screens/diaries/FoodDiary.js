@@ -24,15 +24,12 @@ import BarcodeScanner from '../BarcodeScanner';
 
 export default function FoodDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
-    
-    const [scanned_food_entries, setScannedFoodEntries] = useState([]);
-    const [barcode_open, setBarcodeOpen] = useState(false);
 
     const [n_inputs, setNInputs] = useState(0);
     
-    const [food_input_components_data, setFoodInputComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a FoodInput component. This is also passed as prop to the component to manipulate the state of this scopre.
+    const [food_input_components_data, setFoodInputComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a FoodInput component. This is also passed as prop to the component to manipulate the state of this scope.
     
-    const[barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]);
+    const[barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]); //first element is a boolean, second element is the index of the component that is currently open for barcode scanning.
 
     const [date, setDate] = useState(new Date())
     const [time, setTime] = useState(date)
@@ -45,9 +42,7 @@ export default function FoodDiary({ navigation, route }) {
 
     useEffect(() => {
         setFoodInputComponentsData(state => [...state, {index:n_inputs, name: "", brand: "", amount: "", scanned_item_object: {} }]);
-    }, [n_inputs]);
-
-    useEffect(() => {console.log(food_input_components_data)} , [food_input_components_data]);
+    }, [n_inputs]); //when number of inputs increases, make sure we have a side effect that will increase the capacity of the input food components dictionary
 
     const getOrCreateFoodDiary = async () => {
         try {
@@ -84,7 +79,7 @@ export default function FoodDiary({ navigation, route }) {
     }
 
     function addFoodInputComponent() {
-        setNInputs(n_inputs + 1);
+        setNInputs(n_inputs + 1); //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
     }
 
     return (

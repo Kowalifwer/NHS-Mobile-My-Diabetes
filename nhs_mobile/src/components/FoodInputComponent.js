@@ -25,15 +25,17 @@ const FoodInputComponent = (props) => {
         
     return (
         <View>
-
-            {(object_is_empty(food_input_components_data[id]["scanned_item_object"])) ? <Text>Diary data for food item {id+1}. </Text> : <Text>Some data for food item {id+1} has been filled by Barcode scanner!</Text>}
+            {(object_is_empty(food_input_components_data[id]["scanned_item_object"])) ? 
+                <Text>Diary data for food item {id+1}. </Text> : 
+                <Text>Some data for food item {id+1} has been filled by Barcode scanner! Please double check and make sure to update anything that is not correct!</Text>
+            }
             
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder='Food Name'
                 value={query_object_for_food_component(food_input_components_data[id]["scanned_item_object"], "name")}
                 onChangeText={(value) => {
-                    setFoodInputComponentsData(state => (state.map(val => {//#endregion
+                    setFoodInputComponentsData(state => (state.map(val => { //updates the food_input_components_data
                         if (val.index == id) {
                             return {...val, ['name']: value}
                         } return val;
@@ -48,7 +50,7 @@ const FoodInputComponent = (props) => {
                 placeholder='Brand'
                 value={query_object_for_food_component(food_input_components_data[id]["scanned_item_object"], "name")}
                 onChangeText={(value) => {
-                    setFoodInputComponentsData(state => (state.map(val => {//#endregion
+                    setFoodInputComponentsData(state => (state.map(val => {//updates the food_input_components_data
                         if (val.index == id) {
                             return {...val, ['brand']: value}
                         } return val;
@@ -63,7 +65,7 @@ const FoodInputComponent = (props) => {
                 placeholder="Weight or Amount"
                 keyboardType="numeric"
                 onChangeText={(value) => {
-                    setFoodInputComponentsData(state => (state.map(val => {//#endregion
+                    setFoodInputComponentsData(state => (state.map(val => {//updates the food_input_components_data
                         if (val.index == id) {
                             return {...val, ['amount']: value.trim()}
                         } return val;

@@ -3,31 +3,16 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
-    SafeAreaView, 
-    ScrollView,
-    Modal,
-    Pressable,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from '../components/Header';
-import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js'
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import {object_is_empty} from '../global_structures.js';
 
 const BarcodeScannerComponent = (props) => {
     let {setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props;
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    // const [open, setOpen] = useState(true);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [product_data, setProductData] = useState(null);
 
     const fetch_product_data = async (ean_barcode) => { //Fetch the product data from the open food facts API.
         const url = `https://world.openfoodfacts.org/api/v0/product/${ean_barcode}.json`;
@@ -52,17 +37,14 @@ const BarcodeScannerComponent = (props) => {
                     nutrients: data["product"]["nutriments"],
                 }
             }
-            
             else {
                 throw "Error - no product found in Database"
             }
-            
         })
         .catch(error => {throw new Error(error);})
     }
 
     useEffect(() => {
-        // update_product_state(product_data)
         (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === 'granted');
@@ -88,24 +70,24 @@ const BarcodeScannerComponent = (props) => {
         return <Text>No access to camera</Text>;
     }
 
-    if (!barcode_scanner_open[0]) return null
+    if (!barcode_scanner_open[0]) return null //make sure no barcode scanner object returned if the barcode scanner is not supposed to be open
 
     return (
-            <View style={styles.body}>
-                <Text>Scan a product into diary entry {id+1}</Text>
-                <BarCodeScanner
-                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                    style={[StyleSheet.absoluteFillObject, {height: 500, marginBottom: 100}]}
-                    barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13]}
-                />
-                {scanned && <CustomButton title={'Tap to Scan Again'} onPressFunction={() => setScanned(false)} />}
-                <CustomButton
-                    style= {{marginTop:550}}
-                    title='Cancel Scan'
-                    color='#761076'
-                    onPressFunction={() => {setBarcodeScannerOpen([false, 0])}}
-                />
-            </View>
+        <View style={styles.body}>
+            <Text>Scan a product into diary entry {id+1}</Text>
+            <BarCodeScanner
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={[StyleSheet.absoluteFillObject, {height: 500, marginBottom: 100}]}
+                barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13]}
+            />
+            {scanned && <CustomButton title={'Tap to Scan Again'} onPressFunction={() => setScanned(false)} />}
+            <CustomButton
+                style= {{marginTop:550}}
+                title='Cancel Scan'
+                color='#761076'
+                onPressFunction={() => {setBarcodeScannerOpen([false, 0])}}
+            />
+        </View>
     );
 }
 

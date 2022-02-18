@@ -20,9 +20,12 @@ import user_struct from '../global_structures.js'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import {object_is_empty} from '../global_structures.js';
 
-export default function BarcodeScanner({ navigation }) {
+const BarcodeScannerComponent = (props) => {
+    let {setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props;
+
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    // const [open, setOpen] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [product_data, setProductData] = useState(null);
 
@@ -58,8 +61,6 @@ export default function BarcodeScanner({ navigation }) {
         .catch(error => {throw new Error(error);})
     }
 
-    // useEffect(() => {return}, [product_data]) //rerender when product data updates.
-
     useEffect(() => {
         // update_product_state(product_data)
         (async () => {
@@ -70,7 +71,14 @@ export default function BarcodeScanner({ navigation }) {
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        fetch_product_data(data).then(result => {setProductData(result); setModalVisible(true)}).catch(error => Alert.alert(error.message))
+        fetch_product_data(data).then(result => {setProductData(result); setModalVisible(true);
+            setFoodInputComponentsData(state => (state.map(val => {//#endregion
+                if (val.index == id) {
+                    return {...val, ['scanned_item_object']: result}
+                } return val;
+            })))
+            setBarcodeScannerOpen([false, 0])})
+            .catch(error => Alert.alert(error.message))
     };
 
     if (hasPermission === null) {
@@ -80,12 +88,22 @@ export default function BarcodeScanner({ navigation }) {
         return <Text>No access to camera</Text>;
     }
 
+    if (!barcode_scanner_open[0]) return null
+
     return (
             <View style={styles.body}>
+                <Text>Scan a product into diary entry {id+1}</Text>
                 <BarCodeScanner
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                    style={StyleSheet.absoluteFillObject}
+                    style={[StyleSheet.absoluteFillObject, {height: 500, marginBottom: 100}]}
                     barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13]}
+                />
+                {/* as */}
+                <CustomButton
+                    style= {{marginTop:550}}
+                    title='Cancel Scan'
+                    color='#761076'
+                    onPressFunction={() => {setBarcodeScannerOpen([false, 0])}}
                 />
 
                 <View style={{display: 'flex', flexDirection: 'column', height: "100%", justifyContent: "flex-end", paddingBottom: 20}}>
@@ -118,22 +136,13 @@ export default function BarcodeScanner({ navigation }) {
                                 />
                             </View>
                         }
-                            
-                    
                     </Modal>
 
-                    {scanned && <CustomButton title={'Tap to Scan Again'} onPressFunction={() => setScanned(false)} />}
-                    <CustomButton
-                        title='Return to Homepage'
-                        color='#761076'
-                        onPressFunction={() => navigation.navigate("Home")}
-                    />
+                    {/* {scanned && <CustomButton title={'Tap to Scan Again'} onPressFunction={() => setScanned(false)} />} */}
                 </View>
             </View>
     );
-
 }
-
 
 const styles = StyleSheet.create({
     body: {
@@ -147,3 +156,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 })
+
+export default BarcodeScannerComponent

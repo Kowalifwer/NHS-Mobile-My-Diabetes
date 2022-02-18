@@ -29,9 +29,11 @@ export default function FoodDiary({ navigation, route }) {
     const [barcode_open, setBarcodeOpen] = useState(false);
 
     const [n_inputs, setNInputs] = useState(0);
-
-    const [food_input_components, setFoodInputComponents] = useState([]); // this part makes it so when you edit food_inputs it gets re-rendered instantly
     
+    const [food_input_components_data, setFoodInputComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a FoodInput component. This is also passed as prop to the component to manipulate the state of this scopre.
+    
+    const[barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]);
+
     const [date, setDate] = useState(new Date())
     const [time, setTime] = useState(date)
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -42,8 +44,10 @@ export default function FoodDiary({ navigation, route }) {
     }, []); // don't know what this is doing
 
     useEffect(() => {
-        setFoodInputComponents(food_input_components => [...food_input_components, new FoodInputComponent({key:n_inputs, barcode_open:barcode_open, setBarcodeOpen:setBarcodeOpen})]);
+        setFoodInputComponentsData(state => [...state, {index:n_inputs, name: "", brand: "", amount: "", scanned_item_object: {} }]);
     }, [n_inputs]);
+
+    useEffect(() => {console.log(food_input_components_data)} , [food_input_components_data]);
 
     const getOrCreateFoodDiary = async () => {
         try {
@@ -80,7 +84,7 @@ export default function FoodDiary({ navigation, route }) {
 
     function addFoodInputComponent() {
         setNInputs(n_inputs + 1);
-    } // maybe this will work ??
+    }
 
     return (
         <SafeAreaView style={styles.body}> 
@@ -188,7 +192,8 @@ export default function FoodDiary({ navigation, route }) {
 
                     <Text>Food</Text>
 
-                    {food_input_components.map((input_component) => input_component.render())}
+                    {food_input_components_data.map((input_component) => <FoodInputComponent key={input_component.index} id={input_component.index} setFoodInputComponentsData={setFoodInputComponentsData} barcode_scanner_open={barcode_scanner_open} setBarcodeScannerOpen={setBarcodeScannerOpen}/>)}
+
                     <CustomButton 
                         onPressFunction={addFoodInputComponent}
                         title="Add another food"

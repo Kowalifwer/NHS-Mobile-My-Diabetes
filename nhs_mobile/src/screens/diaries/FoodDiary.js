@@ -139,61 +139,61 @@ export default function FoodDiary({ navigation, route }) {
                         style={GlobalStyle.InputField}
                         placeholder='Meal'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["meal"]:value.trim() }), [])}
-                        multiline={true}
-                        numberOfLines={1}
+                        // multiline={true}
+                        // numberOfLines={1}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Water (ml)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["water"]:value.trim() }), [])}
-                        multiline={true}
-                        numberOfLines={1}
+                        // multiline={true}
+                        // numberOfLines={1}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Calories (kcal)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["kcal"]:value.trim() }), [])}
-                        multiline={true}
-                        numberOfLines={1}
+                        // multiline={true}
+                        // numberOfLines={1}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Fat (g)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["fat"]:value.trim() }), [])}
-                        multiline={true}
-                        numberOfLines={1}
+                        // multiline={true}
+                        // numberOfLines={1}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Carbohydrates (g)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["carb"]:value.trim() }), [])}
-                        multiline={true}
-                        numberOfLines={1}
+                        // multiline={true}
+                        // numberOfLines={1}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Sugar (g)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["sugar"]:value.trim() }), [])}
-                        multiline={true}
-                        numberOfLines={1}
+                        // multiline={true}
+                        // numberOfLines={1}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Protein (g)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["protein"]:value.trim() }), [])}
-                        multiline={true}
-                        numberOfLines={1}
+                        // multiline={true}
+                        // numberOfLines={1}
                     />
 
                     <Text>Food</Text>
 
-                    {food_input_components_data.map((input_component) => <FoodInputComponent key={input_component.index} id={input_component.index} setFoodInputComponentsData={setFoodInputComponentsData} barcode_scanner_open={barcode_scanner_open} setBarcodeScannerOpen={setBarcodeScannerOpen}/>)}
+                    {food_input_components_data.map((input_component) => <FoodInputComponent key={input_component.index} id={input_component.index} food_input_components_data={food_input_components_data} setFoodInputComponentsData={setFoodInputComponentsData} barcode_scanner_open={barcode_scanner_open} setBarcodeScannerOpen={setBarcodeScannerOpen}/>)}
 
                     <CustomButton 
                         onPressFunction={addFoodInputComponent}

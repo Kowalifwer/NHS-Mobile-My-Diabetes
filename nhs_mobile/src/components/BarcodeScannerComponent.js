@@ -71,14 +71,14 @@ const BarcodeScannerComponent = (props) => {
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        fetch_product_data(data).then(result => {setProductData(result); setModalVisible(true);
+        fetch_product_data(data).then(result => {
             setFoodInputComponentsData(state => (state.map(val => {//#endregion
                 if (val.index == id) {
                     return {...val, ['scanned_item_object']: result}
                 } return val;
             })))
-            setBarcodeScannerOpen([false, 0])})
-            .catch(error => Alert.alert(error.message))
+            setBarcodeScannerOpen([false, 0])
+        }).catch(error => Alert.alert("Product not found. Please try to scan again or close the scanner and input data manually. Sorry for the inconvenience."))
     };
 
     if (hasPermission === null) {
@@ -98,48 +98,13 @@ const BarcodeScannerComponent = (props) => {
                     style={[StyleSheet.absoluteFillObject, {height: 500, marginBottom: 100}]}
                     barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13]}
                 />
-                {/* as */}
+                {scanned && <CustomButton title={'Tap to Scan Again'} onPressFunction={() => setScanned(false)} />}
                 <CustomButton
                     style= {{marginTop:550}}
                     title='Cancel Scan'
                     color='#761076'
                     onPressFunction={() => {setBarcodeScannerOpen([false, 0])}}
                 />
-
-                <View style={{display: 'flex', flexDirection: 'column', height: "100%", justifyContent: "flex-end", paddingBottom: 20}}>
-
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                            setModalVisible(!modalVisible);
-                        }}
-                    >   
-                        {product_data && 
-                            <View style={{height: "100%",padding: 50, backgroundColor: "blue", display: "flex", justifyContent: "space-between", paddingBottom: 50, zIndex: 5}}>
-
-                                <Text>Product found!</Text>
-                                <Text>{product_data.name}</Text>
-                                <Text>{product_data.image}</Text>
-                                <Text>{product_data.allergens}</Text>
-                                <Text>{product_data.ingredients}</Text>
-                                <Text>{product_data.countries}</Text>
-                                <Text>{product_data.image_nutrition}</Text>
-
-                                {console.log(object_is_empty(product_data.nutrients))}
-
-                                <CustomButton
-                                    title="Close product"
-                                    onPressFunction={() => setModalVisible(!modalVisible)}
-                                />
-                            </View>
-                        }
-                    </Modal>
-
-                    {/* {scanned && <CustomButton title={'Tap to Scan Again'} onPressFunction={() => setScanned(false)} />} */}
-                </View>
             </View>
     );
 }

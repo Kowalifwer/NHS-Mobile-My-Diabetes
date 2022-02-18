@@ -11,16 +11,27 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 import BarcodeScannerComponent from '../components/BarcodeScannerComponent';
 import CustomButton from '../components/CustomButton';
+import {object_is_empty} from '../global_structures.js'
 // this is the food input which gets added to the page when user clicks the + button
+
+const query_object_for_food_component = (object, key) => {
+    if (object_is_empty(object)) return ''
+    if (object[key] == undefined) return ''
+    return object[key]
+}
+
 const FoodInputComponent = (props) => {
-    const {setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props
+    const {food_input_components_data, setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props
         
     return (
         <View>
-            <Text>Diary data for food item {id+1}</Text>
+
+            {(object_is_empty(food_input_components_data[id]["scanned_item_object"])) ? <Text>Diary data for food item {id+1}. </Text> : <Text>Some data for food item {id+1} has been filled by Barcode scanner!</Text>}
+            
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder='Food Name'
+                value={query_object_for_food_component(food_input_components_data[id]["scanned_item_object"], "name")}
                 onChangeText={(value) => {
                     setFoodInputComponentsData(state => (state.map(val => {//#endregion
                         if (val.index == id) {
@@ -28,13 +39,14 @@ const FoodInputComponent = (props) => {
                         } return val;
                     })))
                 }}
-                multiline={true}
-                numberOfLines={1}
+                // multiline={true}
+                // numberOfLines={1}
             />
 
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder='Brand'
+                value={query_object_for_food_component(food_input_components_data[id]["scanned_item_object"], "name")}
                 onChangeText={(value) => {
                     setFoodInputComponentsData(state => (state.map(val => {//#endregion
                         if (val.index == id) {
@@ -42,8 +54,8 @@ const FoodInputComponent = (props) => {
                         } return val;
                     })))
                 }}
-                multiline={true}
-                numberOfLines={1}
+                // multiline={true}
+                // numberOfLines={1}
             />
 
             <TextInput
@@ -57,8 +69,8 @@ const FoodInputComponent = (props) => {
                         } return val;
                     })))
                 }}
-                multiline={true}
-                numberOfLines={1}
+                // multiline={true}
+                // numberOfLines={1}
             />
 
             {(barcode_scanner_open[0] && barcode_scanner_open[1] == id) && <BarcodeScannerComponent id={id} setFoodInputComponentsData={setFoodInputComponentsData} setBarcodeScannerOpen={setBarcodeScannerOpen} barcode_scanner_open={barcode_scanner_open}/>}

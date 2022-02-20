@@ -42,9 +42,9 @@ export default function Email({navigation, route}) {
     const [email_value, setEmailValue] = useState(null);
     const [email, setEmail] = useState([]);
 
-    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]); Will be uncommented and worked on when Food Diary Implemented.
-    //const [bloodPressureDiaryJSON, setBloodPressureDiaryJSON] = useState([]); Will be uncommented and worked on when Blood Pressure Diary Implemented.
-    //const [glucoseDiaryJSON, setGlucoseDiaryJSON] = useState([]); Will be uncommented and worked on when Glucose Diary Implemented.
+    const [foodDiaryJSON, setFoodDiaryJSON] = useState([]); //Will be uncommented and worked on when Food Diary Implemented.
+    //const [bloodPressureDiaryJSON, setBloodPressureDiaryJSON] = useState([]); //Will be uncommented and worked on when Blood Pressure Diary Implemented.
+    //const [glucoseDiaryJSON, setGlucoseDiaryJSON] = useState([]); //Will be uncommented and worked on when Glucose Diary Implemented.
 
     // Used for DropDownPicker. Automatically closes and opens picker depending on these values.
     const [diary_open, setDiaryOpen] = useState(false);
@@ -66,6 +66,7 @@ export default function Email({navigation, route}) {
         setEmailOpen(false);
     }, []);
 
+    
     //BLOOD PRESSURE JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data.
     const bloodPressureDiaryJSON = [{
         "date": "15/01/2021",
@@ -175,7 +176,8 @@ export default function Email({navigation, route}) {
 
     useEffect(() => {
         getUserData();
-   //     getFoodDiaryData();
+        getFoodDiaryData();
+        //getBloodPressureDiaryData();
         convertDiaryData();
     }, []);
 
@@ -188,24 +190,49 @@ export default function Email({navigation, route}) {
           // error reading value
         }
     }
-    
-    /* TO BE WORKED ON
-    // Gets JSON data of the Food Diary from AsyncStorage
-    const getFoodDiaryData = async() => {
+
+    /*
+    // Gets JSON data of the Blood Pressure Diary from AsyncStorage
+    const getBloodPressureDiaryData = async() => {
         try {
-            var foodDiary = await getData('FoodDiary');
-            console.log(foodDiary)
-            setFoodDiaryJSON([]);
+            var bloodPressureDiary = await getData('BPDiary');
+            console.log("ssdas:")
+            console.log(bloodPressureDiary)
+            setBloodPressureDiaryJSON([]);
 
             //Adds each item in array to variable foodDiaryJSON by looping through
             for (var i =0; i< foodDiary.length; i++) {
-                setFoodDiaryJSON(state =>, [])
+                setBloodPressureDiaryJSON(state => [])
             }
+
+            
         } catch (e) {
             // error reading value
         }
     }
+
     */
+    
+    
+    // Gets JSON data of the Food Diary from AsyncStorage
+    const getFoodDiaryData = async() => {
+        try {
+            var foodDiary = await getData('FoodDiary');
+            console.log("ssdas:")
+            console.log(foodDiary)
+            setFoodDiaryJSON([]);
+
+            /*
+            //Adds each item in array to variable foodDiaryJSON by looping through
+            for (var i =0; i< foodDiary.length; i++) {
+                setFoodDiaryJSON(state => [])
+            }]*/
+        } catch (e) {
+            // error reading value
+        }
+    }
+    
+    
 
     // Gets email recepients AsyncStorage
     const getUserData = async () => {

@@ -21,6 +21,8 @@ import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import XLSX from 'xlsx';
+import { Asset } from 'expo-asset';
+import { manipulateAsync } from 'expo-image-manipulator';
 
 export default function Email({navigation, route}) {
 
@@ -31,6 +33,8 @@ export default function Email({navigation, route}) {
     const [selectedDiary, setSelectedDiary] = useState("")
     
     let htmlContent = "";
+    const [imageHTML, setImageHTML] = useState();
+    const [currentDate, setCurrentDate] = useState("");
     
     //Stores each html table data for each diary. To be used in each html variable
     const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", glucoseResultsHTML: ""});
@@ -66,7 +70,27 @@ export default function Email({navigation, route}) {
         setEmailOpen(false);
     }, []);
 
-    
+    // Changes image to be used in the html's into base64 and into html code. This is done because Expo Print has no facility to add local images so this workaround was made.
+    async function generateImageHTML() {
+        const asset = Asset.fromModule(require('../../assets/my_diabetes.jpg'));
+        const image = await manipulateAsync(
+            asset.localUri ?? asset.uri,
+            [],
+            {base64: true}
+        );
+
+        return `<img src="data:image/jpeg;base64,${image.base64}" class="center"/>`;
+    }
+
+    // Generates current date to be added to html of the diaries
+    function generateCurrentDate() {
+        const n = new Date();
+        const y = n.getFullYear();
+        const m = n.getMonth() + 1;
+        const d = n.getDate();
+        return d + "/" + m + "/" + y;
+    }
+
     //BLOOD PRESSURE JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data.
     const bloodPressureDiaryJSON = [{
         "date": "15/01/2021",
@@ -103,9 +127,79 @@ export default function Email({navigation, route}) {
                     "dia_avg": 23}
     }]
 
-    //other Diary HTML
-    const foodHTML = `PLACEHOLDER FOR FOOD DIARY HTML`
-    const glucoseHTML = `PLACEHOLDER FOR GLUCOSE DIARY HTML`
+    // Food Diary HTML
+    const foodHTML = `
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Food Diary</title>
+        <style>
+            table, th, tr, td {
+                border:1px solid black;
+            }
+
+            td {
+                text-align: center;
+            }
+
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 50%;
+            }
+        </style>
+    </head>
+    
+    <body>
+        ${imageHTML}
+        <h1>Diary: Food Diary</h1>
+        <h1>NHS Number: ${stored_user.nhs_number} </h1>
+        <h1>Date Generated: ${currentDate}</h1>
+    </body>
+    
+    </html>
+`
+
+    // Glucose Diary HTML
+    const glucoseHTML = `
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Glucose Diary</title>
+        <style>
+            table, th, tr, td {
+                border:1px solid black;
+            }
+
+            td {
+                text-align: center;
+            }
+
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 50%;
+            }
+        </style>
+    </head>
+    
+    <body>
+        ${imageHTML}
+        <h1>Diary: Glucose Diary</h1>
+        <h1>NHS Number: ${stored_user.nhs_number} </h1>
+        <h1>Date Generated: ${currentDate}</h1>
+    </body>
+    
+    </html>
+`
 
     // Blood Pressure Diary HTML
     const bloodpressureHTML = `
@@ -124,22 +218,22 @@ export default function Email({navigation, route}) {
             td {
                 text-align: center;
             }
+
+            .center {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 50%;
+            }
         </style>
     </head>
     
     <body>
+        ${imageHTML}
         <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM BLOOD PRESSURE DIARY TO BE IMPLEMENTED </h3>
         <h1>Diary: Blood Pressure</h1>
         <h1>NHS Number: ${stored_user.nhs_number} </h1>
-        <h1>Date Generated: <span id="date"></span></h1>
-    
-        <script>
-            n = new Date();
-            y = n.getFullYear();
-            m = n.getMonth() + 1;
-            d = n.getDate();
-            document.getElementById("date").innerHTML = d + "/" + m + "/" + y;
-        </script>
+        <h1>Date Generated: ${currentDate}</h1>
         
         <!--Daily Results Table-->
         <p>Daily Results Table</p>
@@ -174,7 +268,9 @@ export default function Email({navigation, route}) {
         }
     }
 
-    useEffect(() => {
+    useEffect(async () => {
+        setImageHTML(await generateImageHTML());
+        setCurrentDate(generateCurrentDate());
         getUserData();
         getFoodDiaryData();
         //getBloodPressureDiaryData();
@@ -419,8 +515,9 @@ export default function Email({navigation, route}) {
         let URIS = [];
         var eURi = [];
         var bloodPressureSelected = false;
+        
 
-        //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each and appends the URI to an array of URIs to be used as an attachement
+        //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
         for (let i=0; i<selectedDiary.length; i++) {
             changeHtmlContent(i);
             
@@ -429,8 +526,18 @@ export default function Email({navigation, route}) {
                 html: htmlContent,
             });
 
-            var fURI = file_object.uri;
-            pdfURIS.push(fURI);
+            //Basically renames the file to its diary name with the current date by replacing the string after the last / with diary name (with spaces taken out) and current date (/ between the number replaced with -)
+            const pdfName = `${file_object.uri.slice(
+                0,
+                file_object.uri.lastIndexOf('/') + 1)+selectedDiary[i].replace(/ /g, '')}_${currentDate.replaceAll('/', '-')}.pdf`
+
+            await FileSystem.moveAsync({
+                from: file_object.uri,
+                to: pdfName,
+            })
+
+            //Adds new uri to array of pdf uris to be used as attachement later
+            pdfURIS.push(pdfName);
         }
 
         //if bloodpressure in selecteddiary then add excel uri to URIS

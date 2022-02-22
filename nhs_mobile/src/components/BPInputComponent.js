@@ -36,6 +36,7 @@ const BPInputComponent = props => {
                                 return {...val, ['time']: new_time}
                             } return val;
                         })))
+                        setStateDict(state => {showTimePicker: false})
                         }
                     }
                 />

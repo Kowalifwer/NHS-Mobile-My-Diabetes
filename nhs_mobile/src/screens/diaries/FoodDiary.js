@@ -29,7 +29,7 @@ export default function FoodDiary({ navigation, route }) {
     
     const [food_input_components_data, setFoodInputComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a FoodInput component. This is also passed as prop to the component to manipulate the state of this scope.
     
-    const[barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]); //first element is a boolean, second element is the index of the component that is currently open for barcode scanning.
+    const [barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]); //first element is a boolean, second element is the index of the component that is currently open for barcode scanning.
 
     const [date, setDate] = useState(new Date())
     const [time, setTime] = useState(date)
@@ -146,46 +146,6 @@ export default function FoodDiary({ navigation, route }) {
                         placeholder='Water (ml)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["water"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Calories (kcal)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["kcal"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Fat (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["fat"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Carbohydrates (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["carb"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Sugar (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["sugar"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Protein (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["protein"]:value.trim() }), [])}
                         // multiline={true}
                         // numberOfLines={1}
                     />

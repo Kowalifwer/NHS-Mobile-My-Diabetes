@@ -16,7 +16,7 @@ import CustomButton from './CustomButton';
 
 // this is the food input which gets added to the page when user clicks the + button
 const BPInputComponent = props => {
-    let {setBPComponentsData,id} = props
+    let {setBPComponentsData, id, bp_input_components_data} = props
 
     const [state_dict, setStateDict] = useState({
         showTimePicker: false,
@@ -29,6 +29,7 @@ const BPInputComponent = props => {
                     testID="timePicker"
                     display="default"
                     mode="time"
+                    value={bp_input_components_data[id]["time"]}
                     onChange={(event, new_time) => {
                         setBPComponentsData(state => (state.map(val => {//#endregion
                             if (val.index == id) {

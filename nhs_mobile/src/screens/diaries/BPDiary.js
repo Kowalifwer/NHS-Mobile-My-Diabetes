@@ -26,7 +26,7 @@ export default function BPDiary({ navigation }) {
     const [diary_entry, setDiaryEntry] = useState(bp_diary_entry)
 
     const [n_inputs, setNInputs] = useState(0);
-    const[bp_input_components_data, setBPComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a BPInput component. This is also passed as prop to the component to manipulate the state of this scopre.
+    const [bp_input_components_data, setBPComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a BPInput component. This is also passed as prop to the component to manipulate the state of this scopre.
 
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -36,7 +36,7 @@ export default function BPDiary({ navigation }) {
     }, []); // don't know what this is doing
 
     useEffect(() => {
-        setBPComponentsData(state => ([...state, {index:n_inputs, time: "", arm: "", systolic: "", diastolic: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
+        setBPComponentsData(state => ([...state, {index:n_inputs, time: new Date(), arm: "", systolic: "", diastolic: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
     }, [n_inputs]);
 
     const getOrCreateBPDiary = async () => {
@@ -115,7 +115,7 @@ export default function BPDiary({ navigation }) {
                     <Text>Blood Pressure</Text>
 
                     {/* {console.log(bp_input_components_data)} */}
-                    {bp_input_components_data.map((input_component) => <BPInputComponent key={input_component.index} id={input_component.index} setBPComponentsData={setBPComponentsData}/>)}
+                    {bp_input_components_data.map((input_component) => <BPInputComponent key={input_component.index} id={input_component.index} bp_input_components_data={bp_input_components_data} setBPComponentsData={setBPComponentsData}/>)}
 
                     <CustomButton 
                         onPressFunction={() => addBPInputComponent()}

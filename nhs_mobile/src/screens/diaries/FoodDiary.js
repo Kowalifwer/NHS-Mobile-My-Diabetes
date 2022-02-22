@@ -41,7 +41,8 @@ export default function FoodDiary({ navigation, route }) {
     }, []); // don't know what this is doing
 
     useEffect(() => {
-        setFoodInputComponentsData(state => [...state, {index:n_inputs, name: "", brand: "", amount: "", scanned_item_object: {} }]);
+        // Please make sure that these fields match the fieleds in FoodInputComponent 'render_input_components' component_update_key parameter
+        setFoodInputComponentsData(state => [...state, {index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", fiber:"", sodium:"", scanned_item_object: {}}]);
     }, [n_inputs]); //when number of inputs increases, make sure we have a side effect that will increase the capacity of the input food components dictionary
 
     const getOrCreateFoodDiary = async () => {
@@ -64,8 +65,11 @@ export default function FoodDiary({ navigation, route }) {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
-                if (food_input_components_data.length > 0) 
-                    diary.push(food_input_components_data);
+                // let current_diary_entry_data = {...diary_entry, food: food_input_components_data}
+                // if (food_input_components_data.length > 0)  //update the food array inside the diary with existing food input data from the other components
+                //     current_diary_entry_data.food = food_input_components_data
+                //this will push the diary_entry to the diary local storagem and also update all food components
+                diary.push({...diary_entry, food: food_input_components_data});
                 await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
                 console.log(diary);
                 navigation.navigate("Home");

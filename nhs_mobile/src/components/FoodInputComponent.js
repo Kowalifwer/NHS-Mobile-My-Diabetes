@@ -49,10 +49,10 @@ const FoodInputComponent = (props) => {
                     placeholder={val.placeholder}
                     value={(val.is_nutrient) ? query_object_for_food_component(food_input_components_data[id]["scanned_item_object"]["nutrients"], val.component_update_key) : query_object_for_food_component(food_input_components_data[id]["scanned_item_object"], val.component_update_key)}
                     onChangeText={(value) => {
-                        setFoodInputComponentsData(state => (state.map(val => { //updates the food_input_components_data
-                            if (val.index == id) {
-                                return {...val, [component_update_key]: value}
-                            } return val;
+                        setFoodInputComponentsData(state => (state.map(entry => { //updates the food_input_components_data
+                            if (entry.index == id) {
+                                return {...entry, [val.component_update_key]: value}
+                            } return entry;
                         })))
                     }}
                     keyboardType={(val.is_numeric) ? "numeric" : "default"}

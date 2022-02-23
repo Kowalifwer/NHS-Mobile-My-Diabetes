@@ -61,7 +61,7 @@ export default function BPDiary({ navigation }) {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 let bp_readings_morning = bp_readings.filter(x => x.time.getHours() < 12);
-                let bp_readings_afternoon = bp_readings.filter(x => x.time.getHours() >= 12 && console.time.getHours() < 17);
+                let bp_readings_afternoon = bp_readings.filter(x => x.time.getHours() >= 12 && x.time.getHours() < 17);
                 let bp_readings_evening = bp_readings.filter(x => x.time.getHours() >= 17);
                 let systolic_avg_morning = NaN;
                 let diastolic_avg_morning = NaN;
@@ -75,10 +75,10 @@ export default function BPDiary({ navigation }) {
                     diastolic_avg_morning = bp_readings_morning.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_morning.length;
                 } if (bp_readings_afternoon.length) {
                     systolic_avg_afternoon = bp_readings_afternoon.reduce((partialSum, a) => partialSum + parseInt(a.systolic), 0) / bp_readings_afternoon.length;
-                    systolic_avg_afternoon = bp_readings_afternoon.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_afternoon.length;
+                    diastolic_avg_afternoon = bp_readings_afternoon.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_afternoon.length;
                 } if (bp_readings_evening.length) {
                     systolic_avg_evening = bp_readings_evening.reduce((partialSum, a) => partialSum + parseInt(a.systolic), 0) / bp_readings_evening.length;
-                    systolic_avg_evening = bp_readings_evening.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_evening.length;
+                    diastolic_avg_evening = bp_readings_evening.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_evening.length;
                 }
 
                 let final_entry = {
@@ -93,6 +93,7 @@ export default function BPDiary({ navigation }) {
                     evening_systolic_avg: systolic_avg_evening,
                     evening_diastolic_avg: diastolic_avg_evening,
                 }
+                
                 // let systolic_avg = bp_readings.reduce((total, next) => total + next.systolic, 0) / bp_readings.length
                 // let diastolic_avg = bp_readings.reduce((total,next) => total + next.diastolic, 0) / bp_readings.length
                 // let final_entry = {...diary_entry, systolic_avg: systolic_avg, diastolic_avg: diastolic_avg, readings: bp_readings}
@@ -163,8 +164,6 @@ export default function BPDiary({ navigation }) {
                         title='add to diary'
                         color='#1eb900'
                         onPressFunction={() => {
-                            // console.log("bp_reading just entered: ", bp_readings);
-                            console.log("bp_readings[0].time.getHours() > 12: ", bp_readings[0].time.getHours() > 12);
                             appendToDiary();
                         }}
                     />

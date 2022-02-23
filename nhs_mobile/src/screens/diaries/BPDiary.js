@@ -27,7 +27,7 @@ export default function BPDiary({ navigation }) {
     const [diary_entry, setDiaryEntry] = useState(bp_diary_entry)
 
     const [n_inputs, setNInputs] = useState(0);
-    const [bp_input_components_data, setBPComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a BPInput component. This is also passed as prop to the component to manipulate the state of this scopre.
+    const [bp_readings, setBPReadings] = useState([]); //stores a list of objects, each object storing the data for all the fields in a BPInput component. This is also passed as prop to the component to manipulate the state of this scopre.
 
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
@@ -37,7 +37,7 @@ export default function BPDiary({ navigation }) {
     }, []); // don't know what this is doing
 
     useEffect(() => {
-        setBPComponentsData(state => ([...state, {index:n_inputs, time: new Date(), arm: "", systolic: "", diastolic: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
+        setBPReadings(state => ([...state, {index:n_inputs, time: new Date(), arm: "", systolic: "", diastolic: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
     }, [n_inputs]);
 
     const getOrCreateBPDiary = async () => {
@@ -57,18 +57,52 @@ export default function BPDiary({ navigation }) {
     }
 
     const appendToDiary = async () => {
-        console.log(diary_entry)
+        // console.log(diary_entry)
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
-                let systolic_avg = bp_input_components_data.reduce((total, next) => total + next.systolic, 0) / bp_input_components_data.length
-                let diastolic_avg = bp_input_components_data.reduce((total,next) => total + next.diastolic, 0) / bp_input_components_data.length
-                let final_entry = {...diary_entry, systolic_avg: systolic_avg, diastolic_avg: diastolic_avg, readings: bp_input_components_data}
-                console.log("systolic avg: ", systolic_avg);
-                console.log("diastolic avg: ", diastolic_avg);
-                console.log(final_entry)
+                let bp_readings_morning = bp_readings.filter(x => x.time.getHours() < 12);
+                let bp_readings_afternoon = bp_readings.filter(x => x.time.getHours() >= 12 && console.time.getHours() < 17);
+                let bp_readings_evening = bp_readings.filter(x => x.time.getHours() >= 17);
+                let systolic_avg_morning = NaN;
+                let diastolic_avg_morning = NaN;
+                let systolic_avg_afternoon = NaN;
+                let diastolic_avg_afternoon = NaN;
+                let systolic_avg_evening = NaN;
+                let diastolic_avg_evening = NaN;
+
+                if (bp_readings_morning.length) {
+                    systolic_avg_morning = bp_readings_morning.reduce((partialSum, a) => partialSum + parseInt(a.systolic), 0) / bp_readings_morning.length;
+                    diastolic_avg_morning = bp_readings_morning.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_morning.length;
+                } if (bp_readings_afternoon.length) {
+                    systolic_avg_afternoon = bp_readings_afternoon.reduce((partialSum, a) => partialSum + parseInt(a.systolic), 0) / bp_readings_afternoon.length;
+                    systolic_avg_afternoon = bp_readings_afternoon.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_afternoon.length;
+                } if (bp_readings_evening.length) {
+                    systolic_avg_evening = bp_readings_evening.reduce((partialSum, a) => partialSum + parseInt(a.systolic), 0) / bp_readings_evening.length;
+                    systolic_avg_evening = bp_readings_evening.reduce((partialSum, a) => partialSum + parseInt(a.diastolic), 0) / bp_readings_evening.length;
+                }
+
+                let final_entry = {
+                    date: diary_entry.date,
+                    morning: bp_readings_morning,
+                    afternoon: bp_readings_afternoon,
+                    evening: bp_readings_evening,
+                    morning_systolic_avg: systolic_avg_morning,
+                    morning_diastolic_avg: diastolic_avg_morning,
+                    afternoon_systolic_avg: systolic_avg_afternoon,
+                    afternoon_diastolic_avg: diastolic_avg_afternoon,
+                    evening_systolic_avg: systolic_avg_evening,
+                    evening_diastolic_avg: diastolic_avg_evening,
+                }
+                // let systolic_avg = bp_readings.reduce((total, next) => total + next.systolic, 0) / bp_readings.length
+                // let diastolic_avg = bp_readings.reduce((total,next) => total + next.diastolic, 0) / bp_readings.length
+                // let final_entry = {...diary_entry, systolic_avg: systolic_avg, diastolic_avg: diastolic_avg, readings: bp_readings}
+                // console.log("systolic avg: ", systolic_avg);
+                // console.log("diastolic avg: ", diastolic_avg);
+                console.log("final bp entry:\n", final_entry);
+
                 const diary = JSON.parse(await AsyncStorage.getItem('BPDiary'))
                 diary.push(final_entry);
-                console.log(diary)
+                // console.log(diary)
                 await AsyncStorage.setItem("BPDiary", JSON.stringify(diary))
                 navigation.navigate("Home");
             } catch (error) {
@@ -81,7 +115,7 @@ export default function BPDiary({ navigation }) {
     }
 
     function addBPInputComponent() {
-        console.log(bp_input_components_data)
+        // console.log(bp_readings);
         setNInputs(n_inputs + 1);
     } // maybe this will work ??
 
@@ -115,8 +149,8 @@ export default function BPDiary({ navigation }) {
 
                     <Text>Blood Pressure</Text>
 
-                    {/* {console.log(bp_input_components_data)} */}
-                    {bp_input_components_data.map((input_component) => <BPInputComponent key={input_component.index} id={input_component.index} bp_input_components_data={bp_input_components_data} setBPComponentsData={setBPComponentsData}/>)}
+                    {/* {console.log(bp_readings)} */}
+                    {bp_readings.map((input_component) => <BPInputComponent key={input_component.index} id={input_component.index} bp_readings={bp_readings} setBPReadings={setBPReadings}/>)}
 
                     <CustomButton 
                         onPressFunction={() => addBPInputComponent()}
@@ -129,7 +163,8 @@ export default function BPDiary({ navigation }) {
                         title='add to diary'
                         color='#1eb900'
                         onPressFunction={() => {
-                            console.log(diary_entry);
+                            // console.log("bp_reading just entered: ", bp_readings);
+                            console.log("bp_readings[0].time.getHours() > 12: ", bp_readings[0].time.getHours() > 12);
                             appendToDiary();
                         }}
                     />

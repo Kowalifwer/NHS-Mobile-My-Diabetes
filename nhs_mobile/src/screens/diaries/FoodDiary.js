@@ -33,7 +33,7 @@ export default function FoodDiary({ navigation, route }) {
     const [barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]); //first element is a boolean, second element is the index of the component that is currently open for barcode scanning.
 
     const [date, setDate] = useState(new Date())
-    const [time, setTime] = useState(date)
+    const [time, setTime] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTimePicker, setShowTimePicker] = useState(false)
 

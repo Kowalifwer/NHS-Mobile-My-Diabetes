@@ -29,30 +29,30 @@ export default function Email({navigation, route}) {
     DropDownPicker.setListMode("SCROLLVIEW");
     
     const stored_user = route.params?.stored_user //can access all current user data from this variable.
-    const [selected, setSelectedRecipient] = useState("")
-    const [selectedDiary, setSelectedDiary] = useState("")
+    const [selected, setSelectedRecipient] = useState("");
+    const [selectedDiary, setSelectedDiary] = useState("");
     
     let htmlContent = "";
     const [imageHTML, setImageHTML] = useState();
     const [currentDate, setCurrentDate] = useState("");
     
     //Stores each html table data for each diary. To be used in each html variable
-    const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", glucoseResultsHTML: ""});
+    const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", waterResultsHTML: "", glucoseResultsHTML: ""});
 
     // Stores each excel files URI to be used as an Email Attachement
     const [excelURIS, setExcelURIS] = useState({bloodpressure: "", food: "", glucose: ""});
     
-    const [email_open, setEmailOpen] = useState(false);
-    const [email_value, setEmailValue] = useState(null);
     const [email, setEmail] = useState([]);
 
-    const [foodDiaryJSON, setFoodDiaryJSON] = useState([]); //Will be uncommented and worked on when Food Diary Implemented.
+    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]); //Will be uncommented and worked on when Food Diary Implemented.
     //const [bloodPressureDiaryJSON, setBloodPressureDiaryJSON] = useState([]); //Will be uncommented and worked on when Blood Pressure Diary Implemented.
     //const [glucoseDiaryJSON, setGlucoseDiaryJSON] = useState([]); //Will be uncommented and worked on when Glucose Diary Implemented.
 
     // Used for DropDownPicker. Automatically closes and opens picker depending on these values.
     const [diary_open, setDiaryOpen] = useState(false);
     const [diary_value, setDiaryValue] = useState(null);
+    const [email_open, setEmailOpen] = useState(false);
+    const [email_value, setEmailValue] = useState(null);
 
     // depends on what diary is actually presented to user NEED TO FIX AFTER MERGE
     const [diaryItems, setDiaryItems] = useState([
@@ -91,41 +91,94 @@ export default function Email({navigation, route}) {
         return d + "/" + m + "/" + y;
     }
 
-    //BLOOD PRESSURE JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data.
+    //BLOOD PRESSURE JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data. TESTING PURPOSES
     const bloodPressureDiaryJSON = [{
-        "date": "15/01/2021",
-        "morning": {"arm": "left",
-                    "sys1": {"bp": 148, "time": "11:00"},
-                    "sys2": {"bp": 117, "time": "11:30"},
-                    "dia1": {"bp": 90, "time": "11:00"},
-                    "dia2": {"bp": 76, "time": "11:30"},
-                    "sys_avg": 132,
-                    "dia_avg": 83},
-        "evening": {"arm": "right",
-                    "sys1": {"bp": 141, "time": "16:00"},
-                    "sys2": {"bp": 110, "time": "16:30"},
-                    "dia1": {"bp": 86, "time": "16:00"},
-                    "dia2": {"bp": 70, "time": "16:30"},
-                    "sys_avg": 126,
-                    "dia_avg": 78}
+        date: "22/02/2022",
+        morning: [
+            {time: "09:31", arm: "left", systolic: "110", diastolic: "73"},
+            {time: "09:34", arm: "right", systolic: "117", diastolic: "74"},
+        ],
+        evening: [
+            {time: "20:11", arm: "left", systolic: "111", diastolic: "72"},
+            {time: "20:15", arm: "right", systolic: "115", diastolic: "75"},
+        ],
+        morning_systolic_avg: "113.5",
+        morning_diastolic_avg: "73.5",
+        evening_systolic_avg: "113",
+        evening_diastolic_avg: "73.5",
     },
     {
-        "date": "16/01/2021",
-        "morning": {"arm": "right",
-                    "sys1": {"bp": 11248, "time": "11:00"},
-                    "sys2": {"bp": 11327, "time": "11:30"},
-                    "dia1": {"bp": 2130, "time": "11:00"},
-                    "dia2": {"bp": 71236, "time": "11:30"},
-                    "sys_avg": 21412,
-                    "dia_avg": 234},
-        "evening": {"arm": "left",
-                    "sys1": {"bp": 123, "time": "16:00"},
-                    "sys2": {"bp": 134, "time": "16:30"},
-                    "dia1": {"bp": 8232, "time": "16:00"},
-                    "dia2": {"bp": 72442, "time": "16:30"},
-                    "sys_avg": 124124,
-                    "dia_avg": 23}
-    }]
+        date: "23/02/2022",
+        morning: [
+            {time: "10:51", arm: "left", systolic: "521", diastolic: "41"},
+            {time: "04:15", arm: "right", systolic: "130", diastolic: "974"},
+        ],
+        evening: [
+            {time: "18:22", arm: "left", systolic: "127", diastolic: "9423"},
+            {time: "19:37", arm: "right", systolic: "648", diastolic: "304"},
+        ],
+        morning_systolic_avg: "423.5",
+        morning_diastolic_avg: "713.5",
+        evening_systolic_avg: "5113",
+        evening_diastolic_avg: "124713.5",
+    }];
+
+    //FOOD DIARY JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data. TESTING PURPOSES
+    const foodDiaryJSON = [{
+        "date": "11/09/2001",
+        "time": "13:46",
+        "meal": "lunch",
+        "water": "400",
+        "food": [{ "index": 0,
+                    "scanned_item_object": {},
+                    "name": "beesechurger",
+                    "amount": 1,
+                    "carb": "2000",
+                    "kcal": "2000",
+                    "fat": "2000",
+                    "protein": "2000",
+                    "sugar": "2000",
+                  },
+                  { "index": 1,
+                    "scanned_item_object": {},
+                    "name": "chiken nuget",
+                    "amount": 400,
+                    "carb": "3",
+                    "kcal": "3",
+                    "fat": "3",
+                    "protein": "3",
+                    "sugar": "7000",
+                   }]
+        },
+      {
+          "date": "30/10/2001",
+          "time": "13:46",
+          "meal": "diner",
+          "water": "800",
+          "food": [
+                    { "index": 0,
+                      "scanned_item_object": {},
+                      "name": "fish",
+                      "amount": 1,
+                      "carb": "12",
+                      "kcal": "12300",
+                      "fat": "454",
+                      "protein": "5530",
+                      "sugar": "13443",
+                    },
+                    { "index": 1,
+                      "scanned_item_object": {},
+                      "name": "alien",
+                      "amount": 0.4,
+                      "carb": "123",
+                      "kcal": "4214",
+                      "fat": "876",
+                      "protein": "222",
+                      "sugar": "1",
+                     },
+                   ]
+        }
+      ];
 
     // Food Diary HTML
     const foodHTML = `
@@ -137,12 +190,20 @@ export default function Email({navigation, route}) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Food Diary</title>
         <style>
-            table, th, tr, td {
+            table, td {
                 border:1px solid black;
             }
 
             td {
                 text-align: center;
+                overflow: hidden; 
+                text-overflow: ellipsis; 
+                word-wrap: break-word;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
             }
 
             .center {
@@ -156,9 +217,25 @@ export default function Email({navigation, route}) {
     
     <body>
         ${imageHTML}
+        <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM FOOD DIARY TO BE IMPLEMENTED </h3>
         <h1>Diary: Food Diary</h1>
         <h1>NHS Number: ${stored_user.nhs_number} </h1>
         <h1>Date Generated: ${currentDate}</h1>
+
+        <!--Food Results Table-->
+        <p>Food Results Table</p>
+
+        <table>
+            ${htmlTableData.foodResultsHTML}
+        </table>
+
+        <!--Water Results Table-->
+        <p>Water Results Table</p>
+
+        <table>
+            ${htmlTableData.waterResultsHTML}
+        </table>
+
     </body>
     
     </html>
@@ -174,20 +251,28 @@ export default function Email({navigation, route}) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Glucose Diary</title>
         <style>
-            table, th, tr, td {
-                border:1px solid black;
-            }
+        table, td {
+            border:1px solid black;
+        }
 
-            td {
-                text-align: center;
-            }
+        td {
+            text-align: center;
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            word-wrap: break-word;
+        }
 
-            .center {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                width: 50%;
-            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
         </style>
     </head>
     
@@ -211,20 +296,28 @@ export default function Email({navigation, route}) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Blood Pressure Diary</title>
         <style>
-            table, th, tr, td {
-                border:1px solid black;
-            }
+        table, td {
+            border:1px solid black;
+        }
 
-            td {
-                text-align: center;
-            }
+        td {
+            text-align: center;
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            word-wrap: break-word;
+        }
 
-            .center {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                width: 50%;
-            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
         </style>
     </head>
     
@@ -238,7 +331,7 @@ export default function Email({navigation, route}) {
         <!--Daily Results Table-->
         <p>Daily Results Table</p>
         
-        <table style="width:100%">
+        <table>
             ${htmlTableData.bloodPressureDailyResultsHTML}
         </table>
         
@@ -246,7 +339,7 @@ export default function Email({navigation, route}) {
         <!--Average Results Table-->
         <p>Average Results Table</p>
         
-        <table style="width:100%">
+        <table>
             ${htmlTableData.bloodPressureAverageResultsHTML}
         </table>
 
@@ -272,7 +365,7 @@ export default function Email({navigation, route}) {
         setImageHTML(await generateImageHTML());
         setCurrentDate(generateCurrentDate());
         getUserData();
-        getFoodDiaryData();
+        //getFoodDiaryData();
         //getBloodPressureDiaryData();
         convertDiaryData();
     }, []);
@@ -287,8 +380,7 @@ export default function Email({navigation, route}) {
         }
     }
 
-    /*
-    // Gets JSON data of the Blood Pressure Diary from AsyncStorage
+    // Gets JSON data of the Blood Pressure Diary from AsyncStorage. Currently not used as diarys are not functioning properly.
     const getBloodPressureDiaryData = async() => {
         try {
             var bloodPressureDiary = await getData('BPDiary');
@@ -305,12 +397,9 @@ export default function Email({navigation, route}) {
         } catch (e) {
             // error reading value
         }
-    }
-
-    */
+    }    
     
-    
-    // Gets JSON data of the Food Diary from AsyncStorage
+    // Gets JSON data of the Food Diary from AsyncStorage.  Currently not used as diarys are not functioning properly.
     const getFoodDiaryData = async() => {
         try {
             var foodDiary = await getData('FoodDiary');
@@ -327,8 +416,6 @@ export default function Email({navigation, route}) {
             // error reading value
         }
     }
-    
-    
 
     // Gets email recepients AsyncStorage
     const getUserData = async () => {
@@ -344,9 +431,7 @@ export default function Email({navigation, route}) {
         }
     }
     
-    /*
-    * Adding Data to Blood Pressure Excel variable from its JSON
-    */
+    // Adding Data to Blood Pressure Excel variable from its JSON
     const bloodPressureJSONtoArr = (dailyResultsExcel, averageResultsExcel) => {
         // Array data for each json diary
         var bloodPressureArrData = bloodPressureDiaryJSON;
@@ -355,46 +440,46 @@ export default function Email({navigation, route}) {
         for (var day=0; day <bloodPressureArrData.length; day++) {
 
             // Get a row of Morning information from JSON and adds it appropriate excel
-            for (var morn=1; morn < (((Object.keys(bloodPressureArrData[day].morning).length)-3)/2)+1; morn++) {
+            for (var morn=0; morn < bloodPressureArrData[day].morning.length; morn++) {
 
-                var sys = "sys";
-                var dia = "dia";
-                var sysX = sys + morn;
-                var diaX = dia + morn;
-
-                dailyResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning[sysX].time, "Morning", bloodPressureArrData[day].morning[sysX].bp, bloodPressureArrData[day].morning[diaX].bp, bloodPressureArrData[day].morning.arm])   
+                dailyResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning[morn].time, "Morning", bloodPressureArrData[day].morning[morn].systolic, bloodPressureArrData[day].morning[morn].diastolic, bloodPressureArrData[day].morning[morn].arm])   
             }
             
             // Get a row of Evening information from JSON and adds it appropriate excel
-            for (var eveng=1; eveng < (((Object.keys(bloodPressureArrData[day].evening).length)-3)/2)+1; eveng++) {
+            for (var eveng=0; eveng < bloodPressureArrData[day].evening.length; eveng++) {
 
-                var sys = "sys";
-                var dia = "dia";
-                var sysX = sys + eveng;
-                var diaX = dia + eveng;
-
-                dailyResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].evening[sysX].time,"Evening", bloodPressureArrData[day].evening[sysX].bp, bloodPressureArrData[day].evening[diaX].bp, bloodPressureArrData[day].evening.arm]);
+                dailyResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].evening[eveng].time,"Evening", bloodPressureArrData[day].evening[eveng].systolic, bloodPressureArrData[day].evening[eveng].diastolic, bloodPressureArrData[day].evening[eveng].arm]);
             }
         }
 
         // Get a row of averages from JSON and adds it to appropriate excel
         for (var day=0; day < bloodPressureArrData.length; day++) {
-            averageResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning.sys_avg, bloodPressureArrData[day].morning.dia_avg, bloodPressureArrData[day].evening.sys_avg, bloodPressureArrData[day].evening.dia_avg]);
+            averageResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning_systolic_avg, bloodPressureArrData[day].morning_diastolic_avg, bloodPressureArrData[day].evening_systolic_avg, bloodPressureArrData[day].evening_diastolic_avg]);
         }
     }
 
-    /*
-    * Adding Data to Food Excel variable from its JSON
-    */
-    const foodJSONtoArr = (excel) => {
+    // Adding Data to Food Excel variable from its JSON
+    const foodJSONtoArr = (foodExcel, waterExcel) => {
         // Array data for each json diary
         var foodArrData = foodDiaryJSON;
 
+        //Loops for each day in the JSON
+        for (var day=0; day<foodArrData.length; day++) {
+            
+            //Loops for each food entry in the JSON and adds to excel sheet the JSON data
+            for (var entry = 0; entry<foodArrData[day].food.length; entry++) {
+
+                foodExcel.push([foodArrData[day].date, foodArrData[day].meal, foodArrData[day].time, foodArrData[day].food[entry].name, foodArrData[day].food[entry].amount, foodArrData[day].food[entry].kcal, foodArrData[day].food[entry].carb, foodArrData[day].food[entry].sugar, foodArrData[day].food[entry].fat, foodArrData[day].food[entry].protein])
+            }
+
+            //Adds amount of water consumed that day
+            waterExcel.push([foodArrData[day].date, foodArrData[day].water]);
+
+        }
+
     }
 
-    /*
-    * Adding Data to Glucose Excel variable from its JSON
-    */
+    //Adding Data to Glucose Excel variable from its JSON
     const glucoseJSONtoArr = (excel) => {
         // Array data for each json diary
         var glucoseArrData = glucoseDiaryJSON;
@@ -408,32 +493,35 @@ export default function Email({navigation, route}) {
     // Reformated json data for excel
         var bloodPressureDailyEXCEL = [];
         var bloodPressureAverageEXCEL = [];
-        var foodEXCEL = []; // change name to applicable data
+        var foodEXCEL = [];
+        var waterEXCEL = [];
         var glucoseEXCEL = []; //change name to applicable data
 
     // Header rows for each table for each diary
         var bloodPressureDailyResultsHeader = ["Date","Time","Period","Systolic","Diastolic","Arm"];
         var bloodPressureAverageResultsHeader = ["Date", "Morning Average Systolic", "Morning Average Diastolic", "Evening Average Systolic", "Evening Average Diastolic"];
-        var foodHeader = []; //change name to applicable data
-        var glucoseHeader = []; //change name to applicable data
+        var foodHeader = ["Date", "Meal", "Time", "Food Name", "Amount", "Calories", "Carbs", "Sugar", "Fat", "Protein"];
+        var waterHeader = ["Date", "Water Drank"];
+        var glucoseHeader = ["Date"]; //change name to applicable data
 
     // Adding header row to each EXCEL variable
         bloodPressureDailyEXCEL.push(bloodPressureDailyResultsHeader);
         bloodPressureAverageEXCEL.push(bloodPressureAverageResultsHeader);
-    //    foodEXCEL.push(foodHeader);
-    //    glucoseEXCEL.push(glucoseHeader);
+        foodEXCEL.push(foodHeader);
+        waterEXCEL.push(waterHeader);
+        glucoseEXCEL.push(glucoseHeader);
 
     //Adds data to each diaries excel variable
         bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL);
-      //  foodJSONtoArr(foodEXCEL);
+        foodJSONtoArr(foodEXCEL, waterEXCEL);
        // glucoseJSONtoArr(glucoseEXCEL);
         
     // Create Excel Document from Excel Diary and appends to a global uri variable to be used in other functions
 
         //creates work book for each diary
         var bloodPressureWB = XLSX.utils.book_new();
-    //    var foodWB = XLSX.utils.book_new();
-     //   var glucoseWB = XLSX.utils.book_new();
+        var foodWB = XLSX.utils.book_new();
+        var glucoseWB = XLSX.utils.book_new();
 
         //Creates a options variable to skip the autogenerated excel headers
         const opts = {
@@ -443,21 +531,23 @@ export default function Email({navigation, route}) {
         //creates work sheets for each part in the diarys
         var bloodPressureDailyResultsWS = XLSX.utils.json_to_sheet(bloodPressureDailyEXCEL, opts);
         var bloodPressureAverageResultsWS = XLSX.utils.json_to_sheet(bloodPressureAverageEXCEL, opts);
-      //  var foodResultsWS = XLSX.utils.json_to_sheet(foodEXCEL, opts);
-       // var glucoseResultsWS = XLSX.utils.json_to_sheet(glucoseEXCEL, opts);
+        var foodResultsWS = XLSX.utils.json_to_sheet(foodEXCEL, opts);
+        var waterResultsWS = XLSX.utils.json_to_sheet(waterEXCEL, opts);
+        var glucoseResultsWS = XLSX.utils.json_to_sheet(glucoseEXCEL, opts);
 
         //Append the work sheets to it's work book
         XLSX.utils.book_append_sheet(bloodPressureWB,bloodPressureDailyResultsWS, "Blood Pressure Daily Results");
         XLSX.utils.book_append_sheet(bloodPressureWB,bloodPressureAverageResultsWS, "Blood Pressure Average Results");
-      //  XLSX.utils.book_append_sheet(foodWB,foodResultsWS, "Food Results");
-       // XLSX.utils.book_append_sheet(glucoseWB,glucoseResultsWS, "Glucose Results");
+        XLSX.utils.book_append_sheet(foodWB,foodResultsWS, "Food Results");
+        XLSX.utils.book_append_sheet(foodWB,waterResultsWS, "Water Results");
+        XLSX.utils.book_append_sheet(glucoseWB,glucoseResultsWS, "Glucose Results");
 
         //Writes work book data to each work book
         const bloodPressureWBOUT = XLSX.write(bloodPressureWB, {
             type: 'base64',
             bookType: 'xlsx'
         });
-/*
+
         const foodWBOUT = XLSX.write(foodWB, {
             type: 'base64',
             bookType: 'xlsx'
@@ -466,29 +556,29 @@ export default function Email({navigation, route}) {
         const glucoseWBOUT = XLSX.write(glucoseWB, {
             type: 'base64',
             bookType: 'xlsx'
-        });*/
+        });
 
         //Creates URI for each excel file to be used elsewhere
-        const bloodPressureURI = FileSystem.cacheDirectory + 'BloodPressureDiary.xlsx';
-       // const foodURI = FileSystem.cacheDirectory + 'FoodDiary.xlsx';
-       // const glucoseURI = FileSystem.cacheDirectory + 'GlucoseDiary.xlsx';
+        const bloodPressureURI = FileSystem.cacheDirectory + `BloodPressureDiary_${currentDate.replace(/\//g, '-')}.xlsx`;
+        const foodURI = FileSystem.cacheDirectory + `FoodDiary_${currentDate.replace(/\//g, '-')}.xlsx`;
+        const glucoseURI = FileSystem.cacheDirectory + `GlucoseDiary_${currentDate.replace(/\//g, '-')}.xlsx`;
         
         FileSystem.writeAsStringAsync(bloodPressureURI, bloodPressureWBOUT, {
             encoding: FileSystem.EncodingType.Base64
             });
-/*
+
         FileSystem.writeAsStringAsync(foodURI, foodWBOUT, {
             encoding: FileSystem.EncodingType.Base64
             });
 
         FileSystem.writeAsStringAsync(glucoseURI, glucoseWBOUT, {
             encoding: FileSystem.EncodingType.Base64
-            });*/
+            });
         
-        //apppends bloood pressure uri to excelURIS object to be used in composeMail function
+        //appends bloood pressure uri to excelURIS object to be used in composeMail function
         setExcelURIS({bloodpressure: bloodPressureURI,
-            //food: foodURI,
-            //glucose: glucoseURI
+            food: foodURI,
+            glucose: glucoseURI
         });
   
     // Converts the excel work sheet data to html and sets the global variable to be used in the html variable for each diary
@@ -496,13 +586,15 @@ export default function Email({navigation, route}) {
         // converts to work sheet to html
         const bpdrHTML = XLSX.utils.sheet_to_html(bloodPressureDailyResultsWS);
         const bparHTML = XLSX.utils.sheet_to_html(bloodPressureAverageResultsWS);
-        //const frHTML = XLSX.utils.sheet_to_html(foodResultsWS);
-        //const grHTML = XLSX.utils.sheet_to_html(glucoseResultsWS);
+        const frHTML = XLSX.utils.sheet_to_html(foodResultsWS);
+        const waterHTML = XLSX.utils.sheet_to_html(waterResultsWS);
+        const grHTML = XLSX.utils.sheet_to_html(glucoseResultsWS);
 
         // takes out the uncessary html information and only leaves the contents of inside the table tag then it appends the data to global variable to be used in actual html variable
         setHtmlTableData({bloodPressureDailyResultsHTML: `${bpdrHTML.slice(bpdrHTML.indexOf('<tr>'), bpdrHTML.lastIndexOf('</table>'))}`, 
             bloodPressureAverageResultsHTML: `${bparHTML.slice(bparHTML.indexOf('<tr>'), bparHTML.lastIndexOf('</table>'))}`,
-          //  foodResultsHTML: `${frHTML.slice(frHTML.indexOf('<tr>'), frHTML.lastIndexOf('</table>'))}`,
+            foodResultsHTML: `${frHTML.slice(frHTML.indexOf('<tr>'), frHTML.lastIndexOf('</table>'))}`,
+            waterResultsHTML: `${waterHTML.slice(waterHTML.indexOf('<tr>'), waterHTML.lastIndexOf('</table>'))}`,
            // glucoseResultsHTML: `${grHTML.slice(grHTML.indexOf('<tr>'), grHTML.lastIndexOf('</table>'))}`
         });
 
@@ -511,51 +603,50 @@ export default function Email({navigation, route}) {
     //Composes Email based on diary chosen by user
     const composeMail = async() => {
 
-        let pdfURIS = [];
-        let URIS = [];
-        var eURi = [];
-        var bloodPressureSelected = false;
-        
+        let URIS = []; // combination of pdf and excel URIs to be used in the attachements part of Expo Compose
+        let pdfURIS = {bloodpressure: "", fooddiary: "", glucosediary: ""};
 
         //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
         for (let i=0; i<selectedDiary.length; i++) {
             changeHtmlContent(i);
             
-            //makes html code to pdf and saves to Filesystem Cache Directory
+            //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
             const file_object = await Print.printToFileAsync({
                 html: htmlContent,
+                height: 842,
+                width: 595,
             });
 
-            //Basically renames the file to its diary name with the current date by replacing the string after the last / with diary name (with spaces taken out) and current date (/ between the number replaced with -)
+            //renames the file to its diary name with the current date by replacing the string after the last slash with diary name (with spaces taken out) and current date (slash / between the number replaced with a dash -)
             const pdfName = `${file_object.uri.slice(
                 0,
-                file_object.uri.lastIndexOf('/') + 1)+selectedDiary[i].replace(/ /g, '')}_${currentDate.replaceAll('/', '-')}.pdf`
+                file_object.uri.lastIndexOf('/') + 1)+selectedDiary[i].replace(/ /g, '')}_${currentDate.replace(/\//g, '-')}.pdf`
 
             await FileSystem.moveAsync({
                 from: file_object.uri,
                 to: pdfName,
             })
 
-            //Adds new uri to array of pdf uris to be used as attachement later
-            pdfURIS.push(pdfName);
+            //Adds the URI from the diary that was just converted to array of pdf uris. Since, the keys in pdfURIS are all lowercase and no spaces together, need to take the space and make lowercase the diary names so the value of the keys can be replaced by the uri. 
+            pdfURIS[selectedDiary[i].replace(/ /g, '').toLowerCase()] = pdfName;
+
         }
 
-        //if bloodpressure in selecteddiary then add excel uri to URIS
+        //Appends the pdf and excel diary uris to one array URIS to be used as attachements.
         for (var index in selectedDiary) {
             if (selectedDiary[index] == "Blood Pressure") {
-                eURi.push(excelURIS.bloodpressure)
-                bloodPressureSelected = true;
+                URIS.push(excelURIS.bloodpressure)
+                URIS.push(pdfURIS.bloodpressure)
+            }
+            if (selectedDiary[index] == "Food Diary") {
+                URIS.push(excelURIS.food)
+                URIS.push(pdfURIS.fooddiary)
+            }
+            if (selectedDiary[index] == "Glucose Diary") {
+                URIS.push(excelURIS.glucose)
+                URIS.push(pdfURIS.glucosediary)
             }
         }
-
-        // Formats URIS depending on diaries chosen by user. Oriented to work with blood pressure diary right now.
-        if (pdfURIS.length == 1) {
-            bloodPressureSelected ? URIS = [pdfURIS[0], eURi[0]] : URIS = [pdfURIS[0]]
-        } else if (pdfURIS.length == 2) {
-            bloodPressureSelected ? URIS = [pdfURIS[0], pdfURIS[1], eURi[0]] : URIS = [pdfURIS[0], pdfURIS[1]]
-        } else {
-            bloodPressureSelected ? URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2], eURi[0]] : URIS = [pdfURIS[0], pdfURIS[1], pdfURIS[2]]
-        };
 
         // This section composes the email with the recepient, email subject and attachemments
         try{
@@ -563,7 +654,6 @@ export default function Email({navigation, route}) {
                 recipients: (selected != null) ? [selected] : [],
                 subject: 'Test email',
                 attachments: URIS,
-                
             });
             (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
         } catch (e) {
@@ -639,13 +729,6 @@ export default function Email({navigation, route}) {
                         color="#ff0f00"
                         title="Compose Email"
                     />
-                    {/* TO BE WORKED ON FOR JSON TO EXCEL
-                    <CustomButton
-                        onPressFunction={() => JSONtoCSV(bloodPressureDiaryJSON,"bloodpressurediary")}
-                        color="#ff0f00"
-                        title="Convert to CSV"
-                    />
-                    */}
 
                     <StatusBar style="auto" />
 

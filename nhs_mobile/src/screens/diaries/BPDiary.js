@@ -9,6 +9,7 @@ import {
     SafeAreaView, 
     ScrollView,
     Button,
+    Keyboard,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../../components/CustomButton';
@@ -86,7 +87,7 @@ export default function BPDiary({ navigation }) {
 
     return (
         <SafeAreaView>
-            <ScrollView keyboardShouldPersistTaps="never" keyboardDismissMode='on-drag'>
+            <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header/>
                     <Text style={[GlobalStyle.CustomFont, styles.text]}>

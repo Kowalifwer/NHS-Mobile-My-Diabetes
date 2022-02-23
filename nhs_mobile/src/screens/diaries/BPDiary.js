@@ -86,7 +86,7 @@ export default function BPDiary({ navigation }) {
 
     return (
         <SafeAreaView>
-            <ScrollView keyboardShouldPersistTaps="handheld">
+            <ScrollView keyboardShouldPersistTaps="never">
                 <View style={styles.body}>
                     <Header/>
                     <Text style={[GlobalStyle.CustomFont, styles.text]}>
@@ -128,6 +128,7 @@ export default function BPDiary({ navigation }) {
                         title='add to diary'
                         color='#1eb900'
                         onPressFunction={() => {
+                            console.log(diary_entry);
                             appendToDiary();
                         }}
                     />

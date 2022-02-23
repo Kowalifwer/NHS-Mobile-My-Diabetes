@@ -27,11 +27,16 @@ const food_diary_entry = {
     protein: ""
 }
 
+const bp_reading_entry = {time: "", arm: "", systolic: "", diastolic: ""}
+
 const bp_diary_entry = {
     date: "",
-    readings: [],
-    systolic_avg: "",
-    diastolic_avg: ""
+    morning: [],
+    evening: [],
+    morning_systolic_avg: "",
+    morning_diastolic_avg: "",
+    evening_systolic_avg: "",
+    evening_diastolic_avg: "",
 }
 
 const food_diary = {screen_name: "FoodDiary", verbose_name: "Food Diary", entries: []} //food diary

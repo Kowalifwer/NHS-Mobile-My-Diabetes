@@ -88,7 +88,7 @@ export default function FoodDiary({ navigation, route }) {
 
     return (
         <SafeAreaView style={styles.body}> 
-            <ScrollView keyboardShouldPersistTaps="handheld">
+            <ScrollView keyboardShouldPersistTaps="never">
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>

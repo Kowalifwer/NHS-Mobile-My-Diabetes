@@ -86,7 +86,7 @@ export default function BPDiary({ navigation }) {
 
     return (
         <SafeAreaView>
-            <ScrollView keyboardShouldPersistTaps="handheld">
+            <ScrollView keyboardShouldPersistTaps="never" keyboardDismissMode='on-drag'>
                 <View style={styles.body}>
                     <Header/>
                     <Text style={[GlobalStyle.CustomFont, styles.text]}>

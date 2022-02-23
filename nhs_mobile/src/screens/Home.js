@@ -88,7 +88,9 @@ export default function Home({ navigation, route }) {
                         <CustomButton
                             title='Send an email'
                             color='#761076'
-                            onPressFunction={() => navigation.navigate("Email")}
+                            onPressFunction={() => navigation.navigate("Email", {
+                                stored_user: stored_user,
+                            })}
                         />
                         <CustomButton
                             title='Authenticate yourself'
@@ -104,12 +106,7 @@ export default function Home({ navigation, route }) {
                             title="My Diaries"
                             color="#761076"
                             onPressFunction={() => navigation.navigate("Diaries")}
-                        />
-                        <CustomButton
-                            title="Blood Pressure Diary"
-                            color="#761076"
-                            onPressFunction={() => navigation.navigate("BPDiary")}
-                        />                        
+                        />                       
                         <CustomButton
                             title='Wipe all local data (warning)'
                             color='red'

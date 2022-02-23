@@ -15,9 +15,7 @@ import DropdownStyle from '../styles/DropdownStyle';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const ConditionalProfileView = props => {
-    let {setData} = props;
-    let {setDynamicUser} = props;
-    let {account_type} = props;
+    let {setData, setDynamicUser, account_type} = props;
     //a shared view that is used in multiple control flows
     const shared_view = () => {
         return(<View style={[styles.body, {marginTop: 50}]}>
@@ -109,6 +107,5 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
 })
-
 
 export default ConditionalProfileView;

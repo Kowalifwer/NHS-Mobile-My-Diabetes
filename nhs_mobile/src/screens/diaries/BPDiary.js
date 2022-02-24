@@ -60,9 +60,23 @@ export default function BPDiary({ navigation }) {
         // console.log(diary_entry)
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
+                const diary = JSON.parse(await AsyncStorage.getItem('BPDiary'))
+
                 let bp_readings_morning = bp_readings.filter(x => x.time.getHours() < 12);
                 let bp_readings_afternoon = bp_readings.filter(x => x.time.getHours() >= 12 && x.time.getHours() < 17);
                 let bp_readings_evening = bp_readings.filter(x => x.time.getHours() >= 17);
+
+                let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
+                console.log("existing diary entry:\n", existing_diary_entry);
+
+                if (existing_diary_entry != undefined) {
+                    diary.splice(diary.indexOf(existing_diary_entry), 1); // this removes the old diary entry
+                    console.log("existing_diary_entry.morning:\n", existing_diary_entry.morning);
+                    bp_readings_morning = existing_diary_entry.morning.concat(bp_readings_morning);
+                    bp_readings_afternoon = existing_diary_entry.afternoon.concat(bp_readings_afternoon);
+                    bp_readings_evening = existing_diary_entry.evening.concat(bp_readings_evening);
+                }
+
                 let systolic_avg_morning = NaN;
                 let diastolic_avg_morning = NaN;
                 let systolic_avg_afternoon = NaN;
@@ -94,14 +108,7 @@ export default function BPDiary({ navigation }) {
                     evening_diastolic_avg: diastolic_avg_evening,
                 }
                 
-                // let systolic_avg = bp_readings.reduce((total, next) => total + next.systolic, 0) / bp_readings.length
-                // let diastolic_avg = bp_readings.reduce((total,next) => total + next.diastolic, 0) / bp_readings.length
-                // let final_entry = {...diary_entry, systolic_avg: systolic_avg, diastolic_avg: diastolic_avg, readings: bp_readings}
-                // console.log("systolic avg: ", systolic_avg);
-                // console.log("diastolic avg: ", diastolic_avg);
                 console.log("final bp entry:\n", final_entry);
-
-                const diary = JSON.parse(await AsyncStorage.getItem('BPDiary'))
                 diary.push(final_entry);
                 // console.log(diary)
                 await AsyncStorage.setItem("BPDiary", JSON.stringify(diary))

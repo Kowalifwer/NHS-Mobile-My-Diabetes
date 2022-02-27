@@ -44,10 +44,6 @@ export default function Email({navigation, route}) {
     
     const [email, setEmail] = useState([]);
 
-    //const [foodDiaryJSON, setFoodDiaryJSON] = useState([]); //Will be uncommented and worked on when Food Diary Implemented.
-    //const [bloodPressureDiaryJSON, setBloodPressureDiaryJSON] = useState([]); //Will be uncommented and worked on when Blood Pressure Diary Implemented.
-    //const [glucoseDiaryJSON, setGlucoseDiaryJSON] = useState([]); //Will be uncommented and worked on when Glucose Diary Implemented.
-
     // Used for DropDownPicker. Automatically closes and opens picker depending on these values.
     const [diary_open, setDiaryOpen] = useState(false);
     const [diary_value, setDiaryValue] = useState(null);
@@ -90,95 +86,6 @@ export default function Email({navigation, route}) {
         const d = n.getDate();
         return d + "/" + m + "/" + y;
     }
-
-    //BLOOD PRESSURE JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data. TESTING PURPOSES
-    const bloodPressureDiaryJSON = [{
-        date: "22/02/2022",
-        morning: [
-            {time: "09:31", arm: "left", systolic: "110", diastolic: "73"},
-            {time: "09:34", arm: "right", systolic: "117", diastolic: "74"},
-        ],
-        evening: [
-            {time: "20:11", arm: "left", systolic: "111", diastolic: "72"},
-            {time: "20:15", arm: "right", systolic: "115", diastolic: "75"},
-        ],
-        morning_systolic_avg: "113.5",
-        morning_diastolic_avg: "73.5",
-        evening_systolic_avg: "113",
-        evening_diastolic_avg: "73.5",
-    },
-    {
-        date: "23/02/2022",
-        morning: [
-            {time: "10:51", arm: "left", systolic: "521", diastolic: "41"},
-            {time: "04:15", arm: "right", systolic: "130", diastolic: "974"},
-        ],
-        evening: [
-            {time: "18:22", arm: "left", systolic: "127", diastolic: "9423"},
-            {time: "19:37", arm: "right", systolic: "648", diastolic: "304"},
-        ],
-        morning_systolic_avg: "423.5",
-        morning_diastolic_avg: "713.5",
-        evening_systolic_avg: "5113",
-        evening_diastolic_avg: "124713.5",
-    }];
-
-    //FOOD DIARY JSON. Will be removed in future commits. Will be replaced with better way of incorporating actual json data from the diaries and not hardocded data. TESTING PURPOSES
-    const foodDiaryJSON = [{
-        "date": "11/09/2001",
-        "time": "13:46",
-        "meal": "lunch",
-        "water": "400",
-        "food": [{ "index": 0,
-                    "scanned_item_object": {},
-                    "name": "beesechurger",
-                    "amount": 1,
-                    "carb": "2000",
-                    "kcal": "2000",
-                    "fat": "2000",
-                    "protein": "2000",
-                    "sugar": "2000",
-                  },
-                  { "index": 1,
-                    "scanned_item_object": {},
-                    "name": "chiken nuget",
-                    "amount": 400,
-                    "carb": "3",
-                    "kcal": "3",
-                    "fat": "3",
-                    "protein": "3",
-                    "sugar": "7000",
-                   }]
-        },
-      {
-          "date": "30/10/2001",
-          "time": "13:46",
-          "meal": "diner",
-          "water": "800",
-          "food": [
-                    { "index": 0,
-                      "scanned_item_object": {},
-                      "name": "fish",
-                      "amount": 1,
-                      "carb": "12",
-                      "kcal": "12300",
-                      "fat": "454",
-                      "protein": "5530",
-                      "sugar": "13443",
-                    },
-                    { "index": 1,
-                      "scanned_item_object": {},
-                      "name": "alien",
-                      "amount": 0.4,
-                      "carb": "123",
-                      "kcal": "4214",
-                      "fat": "876",
-                      "protein": "222",
-                      "sugar": "1",
-                     },
-                   ]
-        }
-      ];
 
     // Food Diary HTML
     const foodHTML = `
@@ -365,8 +272,6 @@ export default function Email({navigation, route}) {
         setImageHTML(await generateImageHTML());
         setCurrentDate(generateCurrentDate());
         getUserData();
-        //getFoodDiaryData();
-        //getBloodPressureDiaryData();
         convertDiaryData();
     }, []);
 
@@ -377,43 +282,6 @@ export default function Email({navigation, route}) {
           return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
           // error reading value
-        }
-    }
-
-    // Gets JSON data of the Blood Pressure Diary from AsyncStorage. Currently not used as diarys are not functioning properly.
-    const getBloodPressureDiaryData = async() => {
-        try {
-            var bloodPressureDiary = await getData('BPDiary');
-            console.log("ssdas:")
-            console.log(bloodPressureDiary)
-            setBloodPressureDiaryJSON([]);
-
-            //Adds each item in array to variable foodDiaryJSON by looping through
-            for (var i =0; i< foodDiary.length; i++) {
-                setBloodPressureDiaryJSON(state => [])
-            }
-
-            
-        } catch (e) {
-            // error reading value
-        }
-    }    
-    
-    // Gets JSON data of the Food Diary from AsyncStorage.  Currently not used as diarys are not functioning properly.
-    const getFoodDiaryData = async() => {
-        try {
-            var foodDiary = await getData('FoodDiary');
-            console.log("ssdas:")
-            console.log(foodDiary)
-            setFoodDiaryJSON([]);
-
-            /*
-            //Adds each item in array to variable foodDiaryJSON by looping through
-            for (var i =0; i< foodDiary.length; i++) {
-                setFoodDiaryJSON(state => [])
-            }]*/
-        } catch (e) {
-            // error reading value
         }
     }
 
@@ -432,9 +300,7 @@ export default function Email({navigation, route}) {
     }
     
     // Adding Data to Blood Pressure Excel variable from its JSON
-    const bloodPressureJSONtoArr = (dailyResultsExcel, averageResultsExcel) => {
-        // Array data for each json diary
-        var bloodPressureArrData = bloodPressureDiaryJSON;
+    const bloodPressureJSONtoArr = (dailyResultsExcel, averageResultsExcel, bloodPressureArrData) => {
         
         //Loops for each day in the JSON
         for (var day=0; day <bloodPressureArrData.length; day++) {
@@ -442,26 +308,39 @@ export default function Email({navigation, route}) {
             // Get a row of Morning information from JSON and adds it appropriate excel
             for (var morn=0; morn < bloodPressureArrData[day].morning.length; morn++) {
 
-                dailyResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning[morn].time, "Morning", bloodPressureArrData[day].morning[morn].systolic, bloodPressureArrData[day].morning[morn].diastolic, bloodPressureArrData[day].morning[morn].arm])   
+                //Since time is diary json is in format: Year-Month-Date<T>Hour:Minute:SecondZ, we need to slice this information so we get the time. Hence below:
+                var mornTime = bloodPressureArrData[day].morning[morn].time.slice(bloodPressureArrData[day].morning[morn].time.indexOf('T')+1,bloodPressureArrData[day].morning[morn].time.indexOf('T')+6)
+
+                dailyResultsExcel.push([bloodPressureArrData[day].date, mornTime, "Morning", bloodPressureArrData[day].morning[morn].systolic, bloodPressureArrData[day].morning[morn].diastolic, bloodPressureArrData[day].morning[morn].arm])   
+            }
+
+            // Get a row of Afternoon information from JSON and adds it to appropriate excel
+            for (var aftn=0; aftn < bloodPressureArrData[day].afternoon.length; aftn++) {
+
+                //Since time is diary json is in format: Year-Month-Date<T>Hour:Minute:SecondZ, we need to slice this information so we get the time. Hence below:
+                var aftnTime = bloodPressureArrData[day].afternoon[aftn].time.slice(bloodPressureArrData[day].afternoon[aftn].time.indexOf('T')+1,bloodPressureArrData[day].afternoon[aftn].time.indexOf('T')+6)
+
+                dailyResultsExcel.push([bloodPressureArrData[day].date, aftnTime, "Afternoon", bloodPressureArrData[day].afternoon[aftn].systolic, bloodPressureArrData[day].afternoon[aftn].diastolic, bloodPressureArrData[day].afternoon[aftn].arm])   
             }
             
-            // Get a row of Evening information from JSON and adds it appropriate excel
+            // Get a row of Evening information from JSON and adds it appropriate excel.
             for (var eveng=0; eveng < bloodPressureArrData[day].evening.length; eveng++) {
+                
+                //Since time is diary json is in format: Year-Month-Date<T>Hour:Minute:SecondZ, we need to slice this information so we get the time. Hence below:
+                var evenTime = bloodPressureArrData[day].evening[eveng].time.slice(bloodPressureArrData[day].evening[eveng].time.indexOf('T')+1,bloodPressureArrData[day].evening[eveng].time.indexOf('T')+6)
 
-                dailyResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].evening[eveng].time,"Evening", bloodPressureArrData[day].evening[eveng].systolic, bloodPressureArrData[day].evening[eveng].diastolic, bloodPressureArrData[day].evening[eveng].arm]);
+                dailyResultsExcel.push([bloodPressureArrData[day].date, evenTime,"Evening", bloodPressureArrData[day].evening[eveng].systolic, bloodPressureArrData[day].evening[eveng].diastolic, bloodPressureArrData[day].evening[eveng].arm]);
             }
         }
 
         // Get a row of averages from JSON and adds it to appropriate excel
         for (var day=0; day < bloodPressureArrData.length; day++) {
-            averageResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning_systolic_avg, bloodPressureArrData[day].morning_diastolic_avg, bloodPressureArrData[day].evening_systolic_avg, bloodPressureArrData[day].evening_diastolic_avg]);
+            averageResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning_systolic_avg, bloodPressureArrData[day].morning_diastolic_avg, bloodPressureArrData[day].afternoon_systolic_avg, bloodPressureArrData[day].afternoon_diastolic_avg, bloodPressureArrData[day].evening_systolic_avg, bloodPressureArrData[day].evening_diastolic_avg]);
         }
     }
 
     // Adding Data to Food Excel variable from its JSON
-    const foodJSONtoArr = (foodExcel, waterExcel) => {
-        // Array data for each json diary
-        var foodArrData = foodDiaryJSON;
+    const foodJSONtoArr = (foodExcel, waterExcel, foodArrData) => {
 
         //Loops for each day in the JSON
         for (var day=0; day<foodArrData.length; day++) {
@@ -469,7 +348,7 @@ export default function Email({navigation, route}) {
             //Loops for each food entry in the JSON and adds to excel sheet the JSON data
             for (var entry = 0; entry<foodArrData[day].food.length; entry++) {
 
-                foodExcel.push([foodArrData[day].date, foodArrData[day].meal, foodArrData[day].time, foodArrData[day].food[entry].name, foodArrData[day].food[entry].amount, foodArrData[day].food[entry].kcal, foodArrData[day].food[entry].carb, foodArrData[day].food[entry].sugar, foodArrData[day].food[entry].fat, foodArrData[day].food[entry].protein])
+                foodExcel.push([foodArrData[day].date, foodArrData[day].meal, foodArrData[day].time, foodArrData[day].food[entry].name, foodArrData[day].food[entry].amount, foodArrData[day].food[entry].energy, foodArrData[day].food[entry].carb, foodArrData[day].food[entry].sugar, foodArrData[day].food[entry].fat, foodArrData[day].food[entry].protein])
             }
 
             //Adds amount of water consumed that day
@@ -480,15 +359,18 @@ export default function Email({navigation, route}) {
     }
 
     //Adding Data to Glucose Excel variable from its JSON
-    const glucoseJSONtoArr = (excel) => {
-        // Array data for each json diary
-        var glucoseArrData = glucoseDiaryJSON;
+    const glucoseJSONtoArr = (excel, glucoseArrData) => {
+
     }
 
     /*
     * Converts JSON Diary data to excel files and also creates a html table to be used in the html variable
     */
-    const convertDiaryData = () => {
+    const convertDiaryData = async () => {
+    // Getting data from diaries
+        var bpJSON = await getData('BPDiary');
+        var foodJSON = await getData('FoodDiary');
+        //var glucoseJSON = await getData('GlucoseDiary');
 
     // Reformated json data for excel
         var bloodPressureDailyEXCEL = [];
@@ -499,7 +381,7 @@ export default function Email({navigation, route}) {
 
     // Header rows for each table for each diary
         var bloodPressureDailyResultsHeader = ["Date","Time","Period","Systolic","Diastolic","Arm"];
-        var bloodPressureAverageResultsHeader = ["Date", "Morning Average Systolic", "Morning Average Diastolic", "Evening Average Systolic", "Evening Average Diastolic"];
+        var bloodPressureAverageResultsHeader = ["Date", "Morning Average Systolic", "Morning Average Diastolic", "Afternoon Average Systolic", "Afternoon Average Diastolic", "Evening Average Systolic", "Evening Average Diastolic"];
         var foodHeader = ["Date", "Meal", "Time", "Food Name", "Amount", "Calories", "Carbs", "Sugar", "Fat", "Protein"];
         var waterHeader = ["Date", "Water Drank"];
         var glucoseHeader = ["Date"]; //change name to applicable data
@@ -512,9 +394,9 @@ export default function Email({navigation, route}) {
         glucoseEXCEL.push(glucoseHeader);
 
     //Adds data to each diaries excel variable
-        bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL);
-        foodJSONtoArr(foodEXCEL, waterEXCEL);
-       // glucoseJSONtoArr(glucoseEXCEL);
+        bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL, bpJSON);
+        foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON);
+       // glucoseJSONtoArr(glucoseEXCEL, glucoseJSON);
         
     // Create Excel Document from Excel Diary and appends to a global uri variable to be used in other functions
 

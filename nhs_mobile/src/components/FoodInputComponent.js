@@ -24,13 +24,12 @@ const query_object_for_food_component = (object, key) => {
 const render_input_components = [
     {placeholder: "Food Name", is_numeric: false, component_update_key: "name", is_nutrient: false},
     {placeholder: "Amount (g)", is_numeric: true, component_update_key: "amount", is_nutrient: false},
-    {placeholder: "Protein (100g)", is_numeric: true, component_update_key: "proteins", is_nutrient: true},
-    {placeholder: "Sugar (100g)", is_numeric: true, component_update_key: "sugar", is_nutrient: true},
-    {placeholder: "Fat (100g)", is_numeric: true, component_update_key: "fat", is_nutrient: true},
-    {placeholder: "Carbohydrates (100g)", is_numeric: true, component_update_key: "carbohydrates", is_nutrient: true},
-    {placeholder: "Fibre (100g)", is_numeric: true, component_update_key: "fiber", is_nutrient: true},
-    {placeholder: "Sodium (100g)", is_numeric: true, component_update_key: "sodium", is_nutrient: true},
-]
+    {placeholder: "Protein (per 100g)", is_numeric: true, component_update_key: "protein", is_nutrient: true},
+    {placeholder: "Sugar (per 100g)", is_numeric: true, component_update_key: "sugar", is_nutrient: true},
+    {placeholder: "Fat (per 100g)", is_numeric: true, component_update_key: "fat", is_nutrient: true},
+    {placeholder: "Carbohydrates (per 100g)", is_numeric: true, component_update_key: "carb", is_nutrient: true},
+    {placeholder: "Energy (kcal)", is_numeric: true, component_update_key: "energy", is_nutrient: true},
+] // the KCAL value is now called Energy with kcal as the units
 
 const FoodInputComponent = (props) => {
     const {food_input_components_data, setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props
@@ -41,7 +40,7 @@ const FoodInputComponent = (props) => {
                 <Text>Diary data for food item {id+1}. </Text> : 
                 <Text>Some data for food item {id+1} has been filled by Barcode scanner! Please double check and make sure to update anything that is not correct!</Text>
             }
-            {/* Render all inputs here! All logic is dealt with, please define components above if neccesary*/}
+            {/* Render all inputs here! All logic is dealt with, please define components above if neccesary */}
             {render_input_components.map((val, index) => 
                 <TextInput
                     key={index}
@@ -51,6 +50,7 @@ const FoodInputComponent = (props) => {
                     onChangeText={(value) => {
                         setFoodInputComponentsData(state => (state.map(entry => { //updates the food_input_components_data
                             if (entry.index == id) {
+                                
                                 return {...entry, [val.component_update_key]: value}
                             } return entry;
                         })))

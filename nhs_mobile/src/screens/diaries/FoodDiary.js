@@ -43,7 +43,7 @@ export default function FoodDiary({ navigation, route }) {
 
     useEffect(() => {
         // Please make sure that these fields match the fieleds in FoodInputComponent 'render_input_components' component_update_key parameter
-        setFoodInputComponentsData(state => [...state, {index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", fiber:"", sodium:"", scanned_item_object: {}}]);
+        setFoodInputComponentsData(state => [...state, {index:n_inputs, name:"", amount:"", energy:"", carb:"", fat:"", protein:"", sugar:"", scanned_item_object: {}}]);
     }, [n_inputs]); //when number of inputs increases, make sure we have a side effect that will increase the capacity of the input food components dictionary
 
     const getOrCreateFoodDiary = async () => {
@@ -70,6 +70,20 @@ export default function FoodDiary({ navigation, route }) {
                 // if (food_input_components_data.length > 0)  //update the food array inside the diary with existing food input data from the other components
                 //     current_diary_entry_data.food = food_input_components_data
                 //this will push the diary_entry to the diary local storagem and also update all food components
+
+                // value * (amount / 100)
+                // food_input_components_data is an ARRAY of objects structure of which is shown below
+                //{index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", scanned_item_object: {}}
+
+                for (let i = 0; i < food_input_components_data.length; i++) {
+                    let x = food_input_components_data[i]
+                    x.energy = parseInt(x.amount) * (parseInt(x.energy) / 100)
+                    x.carb = parseInt(x.amount) * (parseInt(x.carb) / 100)
+                    x.fat = parseInt(x.amount) * (parseInt(x.fat) / 100)
+                    x.sugar = parseInt(x.amount) * (parseInt(x.sugar) / 100)
+                    x.protein = parseInt(x.amount) * (parseInt(x.protein) / 100)
+                }
+                
                 diary.push({...diary_entry, food: food_input_components_data});
                 await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
                 console.log(diary);
@@ -105,8 +119,10 @@ export default function FoodDiary({ navigation, route }) {
                             display="default"
                             onChange={(event, date) => {
                                 setShowDatePicker(false);
-                                setDate(date)
-                                setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                if (date != undefined) {
+                                    setDate(date)
+                                    setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                }
                             }}
                         />
                     )}
@@ -124,9 +140,11 @@ export default function FoodDiary({ navigation, route }) {
                             mode="time"
                             onChange={(event, time) => {
                                 setShowTimePicker(false);
-                                setTime(time)
-                                const time_string = `${time.getHours()}:${time.getMinutes()}`;
-                                setDiaryEntry(state => ({ ...state, ["time"]:time_string }), [])
+                                if (time != undefined) {
+                                    setTime(time)
+                                    const time_string = `${time.getHours()}:${time.getMinutes()}`;
+                                    setDiaryEntry(state => ({ ...state, ["time"]:time_string }), [])
+                                }
                             }}
                         />
                     )}

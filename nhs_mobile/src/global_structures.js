@@ -16,22 +16,25 @@ const user_struct = {
 //Stores the data for 1 entry in the foor diary. The equivalent in LocalStorage is 'FoodDiary'. 'FoodDiary' in LocalStorage is an array of all the entries logged by the user.
 const food_diary_entry = {
     date: "",
-    meal: "",
     time: "",
-    food: [],
+    meal: "",
     water: "",
-    kcal: "",
-    fat: "",
-    carb: "",
-    sugar: "",
-    protein: ""
+    food: [],
 }
+
+const bp_reading_entry = {time: "", arm: "", systolic: "", diastolic: ""}
 
 const bp_diary_entry = {
     date: "",
-    readings: [],
-    systolic_avg: "",
-    diastolic_avg: ""
+    morning: [],
+    afternoon: [],
+    evening: [],
+    morning_systolic_avg: "",
+    morning_diastolic_avg: "",
+    afternoon_systolic_avg: "",
+    afternoon_diastolic_avg: "",
+    evening_systolic_avg: "",
+    evening_diastolic_avg: "",
 }
 
 const food_diary = {screen_name: "FoodDiary", verbose_name: "Food Diary", entries: []} //food diary

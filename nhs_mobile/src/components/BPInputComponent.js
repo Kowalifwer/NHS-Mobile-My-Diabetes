@@ -16,34 +16,33 @@ import CustomButton from './CustomButton';
 
 // this is the food input which gets added to the page when user clicks the + button
 const BPInputComponent = props => {
-    let {setBPComponentsData,id} = props
-
-    const [state_dict, setStateDict] = useState({
-        showTimePicker: false,
-    });
+    let {id, setBPReadings, bp_readings} = props
+    const [show_time_picker, setShowTimePicker] = useState(false);
 
     return (
         <View>
-            {state_dict.showTimePicker && (
+            {show_time_picker && (
                 <DateTimePicker
                     testID="timePicker"
                     display="default"
                     mode="time"
+                    value={bp_readings[id]["time"]}
                     onChange={(event, new_time) => {
-                        setBPComponentsData(state => (state.map(val => {//#endregion
-                            if (val.index == id) {
-                                return {...val, ['time']: new_time}
-                            } return val;
-                        })))
+                        if (new_time != undefined) {
+                            setBPReadings(state => (state.map(val => {//#endregion
+                                if (val.index == id) {
+                                    return {...val, ['time']: new_time}
+                                } return val;
+                            })))
+                        }
+                        setShowTimePicker(false);
                         }
                     }
                 />
             )}
             <CustomButton
                 onPressFunction={() => {
-                    setStateDict(state => ({ ...state, 
-                        ["showTimePicker"]:true,
-                    }), [])
+                    setShowTimePicker(true);
                 }}
                 title="Enter Time"
                 color="#008c8c"
@@ -55,42 +54,36 @@ const BPInputComponent = props => {
                 style={GlobalStyle.InputField}
                 placeholder='arm'
                 onChangeText={(value) => {
-                    setBPComponentsData(state => (state.map(val => {//#endregion
+                    setBPReadings(state => (state.map(val => {//#endregion
                         if (val.index == id) {
                             return {...val, ['arm']: value.trim()}
                         } return val;
                     })))
                 }}
-                // multiline={true}
-                // numberOfLines={1}
             />
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder="systolic"
                 keyboardType="numeric"
                 onChangeText={(value) => {
-                    setBPComponentsData(state => (state.map(val => {//#endregion
+                    setBPReadings(state => (state.map(val => {//#endregion
                         if (val.index == id) {
                             return {...val, ['systolic']: value.trim()}
                         } return val;
                     })))
                 }}
-                // multiline={true}
-                // numberOfLines={1}
             />
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder="diastolic"
                 keyboardType="numeric"
                 onChangeText={(value) => {
-                    setBPComponentsData(state => (state.map(val => {//#endregion
+                    setBPReadings(state => (state.map(val => {//#endregion
                         if (val.index == id) {
                             return {...val, ['diastolic']: value.trim()}
                         } return val;
                     })))
                 }}
-                // multiline={true}
-                // numberOfLines={1}
             />
         </View>
     )

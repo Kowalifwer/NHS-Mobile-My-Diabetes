@@ -118,11 +118,11 @@ export default function FoodDiary({ navigation, route }) {
                             value={date}
                             display="default"
                             onChange={(event, date) => {
-                                setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
                                 }
+                                setShowDatePicker(false);
                             }}
                         />
                     )}
@@ -139,12 +139,12 @@ export default function FoodDiary({ navigation, route }) {
                             display="default"
                             mode="time"
                             onChange={(event, time) => {
-                                setShowTimePicker(false);
                                 if (time != undefined) {
                                     setTime(time)
                                     const time_string = `${time.getHours()}:${time.getMinutes()}`;
                                     setDiaryEntry(state => ({ ...state, ["time"]:time_string }), [])
                                 }
+                                setShowTimePicker(false);
                             }}
                         />
                     )}

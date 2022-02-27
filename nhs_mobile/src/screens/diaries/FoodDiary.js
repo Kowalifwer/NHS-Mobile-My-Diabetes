@@ -66,6 +66,10 @@ export default function FoodDiary({ navigation, route }) {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
+
+                let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
+                console.log("existing diary entry:\n", existing_diary_entry);
+
                 // let current_diary_entry_data = {...diary_entry, food: food_input_components_data}
                 // if (food_input_components_data.length > 0)  //update the food array inside the diary with existing food input data from the other components
                 //     current_diary_entry_data.food = food_input_components_data
@@ -118,11 +122,11 @@ export default function FoodDiary({ navigation, route }) {
                             value={date}
                             display="default"
                             onChange={(event, date) => {
+                                setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
                                 }
-                                setShowDatePicker(false);
                             }}
                         />
                     )}
@@ -139,12 +143,12 @@ export default function FoodDiary({ navigation, route }) {
                             display="default"
                             mode="time"
                             onChange={(event, time) => {
+                                setShowTimePicker(false);
                                 if (time != undefined) {
                                     setTime(time)
                                     const time_string = `${time.getHours()}:${time.getMinutes()}`;
                                     setDiaryEntry(state => ({ ...state, ["time"]:time_string }), [])
                                 }
-                                setShowTimePicker(false);
                             }}
                         />
                     )}

@@ -142,11 +142,11 @@ export default function BPDiary({ navigation }) {
                             value={date}
                             display="default"
                             onChange={(event, date) => {
+                                setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
                                 }
-                                setShowDatePicker(false);
                             }}
                         />
                     )}

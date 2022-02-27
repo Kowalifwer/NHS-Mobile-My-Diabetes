@@ -26,8 +26,9 @@ const BPInputComponent = props => {
                     testID="timePicker"
                     display="default"
                     mode="time"
-                    value={bp_readings[id]["time"]}
-                    onChange={(event, new_time) => {
+                    value={ bp_readings[id]["time"] }
+                    onChange={ (event, new_time) => {
+                        setShowTimePicker(false);
                         if (new_time != undefined) {
                             setBPReadings(state => (state.map(val => {//#endregion
                                 if (val.index == id) {
@@ -35,7 +36,6 @@ const BPInputComponent = props => {
                                 } return val;
                             })))
                         }
-                        setShowTimePicker(false);
                         }
                     }
                 />

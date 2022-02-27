@@ -34,6 +34,13 @@ const bp_diary_entry = {
     diastolic_avg: ""
 }
 
+const glucose_diary_entry = {
+    date: "",
+    glucose_readings: [],
+    injections: [],
+    feel_sick: "",
+}
+
 const food_diary = {screen_name: "FoodDiary", verbose_name: "Food Diary", entries: []} //food diary
 const bp_diary = {screen_name: "BPDiary", verbose_name: "Blood Pressure Diary", entries: []} //blood pressure diary
 const render_test_diary = {screen_name: "TestDiary", verbose_name: "Test Diary", entries: []} //test diary

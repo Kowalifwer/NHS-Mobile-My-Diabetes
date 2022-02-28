@@ -15,11 +15,9 @@ import CustomButton from './CustomButton';
 
 
 const InjectionInputComponent = props => {
-    let {setInjectionsData, id} = props
+    let {setInjectionsData, injectionsData, id} = props
 
-    const [state_dict, setStateDict] = useState({
-        showTimePicker: false,
-    });
+    const [show_time_picker, setShowTimePicker] = useState(false);
 
     return (
         <View>
@@ -28,11 +26,12 @@ const InjectionInputComponent = props => {
                 Injection {id+1}
             </Text>
 
-            {state_dict.showTimePicker && (
+            {show_time_picker && (
                 <DateTimePicker
                     testID="timePicker"
                     display="default"
                     mode="time"
+                    value={ injectionsData[id]["time"] }
                     onChange={(event, new_time) => {
                         setShowTimePicker(false);
                         if (new_time != undefined) {
@@ -49,9 +48,7 @@ const InjectionInputComponent = props => {
 
             <CustomButton
                 onPressFunction={() => {
-                    setStateDict(state => ({ ...state, 
-                        ["showTimePicker"]:true,
-                    }), [])
+                    setShowTimePicker(true);
                 }}
                 title="Enter Time"
                 color="#008c8c"

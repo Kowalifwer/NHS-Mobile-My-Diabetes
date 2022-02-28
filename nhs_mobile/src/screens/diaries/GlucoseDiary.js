@@ -17,18 +17,25 @@ import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
 import DropdownStyle from '../../styles/DropdownStyle';
 import user_struct from '../../global_structures.js';
-import {glucose_diary_entry} from '../../global_structures.js';
+// import {glucose_diary_entry} from '../../global_structures.js'; // for some reason this is just giving undefined for the useState
 import GlucoseInputComponent from '../../components/GlucoseInputComponent';
 import InjectionInputComponent from "../../components/InjectionInputComponent";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+const glucose_diary_entry = {
+    date: "",
+    glucose_readings: [],
+    injections: [],
+    feel_sick: "",
+}
 
-export default function GlucoseDiary({ navigation }) {
+export default function GlucoseDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(glucose_diary_entry)
 
     const [n_glucose_inputs, setNGlucoseInputs] = useState(0);
+    const [glucose_input_components_data, setGlucoseComponentsData] = useState([]);
+
     const [n_injections, setNInjections] = useState(0);
-    const [glucose_input_components_data, setGlucoseComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a BPInput component. This is also passed as prop to the component to manipulate the state of this scopre.
     const [injections_data, setInjectionsData] = useState([]);
 
     const [date, setDate] = useState(new Date())
@@ -39,11 +46,11 @@ export default function GlucoseDiary({ navigation }) {
     }, []); // don't know what this is doing
 
     useEffect(() => {
-        setGlucoseComponentsData(state => ([...state, {index:n_glucose_inputs, time: "", reading: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
+        setGlucoseComponentsData(state => ([...state, {index:n_glucose_inputs, time: new Date(), reading: ""}]) )
     }, [n_glucose_inputs]);
 
     useEffect(() => {
-        setGlucoseComponentsData(state => ([...state, {index:n_injections, time: "", type: "", units: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
+        setInjectionsData(state => ([...state, {index:n_injections, time: new Date(), type: "", units: ""}]) )
     }, [n_injections]);
 
     const getOrCreateGlucoseDiary = async () => {
@@ -63,18 +70,20 @@ export default function GlucoseDiary({ navigation }) {
     }
 
     const appendToDiary = async () => {
-        console.log(diary_entry)
+        // console.log(diary_entry)
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('GlucoseDiary'))
 
-                // let systolic_avg = bp_input_components_data.reduce((total, next) => total + next.systolic, 0) / bp_input_components_data.length
-                // let diastolic_avg = bp_input_components_data.reduce((total,next) => total + next.diastolic, 0) / bp_input_components_data.length
-                // let final_entry = {...diary_entry, systolic_avg: systolic_avg, diastolic_avg: diastolic_avg, readings: bp_input_components_data}
-                // console.log("systolic avg: ", systolic_avg);
-                // console.log("diastolic avg: ", diastolic_avg);
-                // console.log(final_entry)
-                // diary.push(final_entry);
+                let final_entry = {
+                    date: date,
+                    glucose_readings: glucose_input_components_data,
+                    injections: injections_data,
+                    feel_sick: "no",
+                }
+
+                console.log(final_entry)
+                diary.push(final_entry);
 
                 console.log(diary)
                 await AsyncStorage.setItem("GlucoseDiary", JSON.stringify(diary))
@@ -89,12 +98,12 @@ export default function GlucoseDiary({ navigation }) {
     }
 
     function addGlucoseInputComponent() {
-        console.log(glucose_input_components_data)
+        // console.log(glucose_input_components_data)
         setNGlucoseInputs(n_glucose_inputs + 1);
     }
 
     function addInjectionInputComponent() {
-        console.log(injections_data)
+        // console.log(injections_data)
         setNInjections(n_injections + 1);
     }
 
@@ -132,7 +141,7 @@ export default function GlucoseDiary({ navigation }) {
                     <Text style={[GlobalStyle.CustomFont, styles.text]}>
                         Readings
                     </Text>
-                    {glucose_input_components_data.map((input_component) => <GlucoseInputComponent key={input_component.index} id={input_component.index} setGlucoseComponentsData={setGlucoseComponentsData}/>)}
+                    {glucose_input_components_data.map((input_component) => <GlucoseInputComponent key={input_component.index} id={input_component.index} setGlucoseComponentsData={setGlucoseComponentsData} glucoseReadings={glucose_input_components_data}/>)}
                     <CustomButton 
                         onPressFunction={() => addGlucoseInputComponent()}
                         title="Enter another reading"
@@ -142,7 +151,7 @@ export default function GlucoseDiary({ navigation }) {
                     <Text style={[GlobalStyle.CustomFont, styles.text]}>
                         Injections
                     </Text>
-                    {injections_data.map((input_component) => <InjectionInputComponent key={input_component.index} id={input_component.index} setInjectionsData={setInjectionsData}/>)}
+                    {injections_data.map((input_component) => <InjectionInputComponent key={input_component.index} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
                     <CustomButton 
                         onPressFunction={() => addInjectionInputComponent()}
                         title="Enter another insulin value"

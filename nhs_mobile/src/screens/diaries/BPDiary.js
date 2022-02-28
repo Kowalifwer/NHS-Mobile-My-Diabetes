@@ -23,7 +23,7 @@ import BPInputComponent from '../../components/BPInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
-export default function BPDiary({ navigation }) {
+export default function BPDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(bp_diary_entry)
 
     const [n_inputs, setNInputs] = useState(0);

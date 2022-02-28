@@ -15,11 +15,9 @@ import CustomButton from './CustomButton';
 
 
 const GlucoseInputComponent = props => {
-    let {setGlucoseComponentsData, id} = props
+    let {setGlucoseComponentsData, glucoseReadings, id} = props
 
-    const [state_dict, setStateDict] = useState({
-        showTimePicker: false,
-    });
+    const [show_time_picker, setShowTimePicker] = useState(false);
 
     return (
         <View>
@@ -28,11 +26,12 @@ const GlucoseInputComponent = props => {
                 Blood Glucose Reading {id+1}
             </Text>
 
-            {state_dict.showTimePicker && (
+            {show_time_picker && (
                 <DateTimePicker
                     testID="timePicker"
                     display="default"
                     mode="time"
+                    value={ glucoseReadings[id]["time"] }
                     onChange={(event, new_time) => {
                         setShowTimePicker(false);
                         if (new_time != undefined) {
@@ -49,9 +48,7 @@ const GlucoseInputComponent = props => {
 
             <CustomButton
                 onPressFunction={() => {
-                    setStateDict(state => ({ ...state, 
-                        ["showTimePicker"]:true,
-                    }), [])
+                    setShowTimePicker(true);
                 }}
                 title="Enter Time"
                 color="#008c8c"
@@ -62,7 +59,7 @@ const GlucoseInputComponent = props => {
                 placeholder="Reading (mmol/L)"
                 keyboardType="numeric"
                 onChangeText={(value) => {
-                    setBPComponentsData(state => (state.map(val => {
+                    setGlucoseComponentsData(state => (state.map(val => {
                         if (val.index == id) {
                             return {...val, ['reading']: value.trim()}
                         } return val;

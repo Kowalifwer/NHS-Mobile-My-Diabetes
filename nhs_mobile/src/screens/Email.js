@@ -505,6 +505,7 @@ export default function Email({navigation, route}) {
 
         let URIS = []; // combination of pdf and excel URIs to be used in the attachements part of Expo Compose
         let pdfURIS = {bloodpressure: "", fooddiary: "", glucosediary: ""};
+        const diarySubject = selectedDiary.toString().replace(/,/g, ' + '); //used in subject of email
 
         //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
         for (let i=0; i<selectedDiary.length; i++) {
@@ -554,7 +555,7 @@ export default function Email({navigation, route}) {
         try{
             let emailResult = await MailComposer.composeAsync({
                 recipients: (selected != null) ? [selected] : [],
-                subject: 'Test email',
+                subject: stored_user.nhs_number == "" ? diarySubject + ' PDF/EXCEL #N/A' : diarySubject + ' PDF/EXCEL #' + stored_user.nhs_number,
                 attachments: URIS,
             });
             (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')

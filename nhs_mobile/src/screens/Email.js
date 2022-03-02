@@ -35,7 +35,12 @@ export default function Email({navigation, route}) {
     let htmlContent = "";
     const [imageHTML, setImageHTML] = useState();
     const [currentDate, setCurrentDate] = useState("");
-    
+
+    //variables to check if diaries are enmpty
+    const [isBPEmpty, setIsBPEmpty] = useState(false);
+    const [isFoodEmpty, setIsFoodEmpty] = useState(false);
+    const [isGlucoseEmpty, setIsGlucoseEmpty] = useState(false);
+
     //Stores each html table data for each diary. To be used in each html variable
     const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", waterResultsHTML: "", glucoseResultsHTML: ""});
 
@@ -393,11 +398,11 @@ export default function Email({navigation, route}) {
         waterEXCEL.push(waterHeader);
         glucoseEXCEL.push(glucoseHeader);
 
-    //Adds data to each diaries excel variable
-        bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL, bpJSON);
-        foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON);
-       // glucoseJSONtoArr(glucoseEXCEL, glucoseJSON);
-        
+    //Adds data to each diaries excel variable if diary is not empty
+        (bpJSON == "null") ? bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL, bpJSON) : setIsBPEmpty(true);
+        (foodJSON == "null") ? foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON) : setIsFoodEmpty(true);
+       // (glucoseJSON === "null") ? glucoseJSONtoArr(glucoseEXCEL, glucoseJSON) : setIsGlucoseEmpty(true);
+
     // Create Excel Document from Excel Diary and appends to a global uri variable to be used in other functions
 
         //creates work book for each diary
@@ -482,6 +487,19 @@ export default function Email({navigation, route}) {
 
     }
 
+    // Alerts user if diary is empty when trying to compose an email
+    const alertIfDiaryEmpty = (diaryToCheck) => {
+        if (diaryToCheck == "Blood Pressure" && isBPEmpty == true) {
+            Alert.alert('No Blood Pressure PDF or Excel file will be attached since data has not been entered to Blood Pressure Diary');
+        }
+        if (diaryToCheck == "Food Diary" && isFoodEmpty == true) {
+            Alert.alert('No Food Diary PDF or Excel file will be attached since data has not been entered to Food Diary');
+        }
+        if (diaryToCheck == "Glucose Diary" && isGlucoseEmpty == true) {
+            Alert.alert('No Glucose Diary PDF or Excel file will be attached since data has not been entered to Glucose Diary');
+        }
+    }
+
     //Composes Email based on diary chosen by user
     const composeMail = async() => {
 
@@ -490,8 +508,10 @@ export default function Email({navigation, route}) {
 
         //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
         for (let i=0; i<selectedDiary.length; i++) {
-            changeHtmlContent(i);
             
+            alertIfDiaryEmpty(selectedDiary[i]);
+            changeHtmlContent(i);
+
             //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
             const file_object = await Print.printToFileAsync({
                 html: htmlContent,
@@ -516,15 +536,15 @@ export default function Email({navigation, route}) {
 
         //Appends the pdf and excel diary uris to one array URIS to be used as attachements.
         for (var index in selectedDiary) {
-            if (selectedDiary[index] == "Blood Pressure") {
+            if (selectedDiary[index] == "Blood Pressure" && isBPEmpty != true) {
                 URIS.push(excelURIS.bloodpressure)
                 URIS.push(pdfURIS.bloodpressure)
             }
-            if (selectedDiary[index] == "Food Diary") {
+            if (selectedDiary[index] == "Food Diary" && isFoodEmpty != true) {
                 URIS.push(excelURIS.food)
                 URIS.push(pdfURIS.fooddiary)
             }
-            if (selectedDiary[index] == "Glucose Diary") {
+            if (selectedDiary[index] == "Glucose Diary" && isGlucoseEmpty != true) {
                 URIS.push(excelURIS.glucose)
                 URIS.push(pdfURIS.glucosediary)
             }

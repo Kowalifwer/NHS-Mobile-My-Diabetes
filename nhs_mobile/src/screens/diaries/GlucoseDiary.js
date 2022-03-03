@@ -9,6 +9,7 @@ import {
     SafeAreaView, 
     ScrollView,
     Button,
+    Keyboard,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../../components/CustomButton';
@@ -135,7 +136,7 @@ export default function GlucoseDiary({ navigation, route }) {
 
     return (
         <SafeAreaView>
-            <ScrollView keyboardShouldPersistTaps="handheld">
+            <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header/>
 

@@ -21,6 +21,7 @@ import user_struct from '../../global_structures.js';
 import GlucoseInputComponent from '../../components/GlucoseInputComponent';
 import InjectionInputComponent from "../../components/InjectionInputComponent";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import CheckBox from "expo-checkbox"
 
 const glucose_diary_entry = {
     date: "",
@@ -40,6 +41,8 @@ export default function GlucoseDiary({ navigation, route }) {
 
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
+
+    const [feelSick, setFeelSick] = useState(false);
 
     useEffect(() => {
         getOrCreateGlucoseDiary();
@@ -79,7 +82,7 @@ export default function GlucoseDiary({ navigation, route }) {
                     date: date,
                     glucose_readings: glucose_input_components_data,
                     injections: injections_data,
-                    feel_sick: "no",
+                    feel_sick: feelSick,
                 }
 
                 console.log(final_entry)
@@ -158,6 +161,15 @@ export default function GlucoseDiary({ navigation, route }) {
                         color="#008c8c"
                     />
 
+                    <View style={styles.checkboxContainer}>
+                        <Text style={styles.label}>I don't feel well</Text>
+                        <CheckBox
+                            value={feelSick}
+                            onValueChange={setFeelSick}
+                            style={GlobalStyle.CheckBox}
+                        />
+                    </View>
+
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'
@@ -190,5 +202,15 @@ const styles = StyleSheet.create({
         fontSize: 30,
         marginBottom: 130,
         textAlign: "center",
+    },
+    checkboxContainer: {
+        flexDirection: "row",
+        marginBottom: 20,
+      },
+    checkbox: {
+    alignSelf: "center",
+    },
+    label: {
+    margin: 8,
     },
 })

@@ -9,7 +9,8 @@ import {
     SafeAreaView, 
     ScrollView,
     StatusBar,
-    Button
+    Button,
+    Vibration
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
@@ -29,13 +30,18 @@ export default function Email({navigation, route}) {
     DropDownPicker.setListMode("SCROLLVIEW");
     
     const stored_user = route.params?.stored_user //can access all current user data from this variable.
-    const [selected, setSelectedRecipient] = useState("");
+    const [selectedRecipient, setSelectedRecipient] = useState("");
     const [selectedDiary, setSelectedDiary] = useState("");
     
     let htmlContent = "";
     const [imageHTML, setImageHTML] = useState();
     const [currentDate, setCurrentDate] = useState("");
-    
+
+    //variables to check if diaries are enmpty
+    const [isBPEmpty, setIsBPEmpty] = useState(false);
+    const [isFoodEmpty, setIsFoodEmpty] = useState(false);
+    const [isGlucoseEmpty, setIsGlucoseEmpty] = useState(false);
+
     //Stores each html table data for each diary. To be used in each html variable
     const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", waterResultsHTML: "", glucoseResultsHTML: ""});
 
@@ -393,11 +399,11 @@ export default function Email({navigation, route}) {
         waterEXCEL.push(waterHeader);
         glucoseEXCEL.push(glucoseHeader);
 
-    //Adds data to each diaries excel variable
-        bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL, bpJSON);
-        foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON);
-       // glucoseJSONtoArr(glucoseEXCEL, glucoseJSON);
-        
+    //Adds data to each diaries excel variable if diary is not empty
+        (bpJSON == "null") ? bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL, bpJSON) : setIsBPEmpty(true);
+        (foodJSON == "null") ? foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON) : setIsFoodEmpty(true);
+       // (glucoseJSON === "null") ? glucoseJSONtoArr(glucoseEXCEL, glucoseJSON) : setIsGlucoseEmpty(true);
+
     // Create Excel Document from Excel Diary and appends to a global uri variable to be used in other functions
 
         //creates work book for each diary
@@ -482,64 +488,93 @@ export default function Email({navigation, route}) {
 
     }
 
+    // Alerts user if diary is empty when trying to compose an email
+    const alertIfDiaryEmpty = (diaryToCheck) => {
+        if (diaryToCheck == "Blood Pressure" && isBPEmpty == true) {
+            Alert.alert('No Blood Pressure PDF or Excel file will be attached since data has not been entered to Blood Pressure Diary');
+            Vibration.vibrate();
+        }
+        if (diaryToCheck == "Food Diary" && isFoodEmpty == true) {
+            Alert.alert('No Food Diary PDF or Excel file will be attached since data has not been entered to Food Diary');
+            Vibration.vibrate();
+        }
+        if (diaryToCheck == "Glucose Diary" && isGlucoseEmpty == true) {
+            Alert.alert('No Glucose Diary PDF or Excel file will be attached since data has not been entered to Glucose Diary');
+            Vibration.vibrate();
+        }
+    }
+
     //Composes Email based on diary chosen by user
     const composeMail = async() => {
+        
+        // Checks if selected diaries and recipient is selected first before composing email
+        if (selectedDiary == "") {
+            Vibration.vibrate();
+            Alert.alert("No Diary Selected");
+        } else if (selectedRecipient == null) {
+            Vibration.vibrate();
+            Alert.alert("No Recepient Selected");
+        } else {
 
-        let URIS = []; // combination of pdf and excel URIs to be used in the attachements part of Expo Compose
-        let pdfURIS = {bloodpressure: "", fooddiary: "", glucosediary: ""};
+            let URIS = []; // combination of pdf and excel URIs to be used in the attachements part of Expo Compose
+            let pdfURIS = {bloodpressure: "", fooddiary: "", glucosediary: ""};
+            const diarySubject = selectedDiary.toString().replace(/,/g, ' + '); //used in subject of email
 
-        //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
-        for (let i=0; i<selectedDiary.length; i++) {
-            changeHtmlContent(i);
-            
-            //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
-            const file_object = await Print.printToFileAsync({
-                html: htmlContent,
-                height: 842,
-                width: 595,
-            });
+            //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
+            for (let i=0; i<selectedDiary.length; i++) {
+                
+                alertIfDiaryEmpty(selectedDiary[i]);
+                changeHtmlContent(i);
 
-            //renames the file to its diary name with the current date by replacing the string after the last slash with diary name (with spaces taken out) and current date (slash / between the number replaced with a dash -)
-            const pdfName = `${file_object.uri.slice(
-                0,
-                file_object.uri.lastIndexOf('/') + 1)+selectedDiary[i].replace(/ /g, '')}_${currentDate.replace(/\//g, '-')}.pdf`
+                //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
+                const file_object = await Print.printToFileAsync({
+                    html: htmlContent,
+                    height: 842,
+                    width: 595,
+                });
 
-            await FileSystem.moveAsync({
-                from: file_object.uri,
-                to: pdfName,
-            })
+                //renames the file to its diary name with the current date by replacing the string after the last slash with diary name (with spaces taken out) and current date (slash / between the number replaced with a dash -)
+                const pdfName = `${file_object.uri.slice(
+                    0,
+                    file_object.uri.lastIndexOf('/') + 1)+selectedDiary[i].replace(/ /g, '')}_${currentDate.replace(/\//g, '-')}.pdf`
 
-            //Adds the URI from the diary that was just converted to array of pdf uris. Since, the keys in pdfURIS are all lowercase and no spaces together, need to take the space and make lowercase the diary names so the value of the keys can be replaced by the uri. 
-            pdfURIS[selectedDiary[i].replace(/ /g, '').toLowerCase()] = pdfName;
+                await FileSystem.moveAsync({
+                    from: file_object.uri,
+                    to: pdfName,
+                })
 
-        }
+                //Adds the URI from the diary that was just converted to array of pdf uris. Since, the keys in pdfURIS are all lowercase and no spaces together, need to take the space and make lowercase the diary names so the value of the keys can be replaced by the uri. 
+                pdfURIS[selectedDiary[i].replace(/ /g, '').toLowerCase()] = pdfName;
 
-        //Appends the pdf and excel diary uris to one array URIS to be used as attachements.
-        for (var index in selectedDiary) {
-            if (selectedDiary[index] == "Blood Pressure") {
-                URIS.push(excelURIS.bloodpressure)
-                URIS.push(pdfURIS.bloodpressure)
             }
-            if (selectedDiary[index] == "Food Diary") {
-                URIS.push(excelURIS.food)
-                URIS.push(pdfURIS.fooddiary)
-            }
-            if (selectedDiary[index] == "Glucose Diary") {
-                URIS.push(excelURIS.glucose)
-                URIS.push(pdfURIS.glucosediary)
-            }
-        }
 
-        // This section composes the email with the recepient, email subject and attachemments
-        try{
-            let emailResult = await MailComposer.composeAsync({
-                recipients: (selected != null) ? [selected] : [],
-                subject: 'Test email',
-                attachments: URIS,
-            });
-            (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selected}` ) : Alert.alert('Email has not been sent')
-        } catch (e) {
-            console.log(e);
+            //Appends the pdf and excel diary uris to one array URIS to be used as attachements.
+            for (var index in selectedDiary) {
+                if (selectedDiary[index] == "Blood Pressure" && isBPEmpty != true) {
+                    URIS.push(excelURIS.bloodpressure)
+                    URIS.push(pdfURIS.bloodpressure)
+                }
+                if (selectedDiary[index] == "Food Diary" && isFoodEmpty != true) {
+                    URIS.push(excelURIS.food)
+                    URIS.push(pdfURIS.fooddiary)
+                }
+                if (selectedDiary[index] == "Glucose Diary" && isGlucoseEmpty != true) {
+                    URIS.push(excelURIS.glucose)
+                    URIS.push(pdfURIS.glucosediary)
+                }
+            }
+
+            // This section composes the email with the recepient, email subject and attachemments
+            try{
+                let emailResult = await MailComposer.composeAsync({
+                    recipients: (selectedRecipient != null) ? [selectedRecipient] : [],
+                    subject: stored_user.nhs_number == "" ? diarySubject + ' PDF/EXCEL #N/A' : diarySubject + ' PDF/EXCEL #' + stored_user.nhs_number,
+                    attachments: URIS,
+                });
+                (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selectedRecipient}` ) : Alert.alert('Email has not been sent')
+            } catch (e) {
+                console.log(e);
+            }
         }
     }
 

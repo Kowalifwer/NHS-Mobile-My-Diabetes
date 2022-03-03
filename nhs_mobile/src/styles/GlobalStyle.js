@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
     CustomFont: {
         fontFamily: 'AbrilFatface',
-        color: 'blue',
+        color: 'white',
         fontWeight: '300',
     },
     ButtonText: {

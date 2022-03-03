@@ -10,7 +10,7 @@ import {
     ScrollView,
     StatusBar
 } from 'react-native';
-import CustomButton from '../components/CustomButton';
+import HomePageButton from '../components/HomePageButton';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
 import {user_struct} from '../global_structures.js';
@@ -19,7 +19,7 @@ import DropdownStyle from '../styles/DropdownStyle';
 
 export default function Home({ navigation, route }) {
     const [stored_user, setStoredUser] = useState(user_struct)
-
+    
     useEffect(() => {
         getUserData();
     }, []);
@@ -44,90 +44,103 @@ export default function Home({ navigation, route }) {
         }
     }
 
-    var clearAll = async () => {
-        try {
-          await AsyncStorage.clear()
-          console.log('Cleared.')
-        } catch(e) {
-          // clear error
-        }
-        
-        Alert.alert('All local data wiped. You need to setup profile again.')
-        getUserData()
-        navigation.navigate("Authentication")
-      }
-
     return (
-        <SafeAreaView style={styles.body}>
-            <ScrollView>
-                <View style={styles.body}>
-                    <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont,styles.text,{fontSize: 50, color: "lime"}]}>
-                        Homepage
-                    </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Welcome {stored_user.name} !
-                    </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        What would you like to do ?
-                    </Text>
+        <SafeAreaView style={styles.outerContainer}>
+            <Header></Header>
+            <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    Welcome {stored_user.name}!
+            </Text>
 
-                    <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
-                        <CustomButton
-                            title='View/Update your profile'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("ProfileUpdate", {
-                                stored_user: stored_user,
-                            })}
-                        />
-                        <CustomButton
-                            title='Setup email recipients'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("EmailSetup")}
-                        />
-                        <CustomButton
-                            title='Send an email'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Email", {
-                                stored_user: stored_user,
-                            })}
-                        />
-                        <CustomButton
-                            title='Authenticate yourself'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Authentication")}
-                        />
-                        <CustomButton
-                            title='Read a barcode'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("BarcodeScanner")}
-                        />
-                        <CustomButton
+            <View style={styles.innerContainer}>
+
+                {/* Column 1 of buttons */}
+                <View style={styles.button}>
+                    
+                    <HomePageButton
+                        title='My Profile'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("MyProfile")}
+                    />
+                    <HomePageButton
+                        title='Email my Results'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Email", {
+                            stored_user: stored_user,
+                        })}
+                    />
+                    <HomePageButton
+                        title='Resources'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Resources")}
+                    />
+                    <HomePageButton
+                        title='Important Information'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("ImportantInformation")}
+                    />
+
+                </View>
+
+                {/* Column 2 of buttons */}
+                <View style={styles.button}>
+                    <HomePageButton
                             title="My Diaries"
                             color="#761076"
                             onPressFunction={() => navigation.navigate("Diaries")}
-                        />                       
-                        <CustomButton
-                            title='Wipe all local data (warning)'
-                            color='red'
-                            onPressFunction={clearAll}
-                        />
-                    </View>
+                    />       
+                    <HomePageButton
+                            title="Videos"
+                            color="#761076"
+                            onPressFunction={() => navigation.navigate("Videos")}
+                    />   
+                    <HomePageButton
+                            title="My Care Processes"
+                            color="#761076"
+                            onPressFunction={() => navigation.navigate("CareProcess")}
+                    />   
+                    <HomePageButton
+                            title="Settings"
+                            color="#761076"
+                            onPressFunction={() => navigation.navigate("Settings")}
+                    />                   
+
+                    <HomePageButton
+                            title="TEMP - old pages"
+                            color="#761076"
+                            onPressFunction={() => navigation.navigate("temp")}
+                    />    
+
                 </View>
-            </ScrollView>      
+
+            </View>   
+
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    body: {
+    innerContainer: {
+        flex: 1,
+        //alignItems: 'center',
+        backgroundColor: '#e9c5b4',
+        flexDirection: 'row',
+    },
+    outerContainer: {
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#e9c5b4',
+        flexDirection: 'column',
     },
     text: {
-        fontSize: 25,
-        margin: 10,
+        fontSize: 35,
+        marginTop: 1,
+        marginBottom: 20,
         textAlign: 'center',
     },
+    button : {
+        display: 'flex',
+        flexDirection: 'column',
+        paddingBottom : 100,
+    },
+    
 })

@@ -15,6 +15,13 @@ import FoodDiary from './screens/diaries/FoodDiary';
 import BPDiary from './screens/diaries/BPDiary';
 import Diaries from './screens/Diaries';
 import GlucoseDiary from "./screens/diaries/GlucoseDiary";
+import MyProfile from './screens/MyProfile';
+import Resources from './screens/Resources';
+import ImportantInformation from './screens/ImportantInformation';
+import CareProcess from './screens/CareProcess';
+import Settings from './screens/Settings';
+import Videos from './screens/Videos';
+import temp from './screens/temp';
 
 const Stack = createStackNavigator();
 
@@ -122,6 +129,55 @@ function App() {
           }}
           component={GlucoseDiary}
         />
+        <Stack.Screen
+          name="MyProfile"
+          options={{
+            headerShown: false,
+          }}
+          component={MyProfile}
+        />
+        <Stack.Screen
+          name="Resources"
+          options={{
+            headerShown: false,
+          }}
+          component={Resources}
+        />
+        <Stack.Screen
+          name="ImportantInformation"
+          options={{
+            headerShown: false,
+          }}
+          component={ImportantInformation}
+        />
+        <Stack.Screen
+          name="CareProcess"
+          options={{
+            headerShown: false,
+          }}
+          component={CareProcess}
+        />
+        <Stack.Screen
+          name="Settings"
+          options={{
+            headerShown: false,
+          }}
+          component={Settings}
+        />
+        <Stack.Screen
+          name="Videos"
+          options={{
+            headerShown: false,
+          }}
+          component={Videos}
+        />
+        <Stack.Screen
+          name="temp"
+          options={{
+            headerShown: false,
+          }}
+          component={temp}
+        />        
       </Stack.Navigator>
     </NavigationContainer>
   )

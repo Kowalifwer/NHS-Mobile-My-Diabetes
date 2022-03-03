@@ -23,7 +23,7 @@ import BPInputComponent from '../../components/BPInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
-export default function BPDiary({ navigation }) {
+export default function BPDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(bp_diary_entry)
 
     const [n_inputs, setNInputs] = useState(0);
@@ -142,11 +142,11 @@ export default function BPDiary({ navigation }) {
                             value={date}
                             display="default"
                             onChange={(event, date) => {
+                                setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
                                 }
-                                setShowDatePicker(false);
                             }}
                         />
                     )}

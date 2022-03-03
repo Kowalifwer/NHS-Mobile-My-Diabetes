@@ -14,23 +14,28 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
 
 
-// this is the food input which gets added to the page when user clicks the + button
-const BPInputComponent = props => {
-    let {id, setBPReadings, bp_readings} = props
+const InjectionInputComponent = props => {
+    let {setInjectionsData, injectionsData, id} = props
+
     const [show_time_picker, setShowTimePicker] = useState(false);
 
     return (
         <View>
+            
+            <Text style={[GlobalStyle.CustomFont]}>
+                Injection {id+1}
+            </Text>
+
             {show_time_picker && (
                 <DateTimePicker
                     testID="timePicker"
                     display="default"
                     mode="time"
-                    value={ bp_readings[id]["time"] }
-                    onChange={ (event, new_time) => {
+                    value={ injectionsData[id]["time"] }
+                    onChange={(event, new_time) => {
                         setShowTimePicker(false);
                         if (new_time != undefined) {
-                            setBPReadings(state => (state.map(val => {//#endregion
+                            setInjectionsData(state => (state.map(val => {
                                 if (val.index == id) {
                                     return {...val, ['time']: new_time}
                                 } return val;
@@ -40,6 +45,7 @@ const BPInputComponent = props => {
                     }
                 />
             )}
+
             <CustomButton
                 onPressFunction={() => {
                     setShowTimePicker(true);
@@ -47,47 +53,35 @@ const BPInputComponent = props => {
                 title="Enter Time"
                 color="#008c8c"
             />
-            <Text style={[GlobalStyle.CustomFont]}>
-                Blood Pressure Reading {id+1}
-            </Text>
+
             <TextInput
                 style={GlobalStyle.InputField}
-                placeholder='arm'
+                placeholder="Insulin type (long/fast)"
                 onChangeText={(value) => {
-                    setBPReadings(state => (state.map(val => {//#endregion
+                    setInjectionsData(state => (state.map(val => {
                         if (val.index == id) {
-                            return {...val, ['arm']: value.trim()}
+                            return {...val, ['type']: value.trim()}
                         } return val;
                     })))
                 }}
             />
+
             <TextInput
                 style={GlobalStyle.InputField}
-                placeholder="systolic"
+                placeholder="Units"
                 keyboardType="numeric"
                 onChangeText={(value) => {
-                    setBPReadings(state => (state.map(val => {//#endregion
+                    setInjectionsData(state => (state.map(val => {
                         if (val.index == id) {
-                            return {...val, ['systolic']: value.trim()}
+                            return {...val, ['units']: value.trim()}
                         } return val;
                     })))
                 }}
             />
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder="diastolic"
-                keyboardType="numeric"
-                onChangeText={(value) => {
-                    setBPReadings(state => (state.map(val => {//#endregion
-                        if (val.index == id) {
-                            return {...val, ['diastolic']: value.trim()}
-                        } return val;
-                    })))
-                }}
-            />
+
         </View>
     )
 
 }
 
-export default BPInputComponent
+export default InjectionInputComponent

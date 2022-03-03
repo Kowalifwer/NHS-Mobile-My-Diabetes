@@ -14,6 +14,7 @@ import { useFonts } from 'expo-font';
 import FoodDiary from './screens/diaries/FoodDiary';
 import BPDiary from './screens/diaries/BPDiary';
 import Diaries from './screens/Diaries';
+import GlucoseDiary from "./screens/diaries/GlucoseDiary";
 import MyProfile from './screens/MyProfile';
 import Resources from './screens/Resources';
 import ImportantInformation from './screens/ImportantInformation';
@@ -120,6 +121,13 @@ function App() {
             headerShown: false,
           }}
           component={BPDiary}
+        />
+        <Stack.Screen
+          name="GlucoseDiary"
+          options={{
+            headerShown: false,
+          }}
+          component={GlucoseDiary}
         />
         <Stack.Screen
           name="MyProfile"

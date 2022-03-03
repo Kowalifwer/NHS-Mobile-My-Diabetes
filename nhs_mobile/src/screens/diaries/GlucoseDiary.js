@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from "react-dom";
+import ReactDOM, { render } from "react-dom";
 import {
     View,
     StyleSheet,
@@ -48,6 +48,14 @@ export default function GlucoseDiary({ navigation, route }) {
     const [hypo, setHypo] = useState(false);
     const [hypoReason, setHypoReason] = useState("");
     const [showHypoDialog, setShowHypoDialog] = useState(false);
+    const [renderInjections, setRenderInjections] = useState(false);
+
+    // if user injects, render injection input components
+    AsyncStorage.getItem('UserData').then(value => {
+        if (JSON.parse(value).health_type == "3") {
+            setRenderInjections(true);
+        }
+    });
 
     useEffect(() => {
         getOrCreateGlucoseDiary();
@@ -174,15 +182,19 @@ export default function GlucoseDiary({ navigation, route }) {
                         color="#008c8c"
                     />
 
-                    <Text style={[GlobalStyle.CustomFont, styles.text]}>
-                        Injections
-                    </Text>
-                    {injections_data.map((input_component) => <InjectionInputComponent key={input_component.index} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
-                    <CustomButton 
-                        onPressFunction={() => addInjectionInputComponent()}
-                        title="Enter another insulin value"
-                        color="#008c8c"
-                    />
+                    {renderInjections && (
+                        <View>
+                            <Text style={[GlobalStyle.CustomFont, styles.text]}>
+                                Injections
+                            </Text>
+                            {injections_data.map((input_component) => <InjectionInputComponent key={input_component.index} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
+                            <CustomButton 
+                                onPressFunction={() => addInjectionInputComponent()}
+                                title="Enter another insulin value"
+                                color="#008c8c"
+                            />
+                        </View>
+                    )}
 
                     <View style={styles.checkboxContainer}>
                         <Text style={styles.label}>I don't feel well</Text>

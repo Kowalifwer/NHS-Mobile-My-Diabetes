@@ -22,6 +22,8 @@ import GlucoseInputComponent from '../../components/GlucoseInputComponent';
 import InjectionInputComponent from "../../components/InjectionInputComponent";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from "expo-checkbox"
+import temp from '../temp';
+import DialogInput from 'react-native-dialog-input';
 
 const glucose_diary_entry = {
     date: "",
@@ -43,6 +45,9 @@ export default function GlucoseDiary({ navigation, route }) {
     const [showDatePicker, setShowDatePicker] = useState(false)
 
     const [feelSick, setFeelSick] = useState(false);
+    const [hypo, setHypo] = useState(false);
+    const [hypoReason, setHypoReason] = useState("");
+    const [showHypoDialog, setShowHypoDialog] = useState(false);
 
     useEffect(() => {
         getOrCreateGlucoseDiary();
@@ -83,12 +88,13 @@ export default function GlucoseDiary({ navigation, route }) {
                     glucose_readings: glucose_input_components_data,
                     injections: injections_data,
                     feel_sick: feelSick,
+                    hypo: hypo,
+                    hypo_reason: hypoReason,
                 }
 
                 console.log(final_entry)
                 diary.push(final_entry);
-
-                console.log(diary)
+                
                 await AsyncStorage.setItem("GlucoseDiary", JSON.stringify(diary))
                 navigation.navigate("Home");
             } catch (error) {
@@ -98,6 +104,23 @@ export default function GlucoseDiary({ navigation, route }) {
             Alert.alert("Diary entry cannot be empty, please put data")
             console.log("empty field in form")
         }
+    }
+
+    const checkForHypo = () => {
+        for (let i = 0; i < glucose_input_components_data.length; i++) {
+            console.log("checking for hypo");
+            let value = glucose_input_components_data[i]["reading"];
+            try {
+                if (parseInt(value) < 4) {
+                    console.log("hypo found");
+                    setHypo(true);
+                    return true
+                }
+            } catch (error) {
+                console.log("error in function checkForHypo in GlucoseDiary: ", error);
+            }
+        }
+        return false
     }
 
     function addGlucoseInputComponent() {
@@ -170,12 +193,27 @@ export default function GlucoseDiary({ navigation, route }) {
                         />
                     </View>
 
+                    <DialogInput isDialogVisible={showHypoDialog}
+                        title={"Low Blood Sugar"}
+                        message={"One of your blood glucose readings was <4mmol/L, please explain why"}
+                        hintInput ={"Reason"}
+                        submitInput={ value => {
+                            setHypoReason(value);
+                            setShowHypoDialog(false);
+                        }}
+                        closeDialog={ () => setShowHypoDialog(false) }>
+                    </DialogInput>
+
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'
                         color='#1eb900'
                         onPressFunction={() => {
-                            appendToDiary();
+                            if (checkForHypo() & hypoReason == "") {
+                                setShowHypoDialog(true);
+                            } else {
+                                appendToDiary();
+                            }
                         }}
                     />
 

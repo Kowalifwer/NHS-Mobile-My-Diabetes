@@ -40,17 +40,9 @@ function App() {
       <Stack.Navigator
       
         initialRouteName="ProfileSetup"
-        // screenOptions={{
-        //   headerTitleAlign: 'center',
-        //   headerStyle: {
-        //     backgroundColor: '#0080ff'
-        //   },
-        //   headerTintColor: '#ffffff',
-        //   headerTitleStyle: {
-        //     fontSize: 25,
-        //     fontWeight: 'bold'
-        //   }
-        // }}
+        screenOptions={{
+          gestureEnabled: false,
+       }}
       >
         <Stack.Screen
           name="ProfileSetup"

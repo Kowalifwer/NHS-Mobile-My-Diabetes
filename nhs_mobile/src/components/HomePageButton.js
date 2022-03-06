@@ -13,7 +13,7 @@ const HomePageButton = (props) => {
             android_ripple={{ color: '#00000050' }}
             style={({ pressed }) => [
                 { backgroundColor: pressed ? '#dddddd' : props.color },
-                styles.button,
+                styles.button,  
                 { ...props.style }
             ]}
         >

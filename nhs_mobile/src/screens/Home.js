@@ -58,24 +58,24 @@ export default function Home({ navigation, route }) {
                     
                     <HomePageButton
                         title='My Profile'
-                        color='#761076'
+                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("MyProfile")}
                     />
                     <HomePageButton
                         title='Email my Results'
-                        color='#761076'
+                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("Email", {
                             stored_user: stored_user,
                         })}
                     />
                     <HomePageButton
                         title='Resources'
-                        color='#761076'
+                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("Resources")}
                     />
                     <HomePageButton
                         title='Important Information'
-                        color='#761076'
+                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("ImportantInformation")}
                     />
 

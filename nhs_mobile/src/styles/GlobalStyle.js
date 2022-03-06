@@ -2,12 +2,12 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     CustomFont: {
-        fontFamily: 'AbrilFatface',
+        fontFamily: 'Atkinson',
         color: 'white',
         fontWeight: '300',
     },
     ButtonText: {
-        fontFamily: 'AbrilFatface-Regular',
+        fontFamily: 'Atkinson',
         fontSize: 30,
         padding: 10,
     },
@@ -28,3 +28,6 @@ export default StyleSheet.create({
         paddingBottom: 5,
     },
 });
+
+//orange #f96a3e
+// cyan #17a09d

@@ -28,7 +28,7 @@ const Stack = createStackNavigator();
 function App() {
 
   const [loaded] = useFonts({
-    AbrilFatface: require('../assets/AbrilFatface.ttf'),
+    Atkinson: require('./styles/Atkinson.ttf'),
   });
   
   if (!loaded) {

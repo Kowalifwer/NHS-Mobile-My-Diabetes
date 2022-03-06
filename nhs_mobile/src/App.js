@@ -22,10 +22,20 @@ import CareProcess from './screens/CareProcess';
 import Settings from './screens/Settings';
 import Videos from './screens/Videos';
 import temp from './screens/temp';
+import { useEffect } from 'react';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const Stack = createStackNavigator();
 
 function App() {
+
+  useEffect(() => {
+    changeScreenOrientation();
+}, []);
+
+  async function changeScreenOrientation() {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+  }
 
   const [loaded] = useFonts({
     AbrilFatface: require('../assets/AbrilFatface.ttf'),

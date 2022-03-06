@@ -133,7 +133,6 @@ export default function FoodDiary({ navigation, route }) {
                     <CustomButton
                         onPressFunction={() => setShowDatePicker(true)}
                         title="Enter Date"
-                        color="#008c8c"
                     />
 
                     {showTimePicker && (
@@ -155,22 +154,17 @@ export default function FoodDiary({ navigation, route }) {
                     <CustomButton
                         onPressFunction={() => setShowTimePicker(true)}
                         title="Enter Time"
-                        color="#008c8c"
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Meal'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["meal"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Water (ml)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["water"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
                     />
 
                     <Text>Food</Text>
@@ -180,13 +174,11 @@ export default function FoodDiary({ navigation, route }) {
                     <CustomButton 
                         onPressFunction={addFoodInputComponent}
                         title="Add another food"
-                        color="#008c8c"    
                     />
 
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'
-                        color='#1eb900'
                         onPressFunction={() => {
                             appendToDiary();
                         }}

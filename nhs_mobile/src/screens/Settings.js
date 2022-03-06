@@ -70,29 +70,27 @@ export default function Settings({ navigation }) {
                     </Text>
 
                     <CustomButton
-                            title='View/Update your profile'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("ProfileUpdate", {
-                                stored_user: stored_user,
-                            })}
+                        title='View/Update your profile'
+                        onPressFunction={() => navigation.navigate("ProfileUpdate", {
+                            stored_user: stored_user,
+                        })}
                     />
 
                     <CustomButton
-                            title='Setup email recipients'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("EmailSetup")}
+                        title='Setup email recipients'
+                        onPressFunction={() => navigation.navigate("EmailSetup")}
                     />
 
                     <CustomButton
-                            title='Wipe all local data (warning)'
-                            color='red'
-                            onPressFunction={clearAll}
+                        title='Wipe all local data (warning)'
+                        color='red'
+                        onPressFunction={clearAll}
                     />
 
                     <CustomButton
-                            title='Go to Homepage directly'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Home")}
+                        title='Go to Homepage directly'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Home")}
                     />
 
                 </View>

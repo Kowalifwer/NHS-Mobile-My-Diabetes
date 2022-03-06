@@ -58,24 +58,20 @@ export default function Home({ navigation, route }) {
                     
                     <HomePageButton
                         title='My Profile'
-                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("MyProfile")}
                     />
                     <HomePageButton
                         title='Email my Results'
-                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("Email", {
                             stored_user: stored_user,
                         })}
                     />
                     <HomePageButton
                         title='Resources'
-                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("Resources")}
                     />
                     <HomePageButton
                         title='Important Information'
-                        color='#17a09d'
                         onPressFunction={() => navigation.navigate("ImportantInformation")}
                     />
 
@@ -85,28 +81,23 @@ export default function Home({ navigation, route }) {
                 <View style={styles.button}>
                     <HomePageButton
                             title="My Diaries"
-                            color="#761076"
                             onPressFunction={() => navigation.navigate("Diaries")}
                     />       
                     <HomePageButton
                             title="Videos"
-                            color="#761076"
                             onPressFunction={() => navigation.navigate("Videos")}
                     />   
                     <HomePageButton
                             title="My Care Processes"
-                            color="#761076"
                             onPressFunction={() => navigation.navigate("CareProcess")}
                     />   
                     <HomePageButton
                             title="Settings"
-                            color="#761076"
                             onPressFunction={() => navigation.navigate("Settings")}
                     />                   
 
                     <HomePageButton
                             title="TEMP - old pages"
-                            color="#761076"
                             onPressFunction={() => navigation.navigate("temp")}
                     />    
 

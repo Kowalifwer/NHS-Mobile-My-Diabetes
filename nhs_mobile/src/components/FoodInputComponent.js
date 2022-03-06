@@ -68,7 +68,6 @@ const FoodInputComponent = (props) => {
                     setBarcodeScannerOpen([true, id])
                 }}
                 title={`Scan a food into food slot ${id+1}!`}
-                color="#008c8c"
             />
         </View>
         )

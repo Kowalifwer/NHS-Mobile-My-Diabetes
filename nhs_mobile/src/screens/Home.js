@@ -73,11 +73,6 @@ export default function Home({ navigation, route }) {
                         color='#761076'
                         onPressFunction={() => navigation.navigate("Resources")}
                     />
-                    <HomePageButton
-                        title='Important Information'
-                        color='#761076'
-                        onPressFunction={() => navigation.navigate("ImportantInformation")}
-                    />
 
                 </View>
 
@@ -103,12 +98,6 @@ export default function Home({ navigation, route }) {
                             color="#761076"
                             onPressFunction={() => navigation.navigate("Settings")}
                     />                   
-
-                    <HomePageButton
-                            title="TEMP - old pages"
-                            color="#761076"
-                            onPressFunction={() => navigation.navigate("temp")}
-                    />    
 
                 </View>
 

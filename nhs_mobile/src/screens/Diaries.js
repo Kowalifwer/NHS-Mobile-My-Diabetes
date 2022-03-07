@@ -22,9 +22,9 @@ import {diary_list} from '../global_structures.js'
 export default function Diaries({ navigation }) {
     const [stored_user, setStoredUser] = useState(null)
 
-    console.log("diary_list: \n", diary_list);
+    // console.log("diary_list: \n", diary_list);
 
-    useEffect(() => { //every time DOM renders, IF stored user is null - fetch from AsyncStorage
+    useEffect(() => { // every time DOM renders, IF stored user is null - fetch from AsyncStorage
         if (!stored_user) 
             (async () => {
                 const user = await AsyncStorage.getItem('UserData');

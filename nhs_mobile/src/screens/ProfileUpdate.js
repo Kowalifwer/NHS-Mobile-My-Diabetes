@@ -8,6 +8,7 @@ import {
     TextInput,
     SafeAreaView,
     ScrollView,
+    Keyboard,
 } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
@@ -87,7 +88,7 @@ export default function Home({ navigation, route }) {
 
     return (
         <SafeAreaView style={styles.body}>
-            <ScrollView>
+            <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont,styles.text,{fontSize: 50, color: "lime"}]}>

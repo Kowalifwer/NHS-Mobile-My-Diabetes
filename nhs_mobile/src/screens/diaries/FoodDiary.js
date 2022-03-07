@@ -30,10 +30,10 @@ export default function FoodDiary({ navigation, route }) {
     
     const [food_input_components_data, setFoodInputComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a FoodInput component. This is also passed as prop to the component to manipulate the state of this scope.
     
-    const[barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]); //first element is a boolean, second element is the index of the component that is currently open for barcode scanning.
+    const [barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]); //first element is a boolean, second element is the index of the component that is currently open for barcode scanning.
 
     const [date, setDate] = useState(new Date())
-    const [time, setTime] = useState(date)
+    const [time, setTime] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTimePicker, setShowTimePicker] = useState(false)
 
@@ -43,7 +43,7 @@ export default function FoodDiary({ navigation, route }) {
 
     useEffect(() => {
         // Please make sure that these fields match the fieleds in FoodInputComponent 'render_input_components' component_update_key parameter
-        setFoodInputComponentsData(state => [...state, {index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", fiber:"", sodium:"", scanned_item_object: {}}]);
+        setFoodInputComponentsData(state => [...state, {index:n_inputs, name:"", amount:"", energy:"", carb:"", fat:"", protein:"", sugar:"", scanned_item_object: {}}]);
     }, [n_inputs]); //when number of inputs increases, make sure we have a side effect that will increase the capacity of the input food components dictionary
 
     const getOrCreateFoodDiary = async () => {
@@ -66,10 +66,28 @@ export default function FoodDiary({ navigation, route }) {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
+
+                let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
+                console.log("existing diary entry:\n", existing_diary_entry);
+
                 // let current_diary_entry_data = {...diary_entry, food: food_input_components_data}
                 // if (food_input_components_data.length > 0)  //update the food array inside the diary with existing food input data from the other components
                 //     current_diary_entry_data.food = food_input_components_data
                 //this will push the diary_entry to the diary local storagem and also update all food components
+
+                // value * (amount / 100)
+                // food_input_components_data is an ARRAY of objects structure of which is shown below
+                //{index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", scanned_item_object: {}}
+
+                for (let i = 0; i < food_input_components_data.length; i++) {
+                    let x = food_input_components_data[i]
+                    x.energy = parseInt(x.amount) * (parseInt(x.energy) / 100)
+                    x.carb = parseInt(x.amount) * (parseInt(x.carb) / 100)
+                    x.fat = parseInt(x.amount) * (parseInt(x.fat) / 100)
+                    x.sugar = parseInt(x.amount) * (parseInt(x.sugar) / 100)
+                    x.protein = parseInt(x.amount) * (parseInt(x.protein) / 100)
+                }
+                
                 diary.push({...diary_entry, food: food_input_components_data});
                 await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
                 console.log(diary);
@@ -105,8 +123,10 @@ export default function FoodDiary({ navigation, route }) {
                             display="default"
                             onChange={(event, date) => {
                                 setShowDatePicker(false);
-                                setDate(date)
-                                setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                if (date != undefined) {
+                                    setDate(date)
+                                    setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                }
                             }}
                         />
                     )}
@@ -124,9 +144,11 @@ export default function FoodDiary({ navigation, route }) {
                             mode="time"
                             onChange={(event, time) => {
                                 setShowTimePicker(false);
-                                setTime(time)
-                                const time_string = `${time.getHours()}:${time.getMinutes()}`;
-                                setDiaryEntry(state => ({ ...state, ["time"]:time_string }), [])
+                                if (time != undefined) {
+                                    setTime(time)
+                                    const time_string = `${time.getHours()}:${time.getMinutes()}`;
+                                    setDiaryEntry(state => ({ ...state, ["time"]:time_string }), [])
+                                }
                             }}
                         />
                     )}
@@ -147,46 +169,6 @@ export default function FoodDiary({ navigation, route }) {
                         placeholder='Water (ml)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["water"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Calories (kcal)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["kcal"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Fat (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["fat"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Carbohydrates (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["carb"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Sugar (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["sugar"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
-                    />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Protein (g)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["protein"]:value.trim() }), [])}
                         // multiline={true}
                         // numberOfLines={1}
                     />

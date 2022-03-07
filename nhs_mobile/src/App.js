@@ -14,10 +14,28 @@ import { useFonts } from 'expo-font';
 import FoodDiary from './screens/diaries/FoodDiary';
 import BPDiary from './screens/diaries/BPDiary';
 import Diaries from './screens/Diaries';
+import GlucoseDiary from "./screens/diaries/GlucoseDiary";
+import MyProfile from './screens/MyProfile';
+import Resources from './screens/Resources';
+import ImportantInformation from './screens/ImportantInformation';
+import CareProcess from './screens/CareProcess';
+import Settings from './screens/Settings';
+import Videos from './screens/Videos';
+import temp from './screens/temp';
+import { useEffect } from 'react';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const Stack = createStackNavigator();
 
 function App() {
+
+  useEffect(() => {
+    changeScreenOrientation();
+}, []);
+
+  async function changeScreenOrientation() {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+  }
 
   const [loaded] = useFonts({
     AbrilFatface: require('../assets/AbrilFatface.ttf'),
@@ -32,17 +50,9 @@ function App() {
       <Stack.Navigator
       
         initialRouteName="ProfileSetup"
-        // screenOptions={{
-        //   headerTitleAlign: 'center',
-        //   headerStyle: {
-        //     backgroundColor: '#0080ff'
-        //   },
-        //   headerTintColor: '#ffffff',
-        //   headerTitleStyle: {
-        //     fontSize: 25,
-        //     fontWeight: 'bold'
-        //   }
-        // }}
+        screenOptions={{
+          gestureEnabled: false,
+       }}
       >
         <Stack.Screen
           name="ProfileSetup"
@@ -113,6 +123,62 @@ function App() {
             headerShown: false,
           }}
           component={BPDiary}
+        />
+        <Stack.Screen
+          name="GlucoseDiary"
+          options={{
+            headerShown: false,
+          }}
+          component={GlucoseDiary}
+        />
+        <Stack.Screen
+          name="MyProfile"
+          options={{
+            headerShown: false,
+          }}
+          component={MyProfile}
+        />
+        <Stack.Screen
+          name="Resources"
+          options={{
+            headerShown: false,
+          }}
+          component={Resources}
+        />
+        <Stack.Screen
+          name="ImportantInformation"
+          options={{
+            headerShown: false,
+          }}
+          component={ImportantInformation}
+        />
+        <Stack.Screen
+          name="CareProcess"
+          options={{
+            headerShown: false,
+          }}
+          component={CareProcess}
+        />
+        <Stack.Screen
+          name="Settings"
+          options={{
+            headerShown: false,
+          }}
+          component={Settings}
+        />
+        <Stack.Screen
+          name="Videos"
+          options={{
+            headerShown: false,
+          }}
+          component={Videos}
+        />
+        <Stack.Screen
+          name="temp"
+          options={{
+            headerShown: false,
+          }}
+          component={temp}
         />        
       </Stack.Navigator>
     </NavigationContainer>

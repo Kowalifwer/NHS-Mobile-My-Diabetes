@@ -443,6 +443,17 @@ export default function Email({navigation, route}) {
         }
     }
 
+    const validateEmail = () => {
+        Alert.alert("Disclaimer", "Sending this email involves sending your medical data. This is your own responsibility so proceed at your own risk.", [
+            {
+                text: 'Cancel',
+                onPress: () => console.log("Cancel"),
+                style: 'cancel',
+            },
+            {text: 'Proceed', onPress: () => composeMail()}
+        ]);
+    }
+
     //Composes Email based on diary chosen by user
     const composeMail = async() => {
         
@@ -582,7 +593,7 @@ export default function Email({navigation, route}) {
                     />
 
                     <CustomButton
-                        onPressFunction={() => composeMail()}
+                        onPressFunction={() => validateEmail()}
                         color="#ff0f00"
                         title="Compose Email"
                     />

@@ -33,7 +33,6 @@ export default function Email({navigation, route}) {
     const [selectedRecipient, setSelectedRecipient] = useState("");
     const [selectedDiary, setSelectedDiary] = useState("");
     
-    let htmlContent = "";
     const [imageHTML, setImageHTML] = useState();
     const [currentDate, setCurrentDate] = useState("");
 
@@ -72,6 +71,86 @@ export default function Email({navigation, route}) {
         setEmailOpen(false);
     }, []);
 
+    useEffect(async () => {
+        setImageHTML(await generateImageHTML());
+        setCurrentDate(generateCurrentDate());
+        getUserData();
+        convertDiaryData();
+    }, []);
+
+    // changes html to be transformed to pdf depending on what diary user selected
+    const changeHTMLContent = (currentDiary) => {
+        var currentHTMLTableData = [];
+
+        if (currentDiary == "Blood Pressure") {
+            currentHTMLTableData.push(htmlTableData.bloodPressureDailyResultsHTML); 
+            currentHTMLTableData.push(htmlTableData.bloodPressureAverageResultsHTML);
+        } else if (currentDiary == "Food Diary") {
+            currentHTMLTableData.push(htmlTableData.foodResultsHTML); 
+            currentHTMLTableData.push(htmlTableData.waterResultsHTML);
+        } else if (currentDiary == "Glucose Diary") {
+            currentHTMLTableData.push(htmlTableData.glucoseResultsHTML);
+            currentHTMLTableData.push((stored_user.health_type == 3) ? htmlTableData.glucoseInjectionsHTML : "");
+        } else {
+            console.log("something went wrong")
+        }
+
+        return `
+            <!DOCTYPE html>
+            <html lang="en">
+            
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${currentDiary}</title>
+                <style>
+                table, td {
+                    border:1px solid black;
+                }
+        
+                td {
+                    text-align: center;
+                    overflow: hidden; 
+                    text-overflow: ellipsis; 
+                    word-wrap: break-word;
+                }
+        
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+        
+                .center {
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 50%;
+                }
+                </style>
+            </head>
+            
+            <body>
+                ${imageHTML}
+                <h1>Diary: ${currentDiary}</h1>
+                <h1>NHS Number: ${stored_user.nhs_number} </h1>
+                <h1>Date Generated: ${currentDate}</h1>
+                
+                <table>
+                    ${currentHTMLTableData[0]}
+                </table>
+                
+                <br>
+        
+                <table>
+                    ${currentHTMLTableData[1]}
+                </table>
+        
+            </body>
+            
+            </html>
+        `
+    }
+
     // Changes image to be used in the html's into base64 and into html code. This is done because Expo Print has no facility to add local images so this workaround was made.
     async function generateImageHTML() {
         const asset = Asset.fromModule(require('../../assets/my_diabetes.jpg'));
@@ -92,208 +171,6 @@ export default function Email({navigation, route}) {
         const d = n.getDate();
         return d + "/" + m + "/" + y;
     }
-
-    // Food Diary HTML
-    const foodHTML = `
-    <!DOCTYPE html>
-    <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Food Diary</title>
-        <style>
-            table, td {
-                border:1px solid black;
-            }
-
-            td {
-                text-align: center;
-                overflow: hidden; 
-                text-overflow: ellipsis; 
-                word-wrap: break-word;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            .center {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                width: 50%;
-            }
-        </style>
-    </head>
-    
-    <body>
-        ${imageHTML}
-        <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM FOOD DIARY TO BE IMPLEMENTED </h3>
-        <h1>Diary: Food Diary</h1>
-        <h1>NHS Number: ${stored_user.nhs_number} </h1>
-        <h1>Date Generated: ${currentDate}</h1>
-
-        <!--Food Results Table-->
-        <p>Food Results Table</p>
-
-        <table>
-            ${htmlTableData.foodResultsHTML}
-        </table>
-
-        <!--Water Results Table-->
-        <p>Water Results Table</p>
-
-        <table>
-            ${htmlTableData.waterResultsHTML}
-        </table>
-
-    </body>
-    
-    </html>
-`
-
-    // Glucose Diary HTML
-    const glucoseHTML = `
-    <!DOCTYPE html>
-    <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Glucose Diary</title>
-        <style>
-        table, td {
-            border:1px solid black;
-        }
-
-        td {
-            text-align: center;
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            word-wrap: break-word;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .center {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 50%;
-        }
-        </style>
-    </head>
-    
-    <body>
-        ${imageHTML}
-        <h1>Diary: Glucose Diary</h1>
-        <h1>NHS Number: ${stored_user.nhs_number} </h1>
-        <h1>Date Generated: ${currentDate}</h1>
-
-        <p>Glucose Results Table</p>
-
-        <table>
-            ${htmlTableData.glucoseResultsHTML}
-        </table>
-
-        <p>Injections Table</p>
-
-        <table>
-            ${htmlTableData.glucoseInjectionsHTML}
-        </table>
-
-
-    </body>
-    
-    </html>
-`
-
-    // Blood Pressure Diary HTML
-    const bloodpressureHTML = `
-    <!DOCTYPE html>
-    <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blood Pressure Diary</title>
-        <style>
-        table, td {
-            border:1px solid black;
-        }
-
-        td {
-            text-align: center;
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            word-wrap: break-word;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .center {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 50%;
-        }
-        </style>
-    </head>
-    
-    <body>
-        ${imageHTML}
-        <h3 style="color:red;font-style:italic;"> USES HARDCODED JSON VALUES RIGHT NOW. SYSTEM TO GET REAL JSON DATA FROM BLOOD PRESSURE DIARY TO BE IMPLEMENTED </h3>
-        <h1>Diary: Blood Pressure</h1>
-        <h1>NHS Number: ${stored_user.nhs_number} </h1>
-        <h1>Date Generated: ${currentDate}</h1>
-        
-        <!--Daily Results Table-->
-        <p>Daily Results Table</p>
-        
-        <table>
-            ${htmlTableData.bloodPressureDailyResultsHTML}
-        </table>
-        
-        <br>
-        <!--Average Results Table-->
-        <p>Average Results Table</p>
-        
-        <table>
-            ${htmlTableData.bloodPressureAverageResultsHTML}
-        </table>
-
-    </body>
-    
-    </html>
-`
-    // Changes htmlContent variable depending on what diary is selected to be sent
-    function changeHtmlContent(index) {
-        
-        if (selectedDiary[index] == "Blood Pressure") {
-            htmlContent = bloodpressureHTML;
-        } else if (selectedDiary[index] == "Food Diary") {
-            htmlContent = foodHTML;
-        } else if (selectedDiary[index] == "Glucose Diary") {
-            htmlContent = glucoseHTML;
-        } else {
-            htmlContent = "SOMETHING WENT WRONG"
-        }
-    }
-
-    useEffect(async () => {
-        setImageHTML(await generateImageHTML());
-        setCurrentDate(generateCurrentDate());
-        getUserData();
-        convertDiaryData();
-    }, []);
 
     // General function to get Data from AsyncStorage. Depending on variable passed it will get data on different listings in AsyncStorage.
     const getData = async (jsonDataType) => {
@@ -325,13 +202,15 @@ export default function Email({navigation, route}) {
         //Loops for each day in the JSON
         for (var day=0; day <bloodPressureArrData.length; day++) {
 
+            var fDate = bloodPressureArrData[day].date.slice(0,10);
+
             // Get a row of Morning information from JSON and adds it appropriate excel
             for (var morn=0; morn < bloodPressureArrData[day].morning.length; morn++) {
 
                 //Since time is diary json is in format: Year-Month-Date<T>Hour:Minute:SecondZ, we need to slice this information so we get the time. Hence below:
                 var mornTime = bloodPressureArrData[day].morning[morn].time.slice(bloodPressureArrData[day].morning[morn].time.indexOf('T')+1,bloodPressureArrData[day].morning[morn].time.indexOf('T')+6)
 
-                dailyResultsExcel.push([bloodPressureArrData[day].date, mornTime, "Morning", bloodPressureArrData[day].morning[morn].systolic, bloodPressureArrData[day].morning[morn].diastolic, bloodPressureArrData[day].morning[morn].arm])   
+                dailyResultsExcel.push([fDate, mornTime, "Morning", bloodPressureArrData[day].morning[morn].systolic, bloodPressureArrData[day].morning[morn].diastolic, bloodPressureArrData[day].morning[morn].arm])   
             }
 
             // Get a row of Afternoon information from JSON and adds it to appropriate excel
@@ -340,7 +219,7 @@ export default function Email({navigation, route}) {
                 //Since time is diary json is in format: Year-Month-Date<T>Hour:Minute:SecondZ, we need to slice this information so we get the time. Hence below:
                 var aftnTime = bloodPressureArrData[day].afternoon[aftn].time.slice(bloodPressureArrData[day].afternoon[aftn].time.indexOf('T')+1,bloodPressureArrData[day].afternoon[aftn].time.indexOf('T')+6)
 
-                dailyResultsExcel.push([bloodPressureArrData[day].date, aftnTime, "Afternoon", bloodPressureArrData[day].afternoon[aftn].systolic, bloodPressureArrData[day].afternoon[aftn].diastolic, bloodPressureArrData[day].afternoon[aftn].arm])   
+                dailyResultsExcel.push([fDate, aftnTime, "Afternoon", bloodPressureArrData[day].afternoon[aftn].systolic, bloodPressureArrData[day].afternoon[aftn].diastolic, bloodPressureArrData[day].afternoon[aftn].arm])   
             }
             
             // Get a row of Evening information from JSON and adds it appropriate excel.
@@ -349,13 +228,13 @@ export default function Email({navigation, route}) {
                 //Since time is diary json is in format: Year-Month-Date<T>Hour:Minute:SecondZ, we need to slice this information so we get the time. Hence below:
                 var evenTime = bloodPressureArrData[day].evening[eveng].time.slice(bloodPressureArrData[day].evening[eveng].time.indexOf('T')+1,bloodPressureArrData[day].evening[eveng].time.indexOf('T')+6)
 
-                dailyResultsExcel.push([bloodPressureArrData[day].date, evenTime,"Evening", bloodPressureArrData[day].evening[eveng].systolic, bloodPressureArrData[day].evening[eveng].diastolic, bloodPressureArrData[day].evening[eveng].arm]);
+                dailyResultsExcel.push([fDate, evenTime,"Evening", bloodPressureArrData[day].evening[eveng].systolic, bloodPressureArrData[day].evening[eveng].diastolic, bloodPressureArrData[day].evening[eveng].arm]);
             }
         }
 
         // Get a row of averages from JSON and adds it to appropriate excel
         for (var day=0; day < bloodPressureArrData.length; day++) {
-            averageResultsExcel.push([bloodPressureArrData[day].date, bloodPressureArrData[day].morning_systolic_avg, bloodPressureArrData[day].morning_diastolic_avg, bloodPressureArrData[day].afternoon_systolic_avg, bloodPressureArrData[day].afternoon_diastolic_avg, bloodPressureArrData[day].evening_systolic_avg, bloodPressureArrData[day].evening_diastolic_avg]);
+            averageResultsExcel.push([fDate, bloodPressureArrData[day].morning_systolic_avg, bloodPressureArrData[day].morning_diastolic_avg, bloodPressureArrData[day].afternoon_systolic_avg, bloodPressureArrData[day].afternoon_diastolic_avg, bloodPressureArrData[day].evening_systolic_avg, bloodPressureArrData[day].evening_diastolic_avg]);
         }
     }
 
@@ -365,14 +244,17 @@ export default function Email({navigation, route}) {
         //Loops for each day in the JSON
         for (var day=0; day<foodArrData.length; day++) {
             
+            var fDate = foodArrData[day].date.slice(0,10);
+            var fTime = foodArrData[day].time.slice(foodArrData[day].time.indexOf('T')+1,foodArrData[day].time.indexOf('T')+6);
+
             //Loops for each food entry in the JSON and adds to excel sheet the JSON data
             for (var entry = 0; entry<foodArrData[day].food.length; entry++) {
 
-                foodExcel.push([foodArrData[day].date, foodArrData[day].meal, foodArrData[day].time, foodArrData[day].food[entry].name, foodArrData[day].food[entry].amount, foodArrData[day].food[entry].energy, foodArrData[day].food[entry].carb, foodArrData[day].food[entry].sugar, foodArrData[day].food[entry].fat, foodArrData[day].food[entry].protein])
+                foodExcel.push([fDate, foodArrData[day].meal, fTime, foodArrData[day].food[entry].name, foodArrData[day].food[entry].amount, foodArrData[day].food[entry].energy, foodArrData[day].food[entry].carb, foodArrData[day].food[entry].sugar, foodArrData[day].food[entry].fat, foodArrData[day].food[entry].protein])
             }
 
             //Adds amount of water consumed that day
-            waterExcel.push([foodArrData[day].date, foodArrData[day].water]);
+            waterExcel.push([fDate, foodArrData[day].water]);
 
         }
 
@@ -380,15 +262,16 @@ export default function Email({navigation, route}) {
 
     //Adding Data to Glucose Excel variable from its JSON
     const glucoseJSONtoArr = (glucoseResultsExcel, glucoseInjectionsExcel,glucoseArrData) => {
-        //console.log(glucoseArrData);
 
         // Loops for each day
         for (var day=0; day<glucoseArrData.length; day++) {
 
+            var fDate = glucoseArrData[day].date.slice(0, 10);
+
             //Loops for glucose readings results
             for (var entry=0; entry<glucoseArrData[day].glucose_readings.length; entry++) {
       
-                var fDate = glucoseArrData[day].date.slice(0, 10);
+                
                 var fTime = glucoseArrData[day].glucose_readings[entry].time.slice(glucoseArrData[day].glucose_readings[entry].time.indexOf('T')+1,glucoseArrData[day].glucose_readings[entry].time.indexOf('T')+6);
                 var hypo_reason = (glucoseArrData[day].hypo_reason == "") ? "N/A": glucoseArrData[day].hypo_reason;
                 var feel_sick = (glucoseArrData[day].feel_sick == false) ? "No" : "Yes";
@@ -404,7 +287,6 @@ export default function Email({navigation, route}) {
                 //Loops for injections readings results
                 for (var entry=0; entry<glucoseArrData[day].injections.length; entry++) {
                     
-                    var fDate = glucoseArrData[day].date.slice(0, 10);
                     var fTime = glucoseArrData[day].injections[entry].time.slice(glucoseArrData[day].injections[entry].time.indexOf('T')+1,glucoseArrData[day].injections[entry].time.indexOf('T')+6);
                     var fType = glucoseArrData[day].injections[entry].type;
                     var fUnits = glucoseArrData[day].injections[entry].units;
@@ -412,7 +294,6 @@ export default function Email({navigation, route}) {
                     glucoseInjectionsExcel.push([fDate, fTime, fType, fUnits]);
                 }
             }
-            
             
         }
     }
@@ -562,6 +443,17 @@ export default function Email({navigation, route}) {
         }
     }
 
+    const validateEmail = () => {
+        Alert.alert("Disclaimer", "Sending this email involves sending your medical data. This is your own responsibility so proceed at your own risk.", [
+            {
+                text: 'Cancel',
+                onPress: () => console.log("Cancel"),
+                style: 'cancel',
+            },
+            {text: 'Proceed', onPress: () => composeMail()}
+        ]);
+    }
+
     //Composes Email based on diary chosen by user
     const composeMail = async() => {
         
@@ -585,11 +477,9 @@ export default function Email({navigation, route}) {
                     return;
                 }
 
-                changeHtmlContent(i);
-
                 //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
                 const file_object = await Print.printToFileAsync({
-                    html: htmlContent,
+                    html: changeHTMLContent(selectedDiary[i]),
                     height: 842,
                     width: 595,
                 });
@@ -703,7 +593,7 @@ export default function Email({navigation, route}) {
                     />
 
                     <CustomButton
-                        onPressFunction={() => composeMail()}
+                        onPressFunction={() => validateEmail()}
                         color="#ff0f00"
                         title="Compose Email"
                     />

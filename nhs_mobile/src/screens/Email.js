@@ -43,7 +43,7 @@ export default function Email({navigation, route}) {
     const [isGlucoseEmpty, setIsGlucoseEmpty] = useState(false);
 
     //Stores each html table data for each diary. To be used in each html variable
-    const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", waterResultsHTML: "", glucoseResultsHTML: ""});
+    const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", waterResultsHTML: "", glucoseResultsHTML: "", glucoseInjectionsHTML: ""});
 
     // Stores each excel files URI to be used as an Email Attachement
     const [excelURIS, setExcelURIS] = useState({bloodpressure: "", food: "", glucose: ""});
@@ -194,6 +194,20 @@ export default function Email({navigation, route}) {
         <h1>Diary: Glucose Diary</h1>
         <h1>NHS Number: ${stored_user.nhs_number} </h1>
         <h1>Date Generated: ${currentDate}</h1>
+
+        <p>Glucose Results Table</p>
+
+        <table>
+            ${htmlTableData.glucoseResultsHTML}
+        </table>
+
+        <p>Injections Table</p>
+
+        <table>
+            ${htmlTableData.glucoseInjectionsHTML}
+        </table>
+
+
     </body>
     
     </html>
@@ -365,8 +379,42 @@ export default function Email({navigation, route}) {
     }
 
     //Adding Data to Glucose Excel variable from its JSON
-    const glucoseJSONtoArr = (excel, glucoseArrData) => {
+    const glucoseJSONtoArr = (glucoseResultsExcel, glucoseInjectionsExcel,glucoseArrData) => {
+        //console.log(glucoseArrData);
 
+        // Loops for each day
+        for (var day=0; day<glucoseArrData.length; day++) {
+
+            //Loops for glucose readings results
+            for (var entry=0; entry<glucoseArrData[day].glucose_readings.length; entry++) {
+      
+                var fDate = glucoseArrData[day].date.slice(0, 10);
+                var fTime = glucoseArrData[day].glucose_readings[entry].time.slice(glucoseArrData[day].glucose_readings[entry].time.indexOf('T')+1,glucoseArrData[day].glucose_readings[entry].time.indexOf('T')+6);
+                var hypo_reason = (glucoseArrData[day].hypo_reason == "") ? "N/A": glucoseArrData[day].hypo_reason;
+                var feel_sick = (glucoseArrData[day].feel_sick == false) ? "No" : "Yes";
+                var hypo = (glucoseArrData[day].hypo == false) ? "No" : "Yes";
+                var glucose_reading = glucoseArrData[day].glucose_readings[entry].reading;
+
+                glucoseResultsExcel.push([fDate, fTime, glucose_reading, hypo, feel_sick, hypo_reason])
+
+            }
+
+            //Only converts data for injections if user injects diabetes
+            if (stored_user.health_type == 3) {
+                //Loops for injections readings results
+                for (var entry=0; entry<glucoseArrData[day].injections.length; entry++) {
+                    
+                    var fDate = glucoseArrData[day].date.slice(0, 10);
+                    var fTime = glucoseArrData[day].injections[entry].time.slice(glucoseArrData[day].injections[entry].time.indexOf('T')+1,glucoseArrData[day].injections[entry].time.indexOf('T')+6);
+                    var fType = glucoseArrData[day].injections[entry].type;
+                    var fUnits = glucoseArrData[day].injections[entry].units;
+
+                    glucoseInjectionsExcel.push([fDate, fTime, fType, fUnits]);
+                }
+            }
+            
+            
+        }
     }
 
     /*
@@ -376,33 +424,36 @@ export default function Email({navigation, route}) {
     // Getting data from diaries
         var bpJSON = await getData('BPDiary');
         var foodJSON = await getData('FoodDiary');
-        //var glucoseJSON = await getData('GlucoseDiary');
+        var glucoseJSON = await getData('GlucoseDiary');
 
     // Reformated json data for excel
         var bloodPressureDailyEXCEL = [];
         var bloodPressureAverageEXCEL = [];
         var foodEXCEL = [];
         var waterEXCEL = [];
-        var glucoseEXCEL = []; //change name to applicable data
+        var glucoseResultsEXCEL = []; 
+        var glucoseInjectionsEXCEL = []; 
 
     // Header rows for each table for each diary
         var bloodPressureDailyResultsHeader = ["Date","Time","Period","Systolic","Diastolic","Arm"];
         var bloodPressureAverageResultsHeader = ["Date", "Morning Average Systolic", "Morning Average Diastolic", "Afternoon Average Systolic", "Afternoon Average Diastolic", "Evening Average Systolic", "Evening Average Diastolic"];
         var foodHeader = ["Date", "Meal", "Time", "Food Name", "Amount", "Calories", "Carbs", "Sugar", "Fat", "Protein"];
         var waterHeader = ["Date", "Water Drank"];
-        var glucoseHeader = ["Date"]; //change name to applicable data
+        var glucoseDailyResultsHeader = ["Date", "Time", "Glucose Reading", "Hypo?", "Feel Sick?", "Hypo Reason"]; 
+        var glucoseDailyInjectionsHeader = ["Date", "Time", "Type", "Units"];
 
     // Adding header row to each EXCEL variable
         bloodPressureDailyEXCEL.push(bloodPressureDailyResultsHeader);
         bloodPressureAverageEXCEL.push(bloodPressureAverageResultsHeader);
         foodEXCEL.push(foodHeader);
         waterEXCEL.push(waterHeader);
-        glucoseEXCEL.push(glucoseHeader);
+        glucoseResultsEXCEL.push(glucoseDailyResultsHeader);
+        glucoseInjectionsEXCEL.push(glucoseDailyInjectionsHeader);
 
     //Adds data to each diaries excel variable if diary is not empty
-        (bpJSON == "null") ? bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL, bpJSON) : setIsBPEmpty(true);
-        (foodJSON == "null") ? foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON) : setIsFoodEmpty(true);
-       // (glucoseJSON === "null") ? glucoseJSONtoArr(glucoseEXCEL, glucoseJSON) : setIsGlucoseEmpty(true);
+        (bpJSON == null) ? setIsBPEmpty(true) : bloodPressureJSONtoArr(bloodPressureDailyEXCEL, bloodPressureAverageEXCEL, bpJSON);
+        (foodJSON == null) ? setIsFoodEmpty(true) : foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON);
+        (glucoseJSON == null) ? setIsGlucoseEmpty(true) : glucoseJSONtoArr(glucoseResultsEXCEL, glucoseInjectionsEXCEL, glucoseJSON);
 
     // Create Excel Document from Excel Diary and appends to a global uri variable to be used in other functions
 
@@ -421,14 +472,16 @@ export default function Email({navigation, route}) {
         var bloodPressureAverageResultsWS = XLSX.utils.json_to_sheet(bloodPressureAverageEXCEL, opts);
         var foodResultsWS = XLSX.utils.json_to_sheet(foodEXCEL, opts);
         var waterResultsWS = XLSX.utils.json_to_sheet(waterEXCEL, opts);
-        var glucoseResultsWS = XLSX.utils.json_to_sheet(glucoseEXCEL, opts);
+        var glucoseResultsWS = XLSX.utils.json_to_sheet(glucoseResultsEXCEL, opts);
+        var glucoseInjectionsWS = XLSX.utils.json_to_sheet(glucoseInjectionsEXCEL, opts);
 
         //Append the work sheets to it's work book
         XLSX.utils.book_append_sheet(bloodPressureWB,bloodPressureDailyResultsWS, "Blood Pressure Daily Results");
         XLSX.utils.book_append_sheet(bloodPressureWB,bloodPressureAverageResultsWS, "Blood Pressure Average Results");
         XLSX.utils.book_append_sheet(foodWB,foodResultsWS, "Food Results");
         XLSX.utils.book_append_sheet(foodWB,waterResultsWS, "Water Results");
-        XLSX.utils.book_append_sheet(glucoseWB,glucoseResultsWS, "Glucose Results");
+        XLSX.utils.book_append_sheet(glucoseWB,glucoseResultsWS, "Glucose Daily Results");
+        XLSX.utils.book_append_sheet(glucoseWB,glucoseInjectionsWS, "Glucose Injections Results");
 
         //Writes work book data to each work book
         const bloodPressureWBOUT = XLSX.write(bloodPressureWB, {
@@ -477,13 +530,15 @@ export default function Email({navigation, route}) {
         const frHTML = XLSX.utils.sheet_to_html(foodResultsWS);
         const waterHTML = XLSX.utils.sheet_to_html(waterResultsWS);
         const grHTML = XLSX.utils.sheet_to_html(glucoseResultsWS);
+        const gIrHTML = XLSX.utils.sheet_to_html(glucoseInjectionsWS);
 
         // takes out the uncessary html information and only leaves the contents of inside the table tag then it appends the data to global variable to be used in actual html variable
         setHtmlTableData({bloodPressureDailyResultsHTML: `${bpdrHTML.slice(bpdrHTML.indexOf('<tr>'), bpdrHTML.lastIndexOf('</table>'))}`, 
             bloodPressureAverageResultsHTML: `${bparHTML.slice(bparHTML.indexOf('<tr>'), bparHTML.lastIndexOf('</table>'))}`,
             foodResultsHTML: `${frHTML.slice(frHTML.indexOf('<tr>'), frHTML.lastIndexOf('</table>'))}`,
             waterResultsHTML: `${waterHTML.slice(waterHTML.indexOf('<tr>'), waterHTML.lastIndexOf('</table>'))}`,
-           // glucoseResultsHTML: `${grHTML.slice(grHTML.indexOf('<tr>'), grHTML.lastIndexOf('</table>'))}`
+            glucoseResultsHTML: `${grHTML.slice(grHTML.indexOf('<tr>'), grHTML.lastIndexOf('</table>'))}`,
+            glucoseInjectionsHTML: `${gIrHTML.slice(gIrHTML.indexOf('<tr>'), gIrHTML.lastIndexOf('</table>'))}`,
         });
 
     }
@@ -491,16 +546,19 @@ export default function Email({navigation, route}) {
     // Alerts user if diary is empty when trying to compose an email
     const alertIfDiaryEmpty = (diaryToCheck) => {
         if (diaryToCheck == "Blood Pressure" && isBPEmpty == true) {
-            Alert.alert('No Blood Pressure PDF or Excel file will be attached since data has not been entered to Blood Pressure Diary');
+            Alert.alert("ERROR: Blood Pressure Diary is Empty. Can't create attachement.");
             Vibration.vibrate();
+            return "exit";
         }
         if (diaryToCheck == "Food Diary" && isFoodEmpty == true) {
-            Alert.alert('No Food Diary PDF or Excel file will be attached since data has not been entered to Food Diary');
+            Alert.alert("ERROR: Food Diary is Empty. Can't create attachement");
             Vibration.vibrate();
+            return "exit"
         }
         if (diaryToCheck == "Glucose Diary" && isGlucoseEmpty == true) {
-            Alert.alert('No Glucose Diary PDF or Excel file will be attached since data has not been entered to Glucose Diary');
+            Alert.alert("ERROR: Glucose Diary is Empty. Can't create attachement");
             Vibration.vibrate();
+            return "exit"
         }
     }
 
@@ -523,7 +581,10 @@ export default function Email({navigation, route}) {
             //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
             for (let i=0; i<selectedDiary.length; i++) {
                 
-                alertIfDiaryEmpty(selectedDiary[i]);
+                if (alertIfDiaryEmpty(selectedDiary[i]) === "exit") {
+                    return;
+                }
+
                 changeHtmlContent(i);
 
                 //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels

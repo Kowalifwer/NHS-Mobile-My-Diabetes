@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly across screens 1`] = `
+<TextInput
+  allowFontScaling={true}
+  keyboardType="numeric"
+  onChangeText={[Function]}
+  rejectResponderTermination={true}
+  style={
+    Object {
+      "backgroundColor": "#ffffff",
+      "borderColor": "#555",
+      "borderRadius": 10,
+      "borderWidth": 1,
+      "fontSize": 20,
+      "height": 40,
+      "marginBottom": 10,
+      "marginTop": 10,
+      "paddingBottom": 5,
+      "textAlign": "center",
+      "width": 350,
+    }
+  }
+  underlineColorAndroid="transparent"
+  value=""
+/>
+`;

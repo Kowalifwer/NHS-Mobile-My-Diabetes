@@ -78,7 +78,7 @@ export default function GlucoseDiary({ navigation, route }) {
                 AsyncStorage.setItem("GlucoseDiary", JSON.stringify([]));
             }
             else {
-                console.log("glucose diary: ", glucose_diary);
+                // console.log("glucose diary: ", glucose_diary);
             }
         } catch (error) {
             console.log("glucose diary getItem error");
@@ -87,24 +87,40 @@ export default function GlucoseDiary({ navigation, route }) {
     }
 
     const appendToDiary = async () => {
-        // console.log(diary_entry)
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('GlucoseDiary'))
 
                 let final_entry = {
-                    date: date,
-                    glucose_readings: glucose_input_components_data,
-                    injections: injections_data,
+                    date: diary_entry.date,
+                    glucose_readings: [...glucose_input_components_data],
+                    injections: [...injections_data],
                     feel_sick: feelSick,
                     hypo: hypo,
                     hypo_reason: hypoReason,
                 }
 
-                console.log(final_entry)
+                let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
+
+                if (existing_diary_entry != undefined) {
+                    console.log("there is an existing glucose diary entry");
+                    diary.splice(diary.indexOf(existing_diary_entry), 1); // this removes the old diary entry
+                    final_entry.glucose_readings = final_entry.glucose_readings.concat(existing_diary_entry.glucose_readings);
+                    final_entry.injections = final_entry.injections.concat(existing_diary_entry.injections);
+                }
+
+                for (let i = 0; i < final_entry.glucose_readings.length; i++) {
+                    delete final_entry.glucose_readings[i].index;
+                }
+
+                for (let i = 0; i < final_entry.injections.length; i++) {
+                    delete final_entry.injections[i].index;
+                }
+
+                // console.log(final_entry);
                 diary.push(final_entry);
-                
-                await AsyncStorage.setItem("GlucoseDiary", JSON.stringify(diary))
+                console.log("glucose diary: ", diary);
+                await AsyncStorage.setItem("GlucoseDiary", JSON.stringify(diary));
                 navigation.navigate("Home");
             } catch (error) {
                 console.log(error);
@@ -117,7 +133,6 @@ export default function GlucoseDiary({ navigation, route }) {
 
     const checkForHypo = () => {
         for (let i = 0; i < glucose_input_components_data.length; i++) {
-            console.log("checking for hypo");
             let value = glucose_input_components_data[i]["reading"];
             try {
                 if (parseInt(value) < 4) {
@@ -133,12 +148,10 @@ export default function GlucoseDiary({ navigation, route }) {
     }
 
     function addGlucoseInputComponent() {
-        // console.log(glucose_input_components_data)
         setNGlucoseInputs(n_glucose_inputs + 1);
     }
 
     function addInjectionInputComponent() {
-        // console.log(injections_data)
         setNInjections(n_injections + 1);
     }
 

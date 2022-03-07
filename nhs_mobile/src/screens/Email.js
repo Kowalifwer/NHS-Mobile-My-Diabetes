@@ -424,6 +424,28 @@ export default function Email({navigation, route}) {
 
     }
 
+    const createPDF = async(diaryName) => {
+        
+        //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
+        const file_object = await Print.printToFileAsync({
+            html: changeHTMLContent(diaryName),
+            height: 842,
+            width: 595,
+        });
+
+        //renames the file to its diary name with the current date by replacing the string after the last slash with diary name (with spaces taken out) and current date (slash / between the number replaced with a dash -)
+        const pdfName = `${file_object.uri.slice(
+            0,
+            file_object.uri.lastIndexOf('/') + 1)+diaryName.replace(/ /g, '')}_${currentDate.replace(/\//g, '-')}.pdf`
+
+        await FileSystem.moveAsync({
+            from: file_object.uri,
+            to: pdfName,
+        })
+
+        return pdfName;
+    }
+
     // Alerts user if diary is empty when trying to compose an email
     const alertIfDiaryEmpty = (diaryToCheck) => {
         if (diaryToCheck == "Blood Pressure" && isBPEmpty == true) {
@@ -454,10 +476,7 @@ export default function Email({navigation, route}) {
         ]);
     }
 
-    //Composes Email based on diary chosen by user
-    const composeMail = async() => {
-        
-        // Checks if selected diaries and recipient is selected first before composing email
+    const validateSelection = () => {
         if (selectedDiary == "") {
             Vibration.vibrate();
             Alert.alert("No Diary Selected");
@@ -465,6 +484,15 @@ export default function Email({navigation, route}) {
             Vibration.vibrate();
             Alert.alert("No Recepient Selected");
         } else {
+            return "valid";
+        }
+    }
+
+    //Composes Email based on diary chosen by user
+    const composeMail = async() => {
+        
+        // Checks if selected diaries and recipient is selected first before composing email
+        if (validateSelection() == "valid") {
 
             let URIS = []; // combination of pdf and excel URIs to be used in the attachements part of Expo Compose
             let pdfURIS = {bloodpressure: "", fooddiary: "", glucosediary: ""};
@@ -473,29 +501,13 @@ export default function Email({navigation, route}) {
             //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
             for (let i=0; i<selectedDiary.length; i++) {
                 
+                // Check if diary selected is empty before proceeding
                 if (alertIfDiaryEmpty(selectedDiary[i]) === "exit") {
                     return;
                 }
 
-                //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
-                const file_object = await Print.printToFileAsync({
-                    html: changeHTMLContent(selectedDiary[i]),
-                    height: 842,
-                    width: 595,
-                });
-
-                //renames the file to its diary name with the current date by replacing the string after the last slash with diary name (with spaces taken out) and current date (slash / between the number replaced with a dash -)
-                const pdfName = `${file_object.uri.slice(
-                    0,
-                    file_object.uri.lastIndexOf('/') + 1)+selectedDiary[i].replace(/ /g, '')}_${currentDate.replace(/\//g, '-')}.pdf`
-
-                await FileSystem.moveAsync({
-                    from: file_object.uri,
-                    to: pdfName,
-                })
-
-                //Adds the URI from the diary that was just converted to array of pdf uris. Since, the keys in pdfURIS are all lowercase and no spaces together, need to take the space and make lowercase the diary names so the value of the keys can be replaced by the uri. 
-                pdfURIS[selectedDiary[i].replace(/ /g, '').toLowerCase()] = pdfName;
+                // Calls the function that creates the pdf and stores the returned uri in appropriate place to be used as attachement later
+                pdfURIS[selectedDiary[i].replace(/ /g, '').toLowerCase()] = await createPDF(selectedDiary[i]);
 
             }
 

@@ -17,7 +17,6 @@ import Diaries from './screens/Diaries';
 import GlucoseDiary from "./screens/diaries/GlucoseDiary";
 import MyProfile from './screens/MyProfile';
 import Resources from './screens/Resources';
-import ImportantInformation from './screens/ImportantInformation';
 import CareProcess from './screens/CareProcess';
 import Settings from './screens/Settings';
 import Videos from './screens/Videos';
@@ -144,13 +143,6 @@ function App() {
             headerShown: false,
           }}
           component={Resources}
-        />
-        <Stack.Screen
-          name="ImportantInformation"
-          options={{
-            headerShown: false,
-          }}
-          component={ImportantInformation}
         />
         <Stack.Screen
           name="CareProcess"

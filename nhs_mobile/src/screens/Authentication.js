@@ -18,7 +18,7 @@ import {
 import * as LocalAuthentication from 'expo-local-authentication';
 
 export default function Authentication({ navigation, route }) {
-  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false) || {};
 
   // Check if hardware supports biometrics
   useEffect(() => {
@@ -80,7 +80,7 @@ export default function Authentication({ navigation, route }) {
       disableDeviceFallback: false,
     });
     // Log the user in on success
-    if (biometricAuth) navigation.navigate("ProfileSetup");
+    if (biometricAuth.success) navigation.navigate("ProfileSetup");
 
     console.log({ isBiometricAvailable });
     console.log({ supportedBiometrics });

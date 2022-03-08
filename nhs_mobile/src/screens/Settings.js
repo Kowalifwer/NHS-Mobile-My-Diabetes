@@ -8,7 +8,7 @@ import {
     SafeAreaView, 
     ScrollView,
 } from 'react-native';
-
+import * as LocalAuthentication from 'expo-local-authentication';
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -44,16 +44,34 @@ export default function Settings({ navigation }) {
         }
     }
 
+
     var clearAll = async () => {
         try {
-          await AsyncStorage.clear()
-          console.log('Cleared.')
+                const compatible = await LocalAuthentication.hasHardwareAsync();
+                if (!compatible) throw 'This device is not compatible for biometric authentication';
+
+                const enrolled = await LocalAuthentication.isEnrolledAsync();
+                if (!enrolled) throw 'This device does not have biometric authentication enabled';
+
+                const result = await LocalAuthentication.authenticateAsync();
+                if(result.success){
+                    await AsyncStorage.clear()
+                    Alert.alert('All local data wiped. You need to setup profile again.');
+                    getUserData();
+                    console.log('Cleared.');
+                }
+              else{
+                Alert.alert('Could Not Clear! Try Again. ')
+                console.log('Not Cleared.')
+
+              }
+              console.log({ result });
         } catch(e) {
           // clear error
+          console.log(e)
         }
         
-        Alert.alert('All local data wiped. You need to setup profile again.')
-        getUserData()
+        
       }
 
     return (

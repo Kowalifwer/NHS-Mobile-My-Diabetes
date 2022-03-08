@@ -9,6 +9,7 @@ import {
     ScrollView,
     Keyboard,
 } from 'react-native';
+import * as LocalAuthentication from 'expo-local-authentication';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -72,16 +73,29 @@ export default function EmailSetup({ navigation }) {
 
     const addItem = async () => {
         try {
-            var current_list = await getData()
-            if (current_list == null)
-                current_list = []
-            console.log(current_list)
-            console.log(add_recipient)
-            if (add_recipient.length > 0)
-                current_list.push(add_recipient)
-            console.log(current_list)
-            Alert.alert(add_recipient + "Added succesfully")
-            storeData(current_list)
+            
+            const compatible = await LocalAuthentication.hasHardwareAsync();
+            if (!compatible) throw 'This device is not compatible for biometric authentication';
+
+            const enrolled = await LocalAuthentication.isEnrolledAsync();
+            if (!enrolled) throw 'This device does not have biometric authentication enabled';
+
+            const result = await LocalAuthentication.authenticateAsync();
+            if(result.success){
+                var current_list = await getData()
+                if (current_list == null)
+                    current_list = []
+                console.log(current_list)
+                console.log(add_recipient)
+                if (add_recipient.length > 0)
+                    current_list.push(add_recipient)
+                console.log(current_list)
+                Alert.alert(add_recipient + "Added succesfully")
+                storeData(current_list)
+            }
+            else{
+                Alert.alert("Could not add! Try Again!")
+            }
         } catch (error) {
             console.log(error);
         }
@@ -91,12 +105,25 @@ export default function EmailSetup({ navigation }) {
     
     const removeItem = async (item) => {
         try {
-            var current_list = await getData()
-            if (current_list == null)
-                return
-            current_list = current_list.filter(function(e) { return e !== item })
-            console.log(current_list)
-            storeData(current_list)
+            const compatible = await LocalAuthentication.hasHardwareAsync();
+            if (!compatible) throw 'This device is not compatible for biometric authentication';
+
+            const enrolled = await LocalAuthentication.isEnrolledAsync();
+            if (!enrolled) throw 'This device does not have biometric authentication enabled';
+
+            const result = await LocalAuthentication.authenticateAsync();
+            if(result.success){
+                var current_list = await getData()
+                if (current_list == null)
+                    return
+                current_list = current_list.filter(function(e) { return e !== item })
+                console.log(current_list)
+                storeData(current_list)
+                Alert.alert("Clinician email removed succesfully.")
+            }
+            else{
+                Alert.alert("Could not remove! Try Again!")
+            }
         } catch (e) {
             // saving error
         }

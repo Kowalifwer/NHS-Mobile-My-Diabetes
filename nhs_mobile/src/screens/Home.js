@@ -74,6 +74,8 @@ export default function Home({ navigation, route }) {
                         onPressFunction={() => navigation.navigate("Resources")}
                     />
 
+                   
+
                 </View>
 
                 {/* Column 2 of buttons */}

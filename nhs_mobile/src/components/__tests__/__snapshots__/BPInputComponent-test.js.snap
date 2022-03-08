@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly across screens 1`] = `
+<View>
+  <View
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    hitSlop={
+      Object {
+        "bottom": 10,
+        "left": 10,
+        "right": 10,
+        "top": 10,
+      }
+    }
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#008c8c",
+        },
+        Object {
+          "alignItems": "center",
+          "borderRadius": 10,
+          "height": "auto",
+          "justifyContent": "center",
+          "margin": 10,
+          "minHeight": 40,
+          "padding": 10,
+          "width": 350,
+        },
+        Object {},
+      ]
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#ffffff",
+          "fontSize": 20,
+          "marginTop": -5,
+          "textAlign": "center",
+        }
+      }
+    >
+      Enter Time
+    </Text>
+  </View>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "blue",
+          "fontFamily": "AbrilFatface",
+          "fontWeight": "300",
+        },
+      ]
+    }
+  >
+    Blood Pressure Reading 
+    NaN
+  </Text>
+  <TextInput
+    allowFontScaling={true}
+    onChangeText={[Function]}
+    placeholder="arm"
+    rejectResponderTermination={true}
+    style={
+      Object {
+        "backgroundColor": "#ffffff",
+        "borderColor": "#555",
+        "borderRadius": 10,
+        "borderWidth": 1,
+        "fontSize": 20,
+        "height": 40,
+        "marginBottom": 10,
+        "marginTop": 10,
+        "paddingBottom": 5,
+        "textAlign": "center",
+        "width": 350,
+      }
+    }
+    underlineColorAndroid="transparent"
+  />
+  <TextInput
+    allowFontScaling={true}
+    keyboardType="numeric"
+    onChangeText={[Function]}
+    placeholder="systolic"
+    rejectResponderTermination={true}
+    style={
+      Object {
+        "backgroundColor": "#ffffff",
+        "borderColor": "#555",
+        "borderRadius": 10,
+        "borderWidth": 1,
+        "fontSize": 20,
+        "height": 40,
+        "marginBottom": 10,
+        "marginTop": 10,
+        "paddingBottom": 5,
+        "textAlign": "center",
+        "width": 350,
+      }
+    }
+    underlineColorAndroid="transparent"
+  />
+  <TextInput
+    allowFontScaling={true}
+    keyboardType="numeric"
+    onChangeText={[Function]}
+    placeholder="diastolic"
+    rejectResponderTermination={true}
+    style={
+      Object {
+        "backgroundColor": "#ffffff",
+        "borderColor": "#555",
+        "borderRadius": 10,
+        "borderWidth": 1,
+        "fontSize": 20,
+        "height": 40,
+        "marginBottom": 10,
+        "marginTop": 10,
+        "paddingBottom": 5,
+        "textAlign": "center",
+        "width": 350,
+      }
+    }
+    underlineColorAndroid="transparent"
+  />
+</View>
+`;

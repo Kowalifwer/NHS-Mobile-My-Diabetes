@@ -74,6 +74,12 @@ export default function Home({ navigation, route }) {
                         onPressFunction={() => navigation.navigate("Resources")}
                     />
 
+                    <HomePageButton
+                        title='Resources'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Authentication")}
+                    />
+
                 </View>
 
                 {/* Column 2 of buttons */}

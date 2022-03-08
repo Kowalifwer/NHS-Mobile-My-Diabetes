@@ -10,6 +10,7 @@ import {
     ScrollView,
     Keyboard,
 } from 'react-native';
+import * as LocalAuthentication from 'expo-local-authentication';
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
@@ -58,17 +59,30 @@ export default function Home({ navigation, route }) {
             console.log("All fields empty!")
         } else {
             try {
-                console.log(dynamic_user)
-                var user = {...stored_user} //create a safe copy of the local storage user object
-                for (const key of Object.keys(user)) { //go over every existing record, and replace it ONLY if the current form input is NOT empty.
-                    console.log(key)
-                    if (key in dynamic_user && dynamic_user[key].length > 0) 
-                        user[key] = dynamic_user[key]
+
+                const compatible = await LocalAuthentication.hasHardwareAsync();
+                if (!compatible) throw 'This device is not compatible for biometric authentication';
+
+                const enrolled = await LocalAuthentication.isEnrolledAsync();
+                if (!enrolled) throw 'This device does not have biometric authentication enabled';
+
+                const result = await LocalAuthentication.authenticateAsync();
+                if(result.success){
+                    console.log(dynamic_user)
+                    var user = {...stored_user} //create a safe copy of the local storage user object
+                    for (const key of Object.keys(user)) { //go over every existing record, and replace it ONLY if the current form input is NOT empty.
+                        console.log(key)
+                        if (key in dynamic_user && dynamic_user[key].length > 0) 
+                            user[key] = dynamic_user[key]
+                    }
+                    await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
+                    getUserData()
+                    console.log("Data updated")
+                    Alert.alert('Success!', 'Your data has been updated.');
                 }
-                await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
-                getUserData()
-                console.log("Data updated")
-                Alert.alert('Success!', 'Your data has been updated.');
+                else{
+                    Alert.alert('Failure!', 'Your data could not be updated.');
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -77,10 +91,22 @@ export default function Home({ navigation, route }) {
 
     const removeUserData = async () => {
         try {
-            console.log("CLEARED UserData - output below")
-            getUserData()
-            await AsyncStorage.removeItem("UserData");
-            navigation.navigate('ProfileSetup');
+            const compatible = await LocalAuthentication.hasHardwareAsync();
+            if (!compatible) throw 'This device is not compatible for biometric authentication';
+
+            const enrolled = await LocalAuthentication.isEnrolledAsync();
+            if (!enrolled) throw 'This device does not have biometric authentication enabled';
+
+            const result = await LocalAuthentication.authenticateAsync();
+            if(result.success){
+                console.log("CLEARED UserData - output below")
+                getUserData()
+                await AsyncStorage.removeItem("UserData");
+                navigation.navigate('ProfileSetup');
+            }
+            else{
+                Alert.alert('Failure!', 'Your profile could not be deleted.');
+            }
         } catch (error) {
             console.log(error);
         }

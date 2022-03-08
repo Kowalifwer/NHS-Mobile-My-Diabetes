@@ -12,6 +12,7 @@ import {
     Button,
     Vibration
 } from 'react-native';
+import * as LocalAuthentication from 'expo-local-authentication';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -515,7 +516,7 @@ export default function Email({navigation, route}) {
             Vibration.vibrate();
             Alert.alert("No Recepient Selected");
         } else {
-
+            
             let URIS = []; // combination of pdf and excel URIs to be used in the attachements part of Expo Compose
             let pdfURIS = {bloodpressure: "", fooddiary: "", glucosediary: ""};
             const diarySubject = selectedDiary.toString().replace(/,/g, ' + '); //used in subject of email
@@ -566,12 +567,25 @@ export default function Email({navigation, route}) {
 
             // This section composes the email with the recepient, email subject and attachemments
             try{
-                let emailResult = await MailComposer.composeAsync({
-                    recipients: (selectedRecipient != null) ? [selectedRecipient] : [],
-                    subject: stored_user.nhs_number == "" ? diarySubject + ' PDF/EXCEL #N/A' : diarySubject + ' PDF/EXCEL #' + stored_user.nhs_number,
-                    attachments: URIS,
-                });
-                (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selectedRecipient}` ) : Alert.alert('Email has not been sent')
+
+                const compatible = await LocalAuthentication.hasHardwareAsync();
+                if (!compatible) throw 'This device is not compatible for biometric authentication';
+
+                const enrolled = await LocalAuthentication.isEnrolledAsync();
+                if (!enrolled) throw 'This device does not have biometric authentication enabled';
+
+                const result = await LocalAuthentication.authenticateAsync();
+                if(result.success){
+                    let emailResult = await MailComposer.composeAsync({
+                        recipients: (selectedRecipient != null) ? [selectedRecipient] : [],
+                        subject: stored_user.nhs_number == "" ? diarySubject + ' PDF/EXCEL #N/A' : diarySubject + ' PDF/EXCEL #' + stored_user.nhs_number,
+                        attachments: URIS,
+                    });
+                    (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selectedRecipient}` ) : Alert.alert('Email has not been sent')
+                }
+                else{
+                    Alert.alert("Failure!", "Could not send email.")
+                }
             } catch (e) {
                 console.log(e);
             }

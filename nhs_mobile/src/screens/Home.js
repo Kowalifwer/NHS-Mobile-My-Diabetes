@@ -18,11 +18,44 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
 
 export default function Home({ navigation, route }) {
-    const [stored_user, setStoredUser] = useState(user_struct)
+    const [stored_user, setStoredUser] = useState(user_struct);
+    const [videoJSON,setVideoJSON] = useState(null);
     
     useEffect(() => {
         getUserData();
+        fetch_videos().then(result => {setVideoJSON(result)}).catch(error => Alert.alert(error.message))
     }, []);
+
+    const fetch_videos = () => {
+        var videoDetails = [];
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        var requestOptions = {
+            method: "get",
+            headers: myHeaders,
+            redirect: "follow",
+        };
+        
+        return fetch("https://v1.nocodeapi.com/testing109999/yt/mUJAWjJbMBVgHGjd/channelVideos?maxResults=50", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            
+            for (var entry=0; entry<result.items.length; entry++) {
+                 videoDetails.push({
+                        id: result.items[entry].snippet.resourceId.videoId,
+                        name: result.items[entry].snippet.title,
+                    })
+            }
+            return videoDetails;
+        })
+        .catch(error => {throw new Error(error)})
+    }
+
+    const validateVideo = () => {
+        (videoJSON == null) ? Alert.alert("Videos are loading, try again") :  navigation.navigate("Videos", {
+            paramKey: videoJSON
+        })
+    }
 
     const getUserData = () => {
         try {
@@ -83,11 +116,7 @@ export default function Home({ navigation, route }) {
                     />       
                     <HomePageButton
                             title="Videos"
-                            onPressFunction={() => navigation.navigate("Videos")}
-                    />   
-                    <HomePageButton
-                            title="My Care Processes"
-                            onPressFunction={() => navigation.navigate("CareProcess")}
+                            onPressFunction={() => validateVideo()}
                     />   
                     <HomePageButton
                             title="Settings"

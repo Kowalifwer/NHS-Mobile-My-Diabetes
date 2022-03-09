@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly across screens 1`] = `
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  hitSlop={
+    Object {
+      "bottom": 10,
+      "left": 10,
+      "right": 10,
+      "top": 10,
+    }
+  }
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "backgroundColor": undefined,
+      },
+      Object {
+        "alignItems": "center",
+        "borderRadius": 10,
+        "height": "auto",
+        "justifyContent": "center",
+        "margin": 10,
+        "minHeight": 40,
+        "padding": 10,
+        "width": 350,
+      },
+      Object {},
+    ]
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "#ffffff",
+        "fontSize": 20,
+        "marginTop": -5,
+        "textAlign": "center",
+      }
+    }
+  />
+</View>
+`;

@@ -3,7 +3,11 @@ import {
     Pressable,
     Text,
     StyleSheet,
+    Dimensions,
 } from 'react-native';
+
+var deviceHeight = Dimensions.get("window").height;
+var deviceWidth = Dimensions.get("window").width;
 
 const HomePageButton = (props) => {
     return (
@@ -27,14 +31,13 @@ const HomePageButton = (props) => {
 const styles = StyleSheet.create({
     text: {
         color: '#ffffff',
-        fontSize: 23,
+        fontSize: (deviceHeight * 0.1) * 0.35,
         textAlign: 'center',
-        marginTop: -5,
+        margin: -5,
     },
     button: {
-        width: 170,
-        minHeight: 75,
-        height: 'auto',
+        width: deviceWidth * 0.44,
+        height: deviceHeight * 0.1,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,

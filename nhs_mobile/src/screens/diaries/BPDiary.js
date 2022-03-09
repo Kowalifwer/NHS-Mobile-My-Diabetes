@@ -66,6 +66,14 @@ export default function BPDiary({ navigation, route }) {
                 let bp_readings_afternoon = bp_readings.filter(x => x.time.getHours() >= 12 && x.time.getHours() < 17);
                 let bp_readings_evening = bp_readings.filter(x => x.time.getHours() >= 17);
 
+                for (let i = 0; i < bp_readings_morning.length; i++) {
+                    delete bp_readings_morning[i].index;
+                } for (let i = 0; i < bp_readings_afternoon.length; i++) {
+                    delete bp_readings_afternoon[i].index;
+                } for (let i = 0; i < bp_readings_evening.length; i++) {
+                    delete bp_readings_evening[i].index;
+                }
+
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
                 console.log("existing diary entry:\n", existing_diary_entry);
 

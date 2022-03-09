@@ -17,15 +17,24 @@ import Diaries from './screens/Diaries';
 import GlucoseDiary from "./screens/diaries/GlucoseDiary";
 import MyProfile from './screens/MyProfile';
 import Resources from './screens/Resources';
-import ImportantInformation from './screens/ImportantInformation';
 import CareProcess from './screens/CareProcess';
 import Settings from './screens/Settings';
 import Videos from './screens/Videos';
 import temp from './screens/temp';
+import { useEffect } from 'react';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 const Stack = createStackNavigator();
 
 function App() {
+
+  useEffect(() => {
+    changeScreenOrientation();
+}, []);
+
+  async function changeScreenOrientation() {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+  }
 
   const [loaded] = useFonts({
     Atkinson: require('./styles/Atkinson.ttf'),
@@ -40,17 +49,9 @@ function App() {
       <Stack.Navigator
       
         initialRouteName="ProfileSetup"
-        // screenOptions={{
-        //   headerTitleAlign: 'center',
-        //   headerStyle: {
-        //     backgroundColor: '#0080ff'
-        //   },
-        //   headerTintColor: '#ffffff',
-        //   headerTitleStyle: {
-        //     fontSize: 25,
-        //     fontWeight: 'bold'
-        //   }
-        // }}
+        screenOptions={{
+          gestureEnabled: false,
+       }}
       >
         <Stack.Screen
           name="ProfileSetup"
@@ -142,13 +143,6 @@ function App() {
             headerShown: false,
           }}
           component={Resources}
-        />
-        <Stack.Screen
-          name="ImportantInformation"
-          options={{
-            headerShown: false,
-          }}
-          component={ImportantInformation}
         />
         <Stack.Screen
           name="CareProcess"

@@ -70,10 +70,8 @@ export default function Home({ navigation, route }) {
                         title='Resources'
                         onPressFunction={() => navigation.navigate("Resources")}
                     />
-                    <HomePageButton
-                        title='Important Information'
-                        onPressFunction={() => navigation.navigate("ImportantInformation")}
-                    />
+
+                   
 
                 </View>
 
@@ -95,11 +93,6 @@ export default function Home({ navigation, route }) {
                             title="Settings"
                             onPressFunction={() => navigation.navigate("Settings")}
                     />                   
-
-                    <HomePageButton
-                            title="TEMP - old pages"
-                            onPressFunction={() => navigation.navigate("temp")}
-                    />    
 
                 </View>
 

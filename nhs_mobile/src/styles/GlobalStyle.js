@@ -5,6 +5,7 @@ export default StyleSheet.create({
         fontFamily: 'Atkinson',
         color: 'white',
         fontWeight: '300',
+        fontSize: 25,
     },
     ButtonText: {
         fontFamily: 'Atkinson',
@@ -13,6 +14,11 @@ export default StyleSheet.create({
     },
     Body: {
         backgroundColor: '#0080ff',
+    },
+    BodyGeneral: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#e9c5b4',
     },
     InputField: {
         width: 350,
@@ -27,7 +33,16 @@ export default StyleSheet.create({
         marginBottom: 10,
         paddingBottom: 5,
     },
+    Orange: {
+        color: "#f96a3e"
+    },
+    Cyan: {
+        color: "#17a09d"
+    },
+    Large: {
+        fontSize: 40,
+    },
 });
 
 //orange #f96a3e
-// cyan #17a09d
+// cyan "#17a09d"

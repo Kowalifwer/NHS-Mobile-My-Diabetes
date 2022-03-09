@@ -112,9 +112,11 @@ export default function Home({ navigation, route }) {
                     <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
                         Your diabetes status is: {health_type_reverse_lookup[route.params?.stored_user.health_type]}
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
+
+                    <Text style={[GlobalStyle.CustomFont, styles.text, {color: "red"}]}>
                         Your daily number of injections is {route.params?.stored_user.daily_injections}
                     </Text>
+                    
 
                     <TextInput
                         style={GlobalStyle.InputField}

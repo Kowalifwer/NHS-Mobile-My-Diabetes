@@ -55,7 +55,6 @@ export default function Diaries({ navigation }) {
                                     health_type: (stored_user.health_type) ? stored_user.health_type : "-1",
                                 })
                             }}
-                            color="#761076"
                             title={item.verbose_name}
                             style={GlobalStyle.button_style}
                         />

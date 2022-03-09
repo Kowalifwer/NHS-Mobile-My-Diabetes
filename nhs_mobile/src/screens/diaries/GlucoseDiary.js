@@ -156,22 +156,23 @@ export default function GlucoseDiary({ navigation, route }) {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={GlobalStyle.BodyGeneral}>
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
-                <View style={styles.body}>
+                <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
 
                     <Text style={[GlobalStyle.CustomFont, styles.text]}>
-                        Glucose Diary
+                        Glucose Diary - Readings
                     </Text>
 
                     {showDatePicker && (
                         <DateTimePicker
                             testID="datePicker"
                             value={date}
+                            style={{minWidth: 200}}
                             display="default"
                             onChange={(event, date) => {
-                                setShowDatePicker(false);
+                                if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
@@ -183,17 +184,14 @@ export default function GlucoseDiary({ navigation, route }) {
                     <CustomButton
                         onPressFunction={() => setShowDatePicker(true)}
                         title="Enter Date"
-                        color="#008c8c"
                     />
-
-                    <Text style={[GlobalStyle.CustomFont, styles.text]}>
-                        Readings
-                    </Text>
+                    
                     {glucose_input_components_data.map((input_component) => <GlucoseInputComponent key={input_component.index} id={input_component.index} setGlucoseComponentsData={setGlucoseComponentsData} glucoseReadings={glucose_input_components_data}/>)}
+                    
                     <CustomButton 
                         onPressFunction={() => addGlucoseInputComponent()}
                         title="Enter another reading"
-                        color="#008c8c"
+                        color="#f96a3e"
                     />
 
                     {renderInjections && (
@@ -211,7 +209,7 @@ export default function GlucoseDiary({ navigation, route }) {
                     )}
 
                     <View style={styles.checkboxContainer}>
-                        <Text style={styles.label}>I don't feel well</Text>
+                        <Text style={[styles.label, GlobalStyle.CustomFont]}>I don't feel well</Text>
                         <CheckBox
                             value={feelSick}
                             onValueChange={setFeelSick}
@@ -257,11 +255,6 @@ export default function GlucoseDiary({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-    body: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#e9c5b4',
-    },
     text: {
         fontSize: 30,
         marginBottom: 130,
@@ -270,11 +263,14 @@ const styles = StyleSheet.create({
     checkboxContainer: {
         flexDirection: "row",
         marginBottom: 20,
+        marginTop: 50,
+        justifyContent: "center",
+        alignItems: "center",
       },
-    checkbox: {
-    alignSelf: "center",
-    },
+    // checkbox: {
+    //     alignSelf: "center",
+    // },
     label: {
-    margin: 8,
+        margin: 8,
     },
 })

@@ -12,54 +12,52 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
-
+import DropDownPicker from 'react-native-dropdown-picker';
+import DropdownStyle from '../styles/DropdownStyle';
 
 // this is the food input which gets added to the page when user clicks the + button
 const BPInputComponent = props => {
     let {id, setBPReadings, bp_readings} = props
     const [show_time_picker, setShowTimePicker] = useState(false);
 
+    const [arm_open, setOpen] = useState(false);
+    const [arm_value, setValue] = useState(null);
+    const [arm_type, setArmType] = useState([
+        {label: 'Left', value: 'left'},
+        {label: 'Right', value: 'right'},
+    ])
+
     return (
-        <View>
-            {show_time_picker && (
-                <DateTimePicker
-                    testID="timePicker"
-                    display="default"
-                    mode="time"
-                    value={ bp_readings[id]["time"] }
-                    onChange={ (event, new_time) => {
-                        setShowTimePicker(false);
-                        if (new_time != undefined) {
-                            setBPReadings(state => (state.map(val => {//#endregion
-                                if (val.index == id) {
-                                    return {...val, ['time']: new_time}
-                                } return val;
-                            })))
-                        }
-                        }
-                    }
-                />
-            )}
-            <CustomButton
-                onPressFunction={() => {
-                    setShowTimePicker(true);
-                }}
-                title="Enter Time"
-                color="#008c8c"
-            />
-            <Text style={[GlobalStyle.CustomFont]}>
+        <View style={GlobalStyle.BodyGeneral}>
+
+            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Cyan, {marginTop: 20, marginBottom: 20}]}>
                 Blood Pressure Reading {id+1}
             </Text>
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder='arm'
-                onChangeText={(value) => {
-                    setBPReadings(state => (state.map(val => {//#endregion
-                        if (val.index == id) {
-                            return {...val, ['arm']: value.trim()}
-                        } return val;
-                    })))
-                }}
+            
+            <DropDownPicker
+                dropDownDirection="BOTTOM"
+                style={DropdownStyle.style}
+                containerStyle={DropdownStyle.containerStyle}
+                placeholderStyle={DropdownStyle.placeholderStyle}
+                textStyle={DropdownStyle.textStyle}
+                labelStyle={DropdownStyle.labelStyle}
+                listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                showArrowIcon={true}
+                showTickIcon={true}
+                placeholder="Which arm did you take the reading from?"
+                open={arm_open}
+                value={arm_value}
+                items={arm_type}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setArmType}
+                onChangeValue={(value) => setBPReadings(state => (state.map(val => {//#endregion
+                    if (val.index == id) {
+                        return {...val, ['arm']: value.trim()}
+                    } return val;
+                })))}
             />
             <TextInput
                 style={GlobalStyle.InputField}
@@ -84,6 +82,31 @@ const BPInputComponent = props => {
                         } return val;
                     })))
                 }}
+            />
+            {show_time_picker && 
+                <DateTimePicker
+                    testID="timePicker"
+                    display="default"
+                    mode="time"
+                    style={{minWidth: 200}}
+                    value={ bp_readings[id]["time"] }
+                    onChange={ (event, new_time) => {
+                        if (Platform.OS !== 'ios') setShowTimePicker(false);
+                        if (new_time != undefined) {
+                            setBPReadings(state => (state.map(val => {//#endregion
+                                if (val.index == id) {
+                                    return {...val, ['time']: new_time}
+                                } return val;
+                            })))
+                        }
+                        }
+                    }
+                />
+            }
+            <CustomButton
+                onPressFunction={() => setShowTimePicker(true)}
+                title="Enter Time"
+                color="#008c8c"
             />
         </View>
     )

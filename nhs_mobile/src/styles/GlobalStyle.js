@@ -2,17 +2,23 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     CustomFont: {
-        fontFamily: 'AbrilFatface',
+        fontFamily: 'Atkinson',
         color: 'white',
         fontWeight: '300',
+        fontSize: 25,
     },
     ButtonText: {
-        fontFamily: 'AbrilFatface-Regular',
+        fontFamily: 'Atkinson',
         fontSize: 30,
         padding: 10,
     },
     Body: {
         backgroundColor: '#0080ff',
+    },
+    BodyGeneral: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#e9c5b4',
     },
     InputField: {
         width: 350,
@@ -27,4 +33,16 @@ export default StyleSheet.create({
         marginBottom: 10,
         paddingBottom: 5,
     },
+    Orange: {
+        color: "#f96a3e"
+    },
+    Cyan: {
+        color: "#17a09d"
+    },
+    Large: {
+        fontSize: 40,
+    },
 });
+
+//orange #f96a3e
+// cyan "#17a09d"

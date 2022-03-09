@@ -84,7 +84,7 @@ const BarcodeScannerComponent = (props) => {
             <CustomButton
                 style= {{marginTop:550}}
                 title='Cancel Scan'
-                color='#761076'
+                color='red'
                 onPressFunction={() => {setBarcodeScannerOpen([false, 0])}}
             />
         </View>

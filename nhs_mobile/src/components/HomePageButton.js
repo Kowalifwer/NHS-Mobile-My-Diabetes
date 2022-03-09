@@ -16,8 +16,8 @@ const HomePageButton = (props) => {
             hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
             android_ripple={{ color: '#00000050' }}
             style={({ pressed }) => [
-                { backgroundColor: pressed ? '#dddddd' : props.color },
-                styles.button,
+                { backgroundColor: pressed ? '#dddddd' : (props.color) ? props.color : '#17a09d' },
+                styles.button,  
                 { ...props.style }
             ]}
         >

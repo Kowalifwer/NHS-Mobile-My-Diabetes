@@ -37,6 +37,14 @@ export default function FoodDiary({ navigation, route }) {
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTimePicker, setShowTimePicker] = useState(false)
 
+    const [food_open, setOpen] = useState(false);
+    const [food_value, setValue] = useState(null);
+    const [food_type, setFoodType] = useState([
+        {label: 'Breakfast', value: 'breakfast'},
+        {label: 'Lunch', value: 'lunch'},
+        {label: 'Dinner', value: 'dinner'},
+    ])
+
     useEffect(() => {
         getOrCreateFoodDiary();
     }, []); // don't know what this is doing
@@ -68,7 +76,7 @@ export default function FoodDiary({ navigation, route }) {
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
 
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
-                console.log("existing diary entry:\n", existing_diary_entry);
+                // console.log("existing diary entry:\n", existing_diary_entry);
 
                 // let current_diary_entry_data = {...diary_entry, food: food_input_components_data}
                 // if (food_input_components_data.length > 0)  //update the food array inside the diary with existing food input data from the other components
@@ -90,7 +98,7 @@ export default function FoodDiary({ navigation, route }) {
                 
                 diary.push({...diary_entry, food: food_input_components_data});
                 await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
-                console.log(diary);
+                // console.log(diary);
                 navigation.navigate("Home");
             } catch (error) {
                 console.log(error);
@@ -106,23 +114,24 @@ export default function FoodDiary({ navigation, route }) {
     }
 
     return (
-        <SafeAreaView style={styles.body}> 
+        <SafeAreaView style={GlobalStyle.BodyGeneral}> 
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
-                <View style={styles.body}>
-                    <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                <View style={GlobalStyle.BodyGeneral}>
+                    <Header/>
+                    <Text style={[GlobalStyle.CustomFont, styles.text]}>
                         {/* how you can fetch parameters from the navigator */}
-                        Food Diary page. Your daily injections: {route.params?.daily_injections}.
+                        Food Diary page. Your daily injections: {route.params?.daily_injections}. {"\n"}
                         Your selected status: {health_type_reverse_lookup[route.params?.health_type]}
                     </Text>
 
                     {showDatePicker && (
                         <DateTimePicker
-                            testID="datePicker"
+                            style= {{minWidth: 200, marginBottom: 50}}
+                            testID="date"
                             value={date}
-                            display="default"
+                            mode="date"
                             onChange={(event, date) => {
-                                setShowDatePicker(false);
+                                if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
@@ -130,20 +139,20 @@ export default function FoodDiary({ navigation, route }) {
                             }}
                         />
                     )}
+
                     <CustomButton
                         onPressFunction={() => setShowDatePicker(true)}
                         title="Enter Date"
-                        color="#008c8c"
                     />
 
                     {showTimePicker && (
                         <DateTimePicker
                             testID="timePicker"
                             value={time}
-                            display="default"
+                            style= {{minWidth: 200}}
                             mode="time"
                             onChange={(event, time) => {
-                                setShowTimePicker(false);
+                                if (Platform.OS !== 'ios') setShowTimePicker(false);
                                 if (time != undefined) {
                                     setTime(time)
                                     const time_string = `${time.getHours()}:${time.getMinutes()}`;
@@ -155,38 +164,49 @@ export default function FoodDiary({ navigation, route }) {
                     <CustomButton
                         onPressFunction={() => setShowTimePicker(true)}
                         title="Enter Time"
-                        color="#008c8c"
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Meal'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["meal"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
+
+                    <DropDownPicker
+                        dropDownDirection="BOTTOM"
+                        style={DropdownStyle.style}
+                        containerStyle={DropdownStyle.containerStyle}
+                        placeholderStyle={DropdownStyle.placeholderStyle}
+                        textStyle={DropdownStyle.textStyle}
+                        labelStyle={DropdownStyle.labelStyle}
+                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                        showArrowIcon={true}
+                        showTickIcon={true}
+                        placeholder="Meal"
+                        open={food_open}
+                        value={food_value}
+                        items={food_type}
+                        setOpen={setOpen}
+                        setValue={setValue}
+                        setItems={setFoodType}
+                        onChangeValue={value => setDiaryEntry(state => ({ ...state, ["meal"]:value.trim() }), [])}
                     />
+
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Water (ml)'
                         keyboardType = 'numeric'
                         onChangeText={value => setDiaryEntry(state => ({ ...state, ["water"]:value.trim() }), [])}
-                        // multiline={true}
-                        // numberOfLines={1}
                     />
 
-                    <Text>Food</Text>
+                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Orange, GlobalStyle.Large, {marginTop: 40}]} >Food entries</Text>
 
                     {food_input_components_data.map((input_component) => <FoodInputComponent key={input_component.index} id={input_component.index} food_input_components_data={food_input_components_data} setFoodInputComponentsData={setFoodInputComponentsData} barcode_scanner_open={barcode_scanner_open} setBarcodeScannerOpen={setBarcodeScannerOpen}/>)}
 
                     <CustomButton 
                         onPressFunction={addFoodInputComponent}
                         title="Add another food"
-                        color="#008c8c"    
                     />
 
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'
-                        color='#1eb900'
                         onPressFunction={() => {
                             appendToDiary();
                         }}

@@ -136,9 +136,9 @@ export default function BPDiary({ navigation, route }) {
     } // maybe this will work ??
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={GlobalStyle.BodyGeneral}>
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
-                <View style={styles.body}>
+                <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
                     <Text style={[GlobalStyle.CustomFont, styles.text]}>
                         Blood Pressure Diary page
@@ -149,8 +149,9 @@ export default function BPDiary({ navigation, route }) {
                             testID="datePicker"
                             value={date}
                             display="default"
+                            style={{minWidth: 200}}
                             onChange={(event, date) => {
-                                setShowDatePicker(false);
+                                if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
@@ -165,15 +166,13 @@ export default function BPDiary({ navigation, route }) {
                         color="#008c8c"
                     />
 
-                    <Text>Blood Pressure</Text>
-
                     {/* {console.log(bp_readings)} */}
                     {bp_readings.map((input_component) => <BPInputComponent key={input_component.index} id={input_component.index} bp_readings={bp_readings} setBPReadings={setBPReadings}/>)}
 
                     <CustomButton 
                         onPressFunction={() => addBPInputComponent()}
                         title="Enter another reading"
-                        color="#008c8c"    
+                        color="#f96a3e"    
                     />
 
                     <CustomButton
@@ -199,11 +198,6 @@ export default function BPDiary({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-    body: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#e9c5b4',
-    },
     text: {
         fontSize: 30,
         marginBottom: 130,

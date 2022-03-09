@@ -20,9 +20,9 @@ const GlucoseInputComponent = props => {
     const [show_time_picker, setShowTimePicker] = useState(false);
 
     return (
-        <View>
+        <View style={GlobalStyle.BodyGeneral}>
             
-            <Text style={[GlobalStyle.CustomFont]}>
+            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Cyan, {marginTop:20, marginBottom: 20}]}>
                 Blood Glucose Reading {id+1}
             </Text>
 
@@ -31,9 +31,10 @@ const GlucoseInputComponent = props => {
                     testID="timePicker"
                     display="default"
                     mode="time"
+                    style={{minWidth: 200}}
                     value={ glucoseReadings[id]["time"] }
                     onChange={(event, new_time) => {
-                        setShowTimePicker(false);
+                        if (Platform.OS !== 'ios') setShowTimePicker(false);
                         if (new_time != undefined) {
                             setGlucoseComponentsData(state => (state.map(val => {
                                 if (val.index == id) {
@@ -46,14 +47,6 @@ const GlucoseInputComponent = props => {
                 />
             )}
 
-            <CustomButton
-                onPressFunction={() => {
-                    setShowTimePicker(true);
-                }}
-                title="Enter Time"
-                color="#008c8c"
-            />
-
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder="Reading (mmol/L)"
@@ -65,6 +58,13 @@ const GlucoseInputComponent = props => {
                         } return val;
                     })))
                 }}
+            />
+
+            <CustomButton
+                onPressFunction={() => {
+                    setShowTimePicker(true);
+                }}
+                title="Enter Time"
             />
 
         </View>

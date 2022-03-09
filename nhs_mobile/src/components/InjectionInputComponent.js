@@ -31,9 +31,10 @@ const InjectionInputComponent = props => {
                     testID="timePicker"
                     display="default"
                     mode="time"
+                    style={{minWidth: 200}}
                     value={ injectionsData[id]["time"] }
                     onChange={(event, new_time) => {
-                        setShowTimePicker(false);
+                        if (Platform.OS !== 'ios') setShowTimePicker(false);
                         if (new_time != undefined) {
                             setInjectionsData(state => (state.map(val => {
                                 if (val.index == id) {

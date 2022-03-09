@@ -37,6 +37,14 @@ export default function FoodDiary({ navigation, route }) {
     const [showDatePicker, setShowDatePicker] = useState(false)
     const [showTimePicker, setShowTimePicker] = useState(false)
 
+    const [food_open, setOpen] = useState(false);
+    const [food_value, setValue] = useState(null);
+    const [food_type, setFoodType] = useState([
+        {label: 'Breakfast', value: 'breakfast'},
+        {label: 'Lunch', value: 'lunch'},
+        {label: 'Dinner', value: 'dinner'},
+    ])
+
     useEffect(() => {
         getOrCreateFoodDiary();
     }, []); // don't know what this is doing
@@ -157,11 +165,29 @@ export default function FoodDiary({ navigation, route }) {
                         onPressFunction={() => setShowTimePicker(true)}
                         title="Enter Time"
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Meal'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["meal"]:value.trim() }), [])}
+
+                    <DropDownPicker
+                        dropDownDirection="BOTTOM"
+                        style={DropdownStyle.style}
+                        containerStyle={DropdownStyle.containerStyle}
+                        placeholderStyle={DropdownStyle.placeholderStyle}
+                        textStyle={DropdownStyle.textStyle}
+                        labelStyle={DropdownStyle.labelStyle}
+                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                        showArrowIcon={true}
+                        showTickIcon={true}
+                        placeholder="Meal"
+                        open={food_open}
+                        value={food_value}
+                        items={food_type}
+                        setOpen={setOpen}
+                        setValue={setValue}
+                        setItems={setFoodType}
+                        onChangeValue={value => setDiaryEntry(state => ({ ...state, ["meal"]:value.trim() }), [])}
                     />
+
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Water (ml)'

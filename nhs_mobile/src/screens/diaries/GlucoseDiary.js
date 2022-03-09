@@ -159,7 +159,7 @@ export default function GlucoseDiary({ navigation, route }) {
                             style={{minWidth: 200}}
                             display="default"
                             onChange={(event, date) => {
-                                setShowDatePicker(false);
+                                if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
                                     setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])

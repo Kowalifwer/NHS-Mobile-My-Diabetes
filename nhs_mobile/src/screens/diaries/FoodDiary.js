@@ -76,16 +76,21 @@ export default function FoodDiary({ navigation, route }) {
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
 
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
-                // console.log("existing diary entry:\n", existing_diary_entry);
+                console.log("existing diary entry:\n", existing_diary_entry);
+
+                if (existing_diary_entry != undefined) {
+                    diary.splice(diary.indexOf(existing_diary_entry), 1); // this removes the old diary entry
+                    
+                }
 
                 // let current_diary_entry_data = {...diary_entry, food: food_input_components_data}
                 // if (food_input_components_data.length > 0)  //update the food array inside the diary with existing food input data from the other components
                 //     current_diary_entry_data.food = food_input_components_data
-                //this will push the diary_entry to the diary local storagem and also update all food components
+                // this will push the diary_entry to the diary local storagem and also update all food components
 
                 // value * (amount / 100)
                 // food_input_components_data is an ARRAY of objects structure of which is shown below
-                //{index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", scanned_item_object: {}}
+                // {index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", scanned_item_object: {}}
 
                 for (let i = 0; i < food_input_components_data.length; i++) {
                     let x = food_input_components_data[i]

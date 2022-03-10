@@ -22,6 +22,11 @@ const food_diary_entry = {
     food: [],
 }
 
+const new_food_diary_entry = {
+    date: "",
+    meals: []
+}
+
 const bp_reading_entry = {time: "", arm: "", systolic: "", diastolic: ""}
 
 const bp_diary_entry = {
@@ -47,6 +52,7 @@ const glucose_diary_entry = {
 const food_diary = {screen_name: "FoodDiary", verbose_name: "Food Diary", entries: []} //food diary
 const bp_diary = {screen_name: "BPDiary", verbose_name: "Blood Pressure Diary", entries: []} //blood pressure diary
 const glucose_diary = {screen_name: "GlucoseDiary", verbose_name: "Glucose Diary", entries: []} // glucose diary
+const new_food_diary = {screen_name: "NewFoodDiary", verbose_name: "New Food Diary", entries: []} // new food diary
 const render_test_diary = {screen_name: "TestDiary", verbose_name: "Test Diary", entries: []} //test diary
 const sleep_diary = {screen_name: "SleepDiary", verbose_name: "Sleep Diary", entries: []} //sleep diary
 const exercise_diary = {screen_name: "ExerciseDiary", verbose_name: "Exercise Diary", entries: []} //exercise diary
@@ -55,6 +61,7 @@ const diary_list = [ //make sure to define screen_name here, to match the names 
     food_diary,
     bp_diary,
     glucose_diary,
+    new_food_diary,
     //diaries below are not linked, just test placeholders
     // render_test_diary,
     // sleep_diary,

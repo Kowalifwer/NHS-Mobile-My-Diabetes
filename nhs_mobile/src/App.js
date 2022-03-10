@@ -15,6 +15,7 @@ import FoodDiary from './screens/diaries/FoodDiary';
 import BPDiary from './screens/diaries/BPDiary';
 import Diaries from './screens/Diaries';
 import GlucoseDiary from "./screens/diaries/GlucoseDiary";
+import NewFoodDiary from './screens/diaries/NewFoodDiary';
 import MyProfile from './screens/MyProfile';
 import Resources from './screens/Resources';
 import CareProcess from './screens/CareProcess';
@@ -130,6 +131,13 @@ function App() {
           }}
           component={GlucoseDiary}
         />
+        <Stack.Screen
+          name="NewFoodDiary"
+          options={{
+            headerShown: false,
+          }}
+          component={NewFoodDiary}
+        />        
         <Stack.Screen
           name="MyProfile"
           options={{

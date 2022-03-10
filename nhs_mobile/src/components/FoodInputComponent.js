@@ -20,7 +20,7 @@ const query_object_for_food_component = (object, key) => {
     return object[key].toString()
 }
 
-//define all inputs in here!
+// define all inputs in here!
 const render_input_components = [
     {placeholder: "Food Name", is_numeric: false, component_update_key: "name", is_nutrient: false},
     {placeholder: "Amount (g)", is_numeric: true, component_update_key: "amount", is_nutrient: false},
@@ -51,7 +51,7 @@ const FoodInputComponent = (props) => {
                         setFoodInputComponentsData(state => (state.map(entry => { //updates the food_input_components_data
                             if (entry.index == id) {
                                 
-                                return {...entry, [val.component_update_key]: value}
+                                return {...entry, [val.component_update_key]: value} // change this to parseint
                             } return entry;
                         })))
                     }}

@@ -3,72 +3,34 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
     SafeAreaView, 
     ScrollView,
-    Button,
 } from 'react-native';
 
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 import YoutubePlayer from "react-native-youtube-iframe";
 
 
 export default function Videos({ navigation, route }) {
-    const [ytVideo,setYTVideo] = useState(null);
     const [playing, setPlaying] = useState(false);
 
-
+    // Used to tell user video has finished. Currently commented as not needed. If by code freeze still not needed then will delete from app
     const onStateChange = useCallback((state) => {
     if (state === "ended") {
         setPlaying(false);
-        Alert.alert("video has finished playing!");
+        //Alert.alert("video has finished playing!");
     }
     }, []);
 
+    // Used to toggle if video is playing via a button. Currently commented as not needed. If by code freeze still not needed then will delete from app
+    /*
     const togglePlaying = useCallback(() => {
     setPlaying((prev) => !prev);
     }, []);
-
-    const showData = () => {
-        console.log("YEET")
-        console.log(ytVideo[1]); 
-        console.log(route.params.paramKey);
-    }
-
-    useEffect(() => {
-        getVideos();
-    }, []);
-
-    const getVideos = async () => {
-        try {
-          const value = await AsyncStorage.getItem('videos')
-          setYTVideo(JSON.parse(value));
-        } catch(e) {
-          console.log(e)
-        }
-      }
-
-    const renderVideos = () => {
-        var xy =[];
-        for (var vid = 0; vid< route.params.paramKey.length; vid++) {
-            xy.push(
-             <View>
-                 <Text>{route.params.paramKey[vid].name}</Text>
-                <YoutubePlayer
-                        height={300}
-                        play={playing}
-                        videoId={route.params.paramKey[vid].id}
-                        onChangeState={onStateChange}
-                    />
-                    <Button title={playing ? "pause" : "play"} onPress={togglePlaying} />
-            </View>)
-        }
-        return xy;
-    } 
+    */
 
     return (
         <SafeAreaView style={styles.body}>
@@ -76,17 +38,23 @@ export default function Videos({ navigation, route }) {
             <ScrollView>
 
                 <View style={styles.body}>
-
                     <Header></Header>
-
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Videos Page
-                    </Text>
                 </View>
 
 
-                <View>
-                {renderVideos()}
+                <View styles={styles.body}>
+                    {route.params?.paramKey.map( vid =>(
+                        <View key={vid.id}>
+                                <Text style={styles.video_text}>{vid.name}</Text>
+                                <YoutubePlayer
+                                        webViewStyle={ {opacity:0.99} }
+                                        height={300}
+                                        play={playing}
+                                        videoId={vid.id}
+                                        onChangeState={onStateChange}
+                                />
+                        </View>
+                    ))}
                 </View>
 
                 <CustomButton
@@ -110,6 +78,10 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 30,
         marginBottom: 130,
+        textAlign: "center",
+    },
+    video_text: {
+        fontSize: 25,
         textAlign: "center",
     },
 })

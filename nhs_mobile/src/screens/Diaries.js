@@ -53,6 +53,7 @@ export default function Diaries({ navigation }) {
                                 navigation.navigate(item.screen_name, { // we can pass paramters to the .navigate function here, such as the number of insulin readings etc.. to then use in the respective Diary screen.
                                     daily_injections: (stored_user.daily_injections) ? stored_user.daily_injections : "-1",
                                     health_type: (stored_user.health_type) ? stored_user.health_type : "-1",
+                                    medicine_list: (stored_user.medicine_list) ? stored_user.medicine_list : [],
                                 })
                             }}
                             title={item.verbose_name}

@@ -199,7 +199,7 @@ export default function GlucoseDiary({ navigation, route }) {
                             <Text style={[GlobalStyle.CustomFont, styles.text]}>
                                 Injections
                             </Text>
-                            {injections_data.map((input_component) => <InjectionInputComponent key={input_component.index} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
+                            {injections_data.map((input_component) => <InjectionInputComponent key={input_component.index} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data} medicine_list={route.params?.medicine_list}/>)}
                             <CustomButton 
                                 onPressFunction={() => addInjectionInputComponent()}
                                 title="Enter another insulin value"
@@ -241,13 +241,13 @@ export default function GlucoseDiary({ navigation, route }) {
                         }}
                     />
 
-                    <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
-                        <CustomButton
-                            title='Go to Homepage directly'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Home")}
-                        />
-                    </View>
+                </View>
+                <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
+                    <CustomButton
+                        title='Go to Homepage directly'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Home")}
+                    />
                 </View>
             </ScrollView>
         </SafeAreaView>

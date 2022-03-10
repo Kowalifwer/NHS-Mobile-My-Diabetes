@@ -12,7 +12,16 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
+// import DropDownPicker from 'react-native-dropdown-picker';
+// import DropdownStyle from '../styles/DropdownStyle';
 
+// const [food_open, setOpen] = useState(false);
+//     const [food_value, setValue] = useState(null);
+//     const [food_type, setFoodType] = useState([
+//         {label: 'Breakfast', value: 'breakfast'},
+//         {label: 'Lunch', value: 'lunch'},
+//         {label: 'Dinner', value: 'dinner'},
+//     ])
 
 const InjectionInputComponent = props => {
     let {setInjectionsData, injectionsData, id} = props

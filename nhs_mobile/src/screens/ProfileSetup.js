@@ -20,7 +20,7 @@ import {user_struct} from '../global_structures.js'
 
 export default function ProfileSetup({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
-    console.log("xd")
+    // console.log("xd")
 
     DropDownPicker.setListMode("SCROLLVIEW");
     useEffect(() => {
@@ -48,7 +48,6 @@ export default function ProfileSetup({ navigation }) {
         } catch (error) {
             console.log(error);
         }
-
     }
       
       const [health_type_open, setOpen] = useState(false);

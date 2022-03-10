@@ -12,11 +12,11 @@ import {
     Keyboard,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import DropdownStyle from '../../styles/DropdownStyle';
 import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
-import DropdownStyle from '../../styles/DropdownStyle';
 import user_struct from '../../global_structures.js'
 import {food_diary_entry, health_type_reverse_lookup} from '../../global_structures.js'
 import FoodInputComponent from '../../components/FoodInputComponent';

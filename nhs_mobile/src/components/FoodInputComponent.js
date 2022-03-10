@@ -50,7 +50,6 @@ const FoodInputComponent = (props) => {
                     onChangeText={(value) => {
                         setFoodInputComponentsData(state => (state.map(entry => { //updates the food_input_components_data
                             if (entry.index == id) {
-                                
                                 return {...entry, [val.component_update_key]: value}
                             } return entry;
                         })))

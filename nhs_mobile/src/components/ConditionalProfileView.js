@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     View,
     StyleSheet,
@@ -16,6 +16,15 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 const ConditionalProfileView = props => {
     let {setData, setDynamicUser, account_type} = props;
+
+    const [medicineInput, setmedicineInput] = useState(null);
+
+    const modifyMedicineList = () => {
+        setDynamicUser(state => ({ ...state, ["medicine_list"]: [...state["medicine_list"], medicineInput] }))
+        setmedicineInput(null);
+        console.log(medicineInput)
+        Alert.alert(medicineInput + " added to your Medicine List! Feel free to add more if neccesary.")
+    }
     //a shared view that is used in multiple control flows
     const shared_view = () => {
         return(<View style={[styles.body, {marginTop: 50}]}>
@@ -38,6 +47,19 @@ const ConditionalProfileView = props => {
                         style={GlobalStyle.InputField}
                         placeholder='Enter your weight (kg)'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
+                    />
+
+                    <TextInput
+                        style={GlobalStyle.InputField}
+                        placeholder='Medicine Name'
+                        value={medicineInput}
+                        onChangeText={(value) => setmedicineInput(value)}
+                    />
+
+                    <CustomButton
+                        style={{marginTop: 40}}
+                        title='Press to add medicine'
+                        onPressFunction={modifyMedicineList}
                     />
 
                     <CustomButton

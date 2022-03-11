@@ -47,7 +47,7 @@ export default function FoodDiary({ navigation, route }) {
 
     useEffect(() => {
         getOrCreateFoodDiary();
-    }, []); // don't know what this is doing
+    }, []);
 
     useEffect(() => {
         // Please make sure that these fields match the fieleds in FoodInputComponent 'render_input_components' component_update_key parameter
@@ -74,6 +74,7 @@ export default function FoodDiary({ navigation, route }) {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
+
 
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
                 console.log("existing diary entry:\n", existing_diary_entry);

@@ -85,7 +85,7 @@ const object_is_empty = (obj) => {
     return true;
 }
 
-export {diary_list, food_diary_entry, bp_diary_entry, user_struct, health_type_reverse_lookup, object_is_empty}
+export {diary_list, food_diary_entry, new_food_diary_entry, bp_diary_entry, user_struct, health_type_reverse_lookup, object_is_empty}
 // diary_paths = {}
 
 // {item: "", brand: "", amount: ""}

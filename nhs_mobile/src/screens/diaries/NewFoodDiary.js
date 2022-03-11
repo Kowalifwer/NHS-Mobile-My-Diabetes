@@ -13,7 +13,7 @@ import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
-import {new_food_diary_entry} from '../../global_structures.js';
+import {new_food_diary_entry, health_type_reverse_lookup} from '../../global_structures.js'
 import MealInputComponent from '../../components/MealInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -43,7 +43,7 @@ export default function NewFoodDiary({ navigation, route }) {
                 AsyncStorage.setItem("NewFoodDiary", JSON.stringify([]));
             }
             else {
-                console.log("NewFoodDiary: ", food_diary);
+                // console.log("NewFoodDiary: ", food_diary);
             }
         } catch (error) {
             console.log("NewFoodDiary getItem error");
@@ -55,6 +55,7 @@ export default function NewFoodDiary({ navigation, route }) {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('NewFoodDiary'));
+                console.log("diary_entry.date: ", diary_entry.date)
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
                 console.log("existing diary entry:\n", existing_diary_entry);
 
@@ -115,7 +116,8 @@ export default function NewFoodDiary({ navigation, route }) {
                         <DateTimePicker
                             testID="datePicker"
                             value={date}
-                            display="default"
+                            // display="default"
+                            mode="date"
                             style={{minWidth: 200}}
                             onChange={(event, date) => {
                                 if (Platform.OS !== 'ios') setShowDatePicker(false);

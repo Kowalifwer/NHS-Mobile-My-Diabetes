@@ -60,7 +60,7 @@ export default function GlucoseDiary({ navigation, route }) {
 
     useEffect(() => {
         getOrCreateGlucoseDiary();
-    }, []); // don't know what this is doing
+    }, []);
 
     useEffect(() => {
         setGlucoseComponentsData(state => ([...state, {index:n_glucose_inputs, time: new Date(), reading: ""}]) )

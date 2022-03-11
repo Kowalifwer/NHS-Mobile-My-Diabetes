@@ -34,7 +34,7 @@ export default function BPDiary({ navigation, route }) {
 
     useEffect(() => {
         getOrCreateBPDiary();
-    }, []); // don't know what this is doing
+    }, []);
 
     useEffect(() => {
         setBPReadings(state => ([...state, {index:n_inputs, time: new Date(), arm: "", systolic: "", diastolic: ""}]) ) //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects

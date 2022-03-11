@@ -139,7 +139,7 @@ export default function NewFoodDiary({ navigation, route }) {
 
                     <CustomButton 
                         onPressFunction={() => addMealInputComponent()}
-                        title="Enter another reading"
+                        title="Add another meal"
                         color="#f96a3e"    
                     />
 

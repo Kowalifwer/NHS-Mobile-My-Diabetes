@@ -127,13 +127,14 @@ export default function Home({ navigation, route }) {
                     />
                 </View>
             </View>  
-       
-            <View style={styles.thirdRow}>
+
+            <View >
                 <HomePageButtonSlim
                     title="Settings"
                     onPressFunction={() => navigation.navigate("Settings")}
                 />   
             </View> 
+            
 
         </SafeAreaView>
     )
@@ -141,8 +142,7 @@ export default function Home({ navigation, route }) {
 
 const styles = StyleSheet.create({
     innerContainer: {
-        flex: 1,
-        //alignItems: 'center',
+        alignItems: 'center',
         backgroundColor: '#e9c5b4',
         flexDirection: 'row',
     },
@@ -150,11 +150,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#e9c5b4',
-        flexDirection: 'column',
-    },
-    thirdRow: {
-        flex: 0.69,
-        alignItems: 'center',
         flexDirection: 'column',
     },
     text: {

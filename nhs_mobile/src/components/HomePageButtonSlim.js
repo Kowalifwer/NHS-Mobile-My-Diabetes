@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
         margin: -5,
     },
     button: {
-        width: deviceWidth * 0.92,
+        width: deviceWidth * 0.94,
         height: deviceHeight * 0.07,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
-        padding: 10,
+        margin: 10,
     },
     
 })

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from "react-dom";
 import {
     View,
@@ -22,9 +22,23 @@ import {food_diary_entry, health_type_reverse_lookup} from '../../global_structu
 import FoodInputComponent from '../../components/FoodInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BarcodeScanner from '../BarcodeScanner';
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function FoodDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
+
+    const [help, setHelp] = useState(false)
+    const [playing, setPlaying] = useState(false);
+    const [videoIndex, setVideoIndex] = useState();
+    const [notFound, setNotFound] = useState(false);
+
+    // Used to tell user video has finished. Currently commented as not needed. If by code freeze still not needed then will delete from app
+    const onStateChange = useCallback((state) => {
+        if (state === "ended") {
+            setPlaying(false);
+            //Alert.alert("video has finished playing!");
+        }
+    }, []);
 
     const [n_inputs, setNInputs] = useState(0);
     
@@ -47,12 +61,48 @@ export default function FoodDiary({ navigation, route }) {
 
     useEffect(() => {
         getOrCreateFoodDiary();
-    }, []); // don't know what this is doing
+        findVideoIndex("Food Diary Video"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
+    }, []);
 
     useEffect(() => {
         // Please make sure that these fields match the fieleds in FoodInputComponent 'render_input_components' component_update_key parameter
         setFoodInputComponentsData(state => [...state, {index:n_inputs, name:"", amount:"", energy:"", carb:"", fat:"", protein:"", sugar:"", scanned_item_object: {}}]);
     }, [n_inputs]); //when number of inputs increases, make sure we have a side effect that will increase the capacity of the input food components dictionary
+
+    // Set the video id that matches the video name passed into this function.
+    const findVideoIndex = (videoName) => {
+        for (var index=0; index < route.params.videos.length; index++) {
+            if (route.params.videos[index].name == videoName) {
+                setVideoIndex(index);
+                return
+            }
+        }
+        setNotFound(true);
+    }
+
+    const showHelp = () => {
+        return <View styles={styles.video_style}>
+                    <Text style={styles.video_text}>{route.params.videos[videoIndex].name}</Text>
+                    <YoutubePlayer
+                        webViewStyle={ {opacity:0.99} }
+                        height={300}
+                        play={playing}
+                        videoId={route.params.videos[videoIndex].id}
+                    />
+                </View>
+    }
+
+    const toggleHelp = () => {
+        if (notFound === false) {
+            if (help === true) {
+                setHelp(false);
+            } else {
+                setHelp(true);
+            }
+        } else {
+            Alert.alert("Help Video Not Found. Please contact clinician")
+        }
+    }
 
     const getOrCreateFoodDiary = async () => {
         try {
@@ -124,6 +174,19 @@ export default function FoodDiary({ navigation, route }) {
                         Your selected status: {health_type_reverse_lookup[route.params?.health_type]}
                     </Text>
 
+                    <CustomButton
+                        title="Help"
+                        onPressFunction={() => toggleHelp()}
+                        color='#761076'
+                    />
+                </View>
+
+
+                <View styles={styles.video_style}>
+                    {(help === true && notFound === false) && showHelp()}
+                </View>
+                    
+                <View style={GlobalStyle.BodyGeneral}>
                     {showDatePicker && (
                         <DateTimePicker
                             style= {{minWidth: 200, marginBottom: 50}}
@@ -197,7 +260,7 @@ export default function FoodDiary({ navigation, route }) {
 
                     <Text style={[GlobalStyle.CustomFont, GlobalStyle.Orange, GlobalStyle.Large, {marginTop: 40}]} >Food entries</Text>
 
-                    {food_input_components_data.map((input_component) => <FoodInputComponent key={input_component.index} id={input_component.index} food_input_components_data={food_input_components_data} setFoodInputComponentsData={setFoodInputComponentsData} barcode_scanner_open={barcode_scanner_open} setBarcodeScannerOpen={setBarcodeScannerOpen}/>)}
+                    {food_input_components_data.map((input_component, i) => <FoodInputComponent key={i} id={input_component.index} food_input_components_data={food_input_components_data} setFoodInputComponentsData={setFoodInputComponentsData} barcode_scanner_open={barcode_scanner_open} setBarcodeScannerOpen={setBarcodeScannerOpen}/>)}
 
                     <CustomButton 
                         onPressFunction={addFoodInputComponent}
@@ -235,4 +298,8 @@ const styles = StyleSheet.create({
         marginBottom: 130,
         textAlign: "center",
     },
+    video_style: {
+        flex: 1,
+        alignItems: 'center',
+    }
 })

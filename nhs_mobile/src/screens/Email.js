@@ -21,10 +21,10 @@ import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
 import XLSX from 'xlsx';
 import { Asset } from 'expo-asset';
 import { manipulateAsync } from 'expo-image-manipulator';
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function Email({navigation, route}) {
 
@@ -56,6 +56,19 @@ export default function Email({navigation, route}) {
     const [email_open, setEmailOpen] = useState(false);
     const [email_value, setEmailValue] = useState(null);
 
+    const [help, setHelp] = useState(false)
+    const [playing, setPlaying] = useState(false);
+    const [videoIndex, setVideoIndex] = useState();
+    const [notFound, setNotFound] = useState(false);
+
+    // Used to tell user video has finished. Currently commented as not needed. If by code freeze still not needed then will delete from app
+    const onStateChange = useCallback((state) => {
+        if (state === "ended") {
+            setPlaying(false);
+            //Alert.alert("video has finished playing!");
+        }
+    }, []);
+
     // depends on what diary is actually presented to user NEED TO FIX AFTER MERGE
     const [diaryItems, setDiaryItems] = useState([
         {label: 'Blood Pressure', value: 'Blood Pressure'},
@@ -77,7 +90,43 @@ export default function Email({navigation, route}) {
         setCurrentDate(generateCurrentDate());
         getUserData();
         convertDiaryData();
+        findVideoIndex("Help Section"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
     }, []);
+
+     // Set the video id that matches the video name passed into this function.
+     const findVideoIndex = (videoName) => {
+        for (var index=0; index < route.params.video.length; index++) {
+            if (route.params.video[index].name == videoName) {
+                setVideoIndex(index);
+                return
+            }
+        }
+        setNotFound(true);
+    }
+
+    const showHelp = () => {
+        return <View styles={styles.video_style}>
+                    <Text style={styles.video_text}>{route.params.video[videoIndex].name}</Text>
+                    <YoutubePlayer
+                        webViewStyle={ {opacity:0.99} }
+                        height={300}
+                        play={playing}
+                        videoId={route.params.video[videoIndex].id}
+                    />
+                </View>
+    }
+
+    const toggleHelp = () => {
+        if (notFound === false) {
+            if (help === true) {
+                setHelp(false);
+            } else {
+                setHelp(true);
+            }
+        } else {
+            Alert.alert("Help Video Not Found. Please contact clinician")
+        }
+    }
 
     // changes html to be transformed to pdf depending on what diary user selected
     const changeHTMLContent = (currentDiary) => {
@@ -561,6 +610,19 @@ export default function Email({navigation, route}) {
                 <View style={styles.body}>
                     <Header></Header>
 
+                    <CustomButton
+                            title="Help"
+                            onPressFunction={() => toggleHelp()}
+                            color='#761076'
+                    />
+                </View>
+
+                <View styles={styles.video_style}>
+                    {(help === true && notFound === false) && showHelp()}
+                </View>
+
+                <View style={styles.body}>
+
                     <Text style={[GlobalStyle.CustomFont,styles.text]}>
                         Select which diary(s) to send to a doctor from your diary list
                     </Text>
@@ -656,5 +718,9 @@ const styles = StyleSheet.create({
         fontSize: 25,
         margin: 10,
         textAlign: 'center',
+    },
+    video_style: {
+        flex: 1,
+        alignItems: 'center',
     },
 })

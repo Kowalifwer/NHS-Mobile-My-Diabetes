@@ -43,7 +43,7 @@ export default function Videos({ navigation, route }) {
 
 
                 <View styles={styles.body}>
-                    {route.params?.paramKey.map( vid =>(
+                    {route.params?.video.map( vid =>(
                         <View key={vid.id}>
                                 <Text style={styles.video_text}>{vid.name}</Text>
                                 <YoutubePlayer

@@ -21,6 +21,7 @@ import CareProcess from './screens/CareProcess';
 import Settings from './screens/Settings';
 import Videos from './screens/Videos';
 import temp from './screens/temp';
+import Results from './screens/Results';
 import { useEffect } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
@@ -171,7 +172,14 @@ function App() {
             headerShown: false,
           }}
           component={temp}
-        />        
+        /> 
+        <Stack.Screen
+          name="Results"
+          options={{
+            headerShown: false,
+          }}
+          component={Results}
+        />         
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -93,6 +93,10 @@ const GlucoseInputComponent = props => {
                     if (parseInt(value) < 4) {
                         setHypo(true);
                         setShowHypoDialog(true);
+                    } else {
+                        setHypo(false);
+                        setHypoReason("");
+                        afterHypo("");
                     }
                     setGlucoseComponentsData(state => (state.map(val => {
                         if (val.index == id) {

@@ -22,9 +22,8 @@ import user_struct from '../../global_structures.js';
 import GlucoseInputComponent from '../../components/GlucoseInputComponent';
 import InjectionInputComponent from "../../components/InjectionInputComponent";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import CheckBox from "expo-checkbox"
 import temp from '../temp';
-import DialogInput from 'react-native-dialog-input';
+
 
 const glucose_diary_entry = {
     date: "",
@@ -45,10 +44,6 @@ export default function GlucoseDiary({ navigation, route }) {
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
 
-    const [feelSick, setFeelSick] = useState(false);
-    const [hypo, setHypo] = useState(false);
-    const [hypoReason, setHypoReason] = useState("");
-    const [showHypoDialog, setShowHypoDialog] = useState(false);
     const [renderInjections, setRenderInjections] = useState(false);
 
     // if user injects, render injection input components
@@ -63,11 +58,11 @@ export default function GlucoseDiary({ navigation, route }) {
     }, []);
 
     useEffect(() => {
-        setGlucoseComponentsData(state => ([...state, {index:n_glucose_inputs, time: new Date(), reading: ""}]) )
+        setGlucoseComponentsData(state => ([...state, {index: n_glucose_inputs, time: new Date(), reading: "", hypo: false, hypoReason: "", feelSick: false}]) )
     }, [n_glucose_inputs]);
 
     useEffect(() => {
-        setInjectionsData(state => ([...state, {index:n_injections, time: new Date(), type: "", units: ""}]) )
+        setInjectionsData(state => ([...state, {index: n_injections, time: new Date(), type: "", units: ""}]) )
     }, [n_injections]);
 
     const getOrCreateGlucoseDiary = async () => {
@@ -94,10 +89,7 @@ export default function GlucoseDiary({ navigation, route }) {
                 let final_entry = {
                     date: diary_entry.date,
                     glucose_readings: [...glucose_input_components_data],
-                    injections: [...injections_data],
-                    feel_sick: feelSick,
-                    hypo: hypo,
-                    hypo_reason: hypoReason,
+                    injections: [...injections_data]
                 }
 
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
@@ -117,7 +109,7 @@ export default function GlucoseDiary({ navigation, route }) {
                     delete final_entry.injections[i].index;
                 }
 
-                // console.log(final_entry);
+                console.log("final_entry: ", final_entry);
                 diary.push(final_entry);
                 console.log("glucose diary: ", diary);
                 await AsyncStorage.setItem("GlucoseDiary", JSON.stringify(diary));
@@ -129,22 +121,6 @@ export default function GlucoseDiary({ navigation, route }) {
             Alert.alert("Diary entry cannot be empty, please put data")
             console.log("empty field in form")
         }
-    }
-
-    const checkForHypo = () => {
-        for (let i = 0; i < glucose_input_components_data.length; i++) {
-            let value = glucose_input_components_data[i]["reading"];
-            try {
-                if (parseInt(value) < 4) {
-                    console.log("hypo found");
-                    setHypo(true);
-                    return true
-                }
-            } catch (error) {
-                console.log("error in function checkForHypo in GlucoseDiary: ", error);
-            }
-        }
-        return false
     }
 
     function addGlucoseInputComponent() {
@@ -208,36 +184,12 @@ export default function GlucoseDiary({ navigation, route }) {
                         </View>
                     )}
 
-                    <View style={styles.checkboxContainer}>
-                        <Text style={[styles.label, GlobalStyle.CustomFont]}>I don't feel well</Text>
-                        <CheckBox
-                            value={feelSick}
-                            onValueChange={setFeelSick}
-                            style={GlobalStyle.CheckBox}
-                        />
-                    </View>
-
-                    <DialogInput isDialogVisible={showHypoDialog}
-                        title={"Low Blood Sugar"}
-                        message={"One of your blood glucose readings was <4mmol/L, please explain why"}
-                        hintInput ={"Reason"}
-                        submitInput={ value => {
-                            setHypoReason(value);
-                            setShowHypoDialog(false);
-                        }}
-                        closeDialog={ () => setShowHypoDialog(false) }>
-                    </DialogInput>
-
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'
                         color='#1eb900'
                         onPressFunction={() => {
-                            if (checkForHypo() & hypoReason == "") {
-                                setShowHypoDialog(true);
-                            } else {
-                                appendToDiary();
-                            }
+                            appendToDiary();
                         }}
                     />
 

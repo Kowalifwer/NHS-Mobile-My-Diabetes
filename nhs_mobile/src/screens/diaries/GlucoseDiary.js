@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM, { render } from "react-dom";
 import {
     View,
@@ -25,6 +25,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from "expo-checkbox"
 import temp from '../temp';
 import DialogInput from 'react-native-dialog-input';
+import YoutubePlayer from "react-native-youtube-iframe";
 
 const glucose_diary_entry = {
     date: "",
@@ -50,16 +51,23 @@ export default function GlucoseDiary({ navigation, route }) {
     const [hypoReason, setHypoReason] = useState("");
     const [showHypoDialog, setShowHypoDialog] = useState(false);
     const [renderInjections, setRenderInjections] = useState(false);
+    
+    const [help, setHelp] = useState(false)
+    const [playing, setPlaying] = useState(false);
+    const [videoIndex, setVideoIndex] = useState();
+    const [notFound, setNotFound] = useState(false);
 
-    // if user injects, render injection input components
-    AsyncStorage.getItem('UserData').then(value => {
-        if (JSON.parse(value).health_type == "3") {
-            setRenderInjections(true);
-        }
-    });
+    // Used to tell user video has finished. Currently commented as not needed. If by code freeze still not needed then will delete from app
+    const onStateChange = useCallback((state) => {
+    if (state === "ended") {
+        setPlaying(false);
+        //Alert.alert("video has finished playing!");
+    }
+    }, []);
 
     useEffect(() => {
         getOrCreateGlucoseDiary();
+        findVideoIndex("Glucose Diary"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
     }, []); // don't know what this is doing
 
     useEffect(() => {
@@ -70,6 +78,48 @@ export default function GlucoseDiary({ navigation, route }) {
         setInjectionsData(state => ([...state, {index:n_injections, time: new Date(), type: "", units: ""}]) )
     }, [n_injections]);
 
+    // if user injects, render injection input components
+    AsyncStorage.getItem('UserData').then(value => {
+        if (JSON.parse(value).health_type == "3") {
+            setRenderInjections(true);
+        }
+    });
+
+    // Set the video id that matches the video name passed into this function.
+    const findVideoIndex = (videoName) => {
+        for (var index=0; index < route.params.videos.length; index++) {
+            if (route.params.videos[index].name == videoName) {
+                setVideoIndex(index);
+                return
+            }
+        }
+        setNotFound(true);
+    }
+
+    const showHelp = () => {
+        return <View styles={styles.video_style}>
+                    <Text style={styles.video_text}>{route.params.videos[videoIndex].name}</Text>
+                    <YoutubePlayer
+                        webViewStyle={ {opacity:0.99} }
+                        height={300}
+                        play={playing}
+                        videoId={route.params.videos[videoIndex].id}
+                    />
+                </View>
+    }
+
+    const toggleHelp = () => {
+        if (notFound === false) {
+            if (help === true) {
+                setHelp(false);
+            } else {
+                setHelp(true);
+            }
+        } else {
+            Alert.alert("Help Video Not Found. Please contact clinician")
+        }
+    }
+    
     const getOrCreateGlucoseDiary = async () => {
         try {
             const glucose_diary = await AsyncStorage.getItem('GlucoseDiary');
@@ -165,6 +215,20 @@ export default function GlucoseDiary({ navigation, route }) {
                         Glucose Diary - Readings
                     </Text>
 
+                    <CustomButton
+                        title="Help"
+                        onPressFunction={() => toggleHelp()}
+                        color='#761076'
+                    />
+                </View>
+
+
+                <View styles={styles.video_style}>
+                    {(help === true && notFound === false) && showHelp()}
+                </View>
+                    
+                <View style={GlobalStyle.BodyGeneral}>
+
                     {showDatePicker && (
                         <DateTimePicker
                             testID="datePicker"
@@ -186,7 +250,7 @@ export default function GlucoseDiary({ navigation, route }) {
                         title="Enter Date"
                     />
                     
-                    {glucose_input_components_data.map((input_component) => <GlucoseInputComponent key={input_component.index} id={input_component.index} setGlucoseComponentsData={setGlucoseComponentsData} glucoseReadings={glucose_input_components_data}/>)}
+                    {glucose_input_components_data.map((input_component, i) => <GlucoseInputComponent key={i} id={input_component.index} setGlucoseComponentsData={setGlucoseComponentsData} glucoseReadings={glucose_input_components_data}/>)}
                     
                     <CustomButton 
                         onPressFunction={() => addGlucoseInputComponent()}
@@ -199,7 +263,7 @@ export default function GlucoseDiary({ navigation, route }) {
                             <Text style={[GlobalStyle.CustomFont, styles.text]}>
                                 Injections
                             </Text>
-                            {injections_data.map((input_component) => <InjectionInputComponent key={input_component.index} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
+                            {injections_data.map((input_component, i) => <InjectionInputComponent key={i} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
                             <CustomButton 
                                 onPressFunction={() => addInjectionInputComponent()}
                                 title="Enter another insulin value"
@@ -273,4 +337,8 @@ const styles = StyleSheet.create({
     label: {
         margin: 8,
     },
+    video_style: {
+        flex: 1,
+        alignItems: 'center',
+    }
 })

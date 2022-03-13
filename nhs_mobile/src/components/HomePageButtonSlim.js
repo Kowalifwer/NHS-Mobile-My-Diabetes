@@ -6,9 +6,10 @@ import {
     Dimensions,
 } from 'react-native';
 
+var deviceHeight = Dimensions.get("window").height;
 var deviceWidth = Dimensions.get("window").width;
 
-const CustomButton = (props) => {
+const HomePageButtonSlim = (props) => {
     return (
         <Pressable
             onPress={props.onPressFunction}
@@ -16,7 +17,7 @@ const CustomButton = (props) => {
             android_ripple={{ color: '#00000050' }}
             style={({ pressed }) => [
                 { backgroundColor: pressed ? '#dddddd' : (props.color) ? props.color : '#17a09d' },
-                styles.button,
+                styles.button,  
                 { ...props.style }
             ]}
         >
@@ -30,20 +31,19 @@ const CustomButton = (props) => {
 const styles = StyleSheet.create({
     text: {
         color: '#ffffff',
-        fontSize: 20,
+        fontSize: (deviceHeight * 0.1) * 0.35,
         textAlign: 'center',
-        marginTop: -5,
+        margin: -5,
     },
     button: {
-        width: deviceWidth * 0.92,
-        minHeight: 40,
-        height: 'auto',
+        width: deviceWidth * 0.94,
+        height: deviceHeight * 0.07,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
         margin: 10,
-        padding: 10,
     },
+    
 })
 
-export default CustomButton;
+export default HomePageButtonSlim;

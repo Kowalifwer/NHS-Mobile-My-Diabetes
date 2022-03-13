@@ -11,6 +11,7 @@ import {
     StatusBar
 } from 'react-native';
 import HomePageButton from '../components/HomePageButton';
+import HomePageButtonSlim from '../components/HomePageButtonSlim';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
 import {user_struct} from '../global_structures.js';
@@ -26,6 +27,7 @@ export default function Home({ navigation, route }) {
         fetch_videos().then(result => {setVideoJSON(result)}).catch(error => Alert.alert(error.message))
     }, []);
 
+    // uses NoCodeAPI to fetch all the video names and id's from youtube channel. 
     const fetch_videos = () => {
         var videoDetails = [];
         var myHeaders = new Headers();
@@ -36,7 +38,7 @@ export default function Home({ navigation, route }) {
             redirect: "follow",
         };
         
-        return fetch("https://v1.nocodeapi.com/testing109999/yt/mUJAWjJbMBVgHGjd/channelVideos?maxResults=50", requestOptions)
+        return fetch("https://v1.nocodeapi.com/testing333333/yt/QIfFhBLBEQOnFOYc/channelVideos?maxResults=50", requestOptions) //the https link is the API Key
         .then(response => response.json())
         .then(result => {
             
@@ -51,9 +53,10 @@ export default function Home({ navigation, route }) {
         .catch(error => {throw new Error(error)})
     }
 
-    const validateVideo = () => {
-        (videoJSON == null) ? Alert.alert("Videos are loading, try again") :  navigation.navigate("Videos", {
-            paramKey: videoJSON
+    const validateVideo = (section) => {
+        (videoJSON == null) ? Alert.alert("Videos are loading, try again") :  navigation.navigate(section, {
+            video: videoJSON,
+            stored_user: stored_user
         })
     }
 
@@ -79,15 +82,19 @@ export default function Home({ navigation, route }) {
 
     return (
         <SafeAreaView style={styles.outerContainer}>
+        
             <Header></Header>
+            
             <Text style={[GlobalStyle.CustomFont,styles.text]}>
                     Welcome {stored_user.name}!
             </Text>
 
+            
+
             <View style={styles.innerContainer}>
 
                 {/* Column 1 of buttons */}
-                <View style={styles.button}>
+                <View>
                     
                     <HomePageButton
                         title='My Profile'
@@ -95,37 +102,39 @@ export default function Home({ navigation, route }) {
                     />
                     <HomePageButton
                         title='Email my Results'
-                        onPressFunction={() => navigation.navigate("Email", {
-                            stored_user: stored_user,
-                        })}
+                        onPressFunction={() => validateVideo("Email")}
                     />
                     <HomePageButton
-                        title='Resources'
-                        onPressFunction={() => navigation.navigate("Resources")}
+                        title='View my Results'
+                        onPressFunction={() => navigation.navigate("Results")}
                     />
-
-                   
 
                 </View>
 
                 {/* Column 2 of buttons */}
-                <View style={styles.button}>
+                <View>
                     <HomePageButton
                             title="My Diaries"
-                            onPressFunction={() => navigation.navigate("Diaries")}
+                            onPressFunction={() => validateVideo("Diaries")}
                     />       
                     <HomePageButton
                             title="Videos"
-                            onPressFunction={() => validateVideo()}
+                            onPressFunction={() => validateVideo("Videos")}
                     />   
                     <HomePageButton
-                            title="Settings"
-                            onPressFunction={() => navigation.navigate("Settings")}
-                    />                   
-
+                        title='Resources'
+                        onPressFunction={() => navigation.navigate("Resources")}
+                    />
                 </View>
+            </View>  
 
-            </View>   
+            <View >
+                <HomePageButtonSlim
+                    title="Settings"
+                    onPressFunction={() => navigation.navigate("Settings")}
+                />   
+            </View> 
+            
 
         </SafeAreaView>
     )
@@ -133,8 +142,7 @@ export default function Home({ navigation, route }) {
 
 const styles = StyleSheet.create({
     innerContainer: {
-        flex: 1,
-        //alignItems: 'center',
+        alignItems: 'center',
         backgroundColor: '#e9c5b4',
         flexDirection: 'row',
     },
@@ -150,10 +158,4 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
     },
-    button : {
-        display: 'flex',
-        flexDirection: 'column',
-        paddingBottom : 100,
-    },
-    
 })

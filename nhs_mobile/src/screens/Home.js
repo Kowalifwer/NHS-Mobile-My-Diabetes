@@ -105,8 +105,8 @@ export default function Home({ navigation, route }) {
                         onPressFunction={() => validateVideo("Email")}
                     />
                     <HomePageButton
-                        title='View my Results'
-                        onPressFunction={() => navigation.navigate("Results")}
+                        title='myResults'
+                        onPressFunction={() => validateVideo("Results")}
                     />
 
                 </View>

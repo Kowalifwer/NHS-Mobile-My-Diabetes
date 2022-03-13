@@ -29,6 +29,7 @@ export default function NewFoodDiary({ navigation, route }) {
 
     useEffect(() => {
         getOrCreateNewFoodDiary();
+        setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
     }, []);
 
     useEffect(() => {
@@ -77,7 +78,7 @@ export default function NewFoodDiary({ navigation, route }) {
                 }
 
                 let final_entry = {
-                    date: date,
+                    date: diary_entry.date,
                     meals: meals
                 }
                 console.log("what was created:")
@@ -118,7 +119,7 @@ export default function NewFoodDiary({ navigation, route }) {
                                 if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
-                                    setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                    setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
                                 }
                             }}
                         />

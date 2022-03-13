@@ -67,6 +67,7 @@ export default function GlucoseDiary({ navigation, route }) {
 
     useEffect(() => {
         getOrCreateGlucoseDiary();
+        setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
         findVideoIndex("Glucose Diary"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
     }, []); // don't know what this is doing
 
@@ -239,7 +240,7 @@ export default function GlucoseDiary({ navigation, route }) {
                                 if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
-                                    setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                    setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
                                 }
                             }}
                         />

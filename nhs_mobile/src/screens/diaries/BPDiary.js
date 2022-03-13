@@ -48,6 +48,7 @@ export default function BPDiary({ navigation, route }) {
 
     useEffect(() => {
         getOrCreateBPDiary();
+        setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
         findVideoIndex("Blood Pressure Diary"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
     }, []); 
 
@@ -216,7 +217,7 @@ export default function BPDiary({ navigation, route }) {
                                 if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
-                                    setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                    setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
                                 }
                             }}
                         />

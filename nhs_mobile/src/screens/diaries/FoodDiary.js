@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import ReactDOM from "react-dom";
+import React, { useState, useEffect } from 'react';
 import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
     SafeAreaView, 
     ScrollView,
-    Button,
     Keyboard,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -16,106 +13,41 @@ import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
-import DropdownStyle from '../../styles/DropdownStyle';
-import user_struct from '../../global_structures.js'
-import {food_diary_entry, health_type_reverse_lookup} from '../../global_structures.js'
-import FoodInputComponent from '../../components/FoodInputComponent';
+import {new_food_diary_entry, health_type_reverse_lookup} from '../../global_structures.js'
+import MealInputComponent from '../../components/MealInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import BarcodeScanner from '../BarcodeScanner';
-import YoutubePlayer from "react-native-youtube-iframe";
 
-export default function FoodDiary({ navigation, route }) {
-    const [diary_entry, setDiaryEntry] = useState(food_diary_entry)
 
-    const [help, setHelp] = useState(false)
-    const [playing, setPlaying] = useState(false);
-    const [videoIndex, setVideoIndex] = useState();
-    const [notFound, setNotFound] = useState(false);
+export default function NewFoodDiary({ navigation, route }) {
+    const [diary_entry, setDiaryEntry] = useState(new_food_diary_entry)
 
-    // Used to tell user video has finished. Currently commented as not needed. If by code freeze still not needed then will delete from app
-    const onStateChange = useCallback((state) => {
-        if (state === "ended") {
-            setPlaying(false);
-            //Alert.alert("video has finished playing!");
-        }
-    }, []);
-
-    const [n_inputs, setNInputs] = useState(0);
-    
-    const [food_input_components_data, setFoodInputComponentsData] = useState([]); //stores a list of objects, each object storing the data for all the fields in a FoodInput component. This is also passed as prop to the component to manipulate the state of this scope.
-    
-    const [barcode_scanner_open, setBarcodeScannerOpen] = useState([false, 0]); //first element is a boolean, second element is the index of the component that is currently open for barcode scanning.
+    const [nMeals, setNMeals] = useState(0);
+    const [meals, setMeals] = useState([]); //stores a list of objects, each object storing the data for all the fields in a BPInput component. This is also passed as prop to the component to manipulate the state of this scopre.
 
     const [date, setDate] = useState(new Date())
-    const [time, setTime] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
-    const [showTimePicker, setShowTimePicker] = useState(false)
-
-    const [food_open, setOpen] = useState(false);
-    const [food_value, setValue] = useState(null);
-    const [food_type, setFoodType] = useState([
-        {label: 'Breakfast', value: 'breakfast'},
-        {label: 'Lunch', value: 'lunch'},
-        {label: 'Dinner', value: 'dinner'},
-    ])
 
     useEffect(() => {
-        getOrCreateFoodDiary();
-        findVideoIndex("Food Diary Video"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
+        getOrCreateNewFoodDiary();
+        setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
     }, []);
 
     useEffect(() => {
-        // Please make sure that these fields match the fieleds in FoodInputComponent 'render_input_components' component_update_key parameter
-        setFoodInputComponentsData(state => [...state, {index:n_inputs, name:"", amount:"", energy:"", carb:"", fat:"", protein:"", sugar:"", scanned_item_object: {}}]);
-    }, [n_inputs]); //when number of inputs increases, make sure we have a side effect that will increase the capacity of the input food components dictionary
+        setMeals(state => ([...state, {index: nMeals, time: new Date(), meal: "", water: "", food: []}])) // increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
+    }, [nMeals]);
 
-    // Set the video id that matches the video name passed into this function.
-    const findVideoIndex = (videoName) => {
-        for (var index=0; index < route.params.videos.length; index++) {
-            if (route.params.videos[index].name == videoName) {
-                setVideoIndex(index);
-                return
-            }
-        }
-        setNotFound(true);
-    }
-
-    const showHelp = () => {
-        return <View styles={styles.video_style}>
-                    <Text style={styles.video_text}>{route.params.videos[videoIndex].name}</Text>
-                    <YoutubePlayer
-                        webViewStyle={ {opacity:0.99} }
-                        height={300}
-                        play={playing}
-                        videoId={route.params.videos[videoIndex].id}
-                    />
-                </View>
-    }
-
-    const toggleHelp = () => {
-        if (notFound === false) {
-            if (help === true) {
-                setHelp(false);
-            } else {
-                setHelp(true);
-            }
-        } else {
-            Alert.alert("Help Video Not Found. Please contact clinician")
-        }
-    }
-
-    const getOrCreateFoodDiary = async () => {
+    const getOrCreateNewFoodDiary = async () => {
         try {
-            const food_diary = await AsyncStorage.getItem('FoodDiary');
+            const food_diary = await AsyncStorage.getItem('NewFoodDiary');
             if (food_diary == null) {
-                console.log("food diary does not exist yet, creating...");
-                AsyncStorage.setItem("FoodDiary", JSON.stringify([]));
+                console.log("NewFoodDiary does not exist yet, creating...");
+                AsyncStorage.setItem("NewFoodDiary", JSON.stringify([]));
             }
             else {
-                console.log("food diary: ", food_diary);
+                // console.log("NewFoodDiary: ", food_diary);
             }
         } catch (error) {
-            console.log("food diary getItem error");
+            console.log("NewFoodDiary getItem error");
             console.log(error);
         }
     }
@@ -123,32 +55,39 @@ export default function FoodDiary({ navigation, route }) {
     const appendToDiary = async () => {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
-                const diary = JSON.parse(await AsyncStorage.getItem('FoodDiary'))
-
+                const diary = JSON.parse(await AsyncStorage.getItem('NewFoodDiary'));
+                console.log("diary_entry.date: ", diary_entry.date)
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
-                // console.log("existing diary entry:\n", existing_diary_entry);
+                console.log("existing diary entry:\n", existing_diary_entry);
 
-                // let current_diary_entry_data = {...diary_entry, food: food_input_components_data}
-                // if (food_input_components_data.length > 0)  //update the food array inside the diary with existing food input data from the other components
-                //     current_diary_entry_data.food = food_input_components_data
-                //this will push the diary_entry to the diary local storagem and also update all food components
+                // ...
 
-                // value * (amount / 100)
-                // food_input_components_data is an ARRAY of objects structure of which is shown below
-                //{index:n_inputs, name:"", amount:"", proteins:"", sugar:"", kcal:"", fat:"", carbohydrates:"", scanned_item_object: {}}
+                for (let i = 0; i < meals.length; i++) {
+                    let food = meals[i].food
+                    for (let j = 0; j < food.length; j++) {
+                        let foodstuff = food[j]
+                        console.log("foodstuff: ", foodstuff)
 
-                for (let i = 0; i < food_input_components_data.length; i++) {
-                    let x = food_input_components_data[i]
-                    x.energy = parseInt(x.amount) * (parseInt(x.energy) / 100)
-                    x.carb = parseInt(x.amount) * (parseInt(x.carb) / 100)
-                    x.fat = parseInt(x.amount) * (parseInt(x.fat) / 100)
-                    x.sugar = parseInt(x.amount) * (parseInt(x.sugar) / 100)
-                    x.protein = parseInt(x.amount) * (parseInt(x.protein) / 100)
+                        console.log("foodstuff.energy: ", foodstuff.energy)
+                        foodstuff.energy = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.energy) / 100) // for some reason this cuts off the last digit before doing calculation
+                        foodstuff.carb = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.carb) / 100)
+                        foodstuff.fat = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.fat) / 100)
+                        foodstuff.sugar = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.sugar) / 100)
+                        foodstuff.protein = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.protein) / 100)
+                    }
                 }
+
+                let final_entry = {
+                    date: diary_entry.date,
+                    meals: meals
+                }
+                console.log("what was created:")
+                console.log(final_entry)
+
+                // ...
                 
-                diary.push({...diary_entry, food: food_input_components_data});
-                await AsyncStorage.setItem("FoodDiary", JSON.stringify(diary))
-                // console.log(diary);
+                diary.push(final_entry);
+                await AsyncStorage.setItem("NewFoodDiary", JSON.stringify(diary))
                 navigation.navigate("Home");
             } catch (error) {
                 console.log(error);
@@ -159,45 +98,28 @@ export default function FoodDiary({ navigation, route }) {
         }
     }
 
-    function addFoodInputComponent() {
-        setNInputs(n_inputs + 1); //increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
+    function addMealInputComponent() {
+        setNMeals(nMeals + 1);
     }
 
     return (
-        <SafeAreaView style={GlobalStyle.BodyGeneral}> 
+        <SafeAreaView style={GlobalStyle.BodyGeneral}>
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
-                    <Text style={[GlobalStyle.CustomFont, styles.text]}>
-                        {/* how you can fetch parameters from the navigator */}
-                        Food Diary page. Your daily injections: {route.params?.daily_injections}. {"\n"}
-                        Your selected status: {health_type_reverse_lookup[route.params?.health_type]}
-                    </Text>
 
-                    <CustomButton
-                        title="Help"
-                        onPressFunction={() => toggleHelp()}
-                        color='#761076'
-                    />
-                </View>
-
-
-                <View styles={styles.video_style}>
-                    {(help === true && notFound === false) && showHelp()}
-                </View>
-                    
-                <View style={GlobalStyle.BodyGeneral}>
                     {showDatePicker && (
                         <DateTimePicker
-                            style= {{minWidth: 200, marginBottom: 50}}
-                            testID="date"
+                            testID="datePicker"
                             value={date}
+                            // display="default"
                             mode="date"
+                            style={{minWidth: 200}}
                             onChange={(event, date) => {
                                 if (Platform.OS !== 'ios') setShowDatePicker(false);
                                 if (date != undefined) {
                                     setDate(date)
-                                    setDiaryEntry(state => ({ ...state, ["date"]:date.toLocaleDateString('en-GB') }), [])
+                                    setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
                                 }
                             }}
                         />
@@ -206,74 +128,26 @@ export default function FoodDiary({ navigation, route }) {
                     <CustomButton
                         onPressFunction={() => setShowDatePicker(true)}
                         title="Enter Date"
+                        color="#008c8c"
                     />
 
-                    {showTimePicker && (
-                        <DateTimePicker
-                            testID="timePicker"
-                            value={time}
-                            style= {{minWidth: 200}}
-                            mode="time"
-                            onChange={(event, time) => {
-                                if (Platform.OS !== 'ios') setShowTimePicker(false);
-                                if (time != undefined) {
-                                    setTime(time)
-                                    const time_string = `${time.getHours()}:${time.getMinutes()}`;
-                                    setDiaryEntry(state => ({ ...state, ["time"]:time_string }), [])
-                                }
-                            }}
-                        />
-                    )}
-                    <CustomButton
-                        onPressFunction={() => setShowTimePicker(true)}
-                        title="Enter Time"
-                    />
-
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
-                        placeholder="Meal"
-                        open={food_open}
-                        value={food_value}
-                        items={food_type}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setFoodType}
-                        onChangeValue={value => setDiaryEntry(state => ({ ...state, ["meal"]:value.trim() }), [])}
-                    />
-
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder='Water (ml)'
-                        keyboardType = 'numeric'
-                        onChangeText={value => setDiaryEntry(state => ({ ...state, ["water"]:value.trim() }), [])}
-                    />
-
-                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Orange, GlobalStyle.Large, {marginTop: 40}]} >Food entries</Text>
-
-                    {food_input_components_data.map((input_component, i) => <FoodInputComponent key={i} id={input_component.index} food_input_components_data={food_input_components_data} setFoodInputComponentsData={setFoodInputComponentsData} barcode_scanner_open={barcode_scanner_open} setBarcodeScannerOpen={setBarcodeScannerOpen}/>)}
+                    {meals.map((input_component) => <MealInputComponent key={input_component.index} id={input_component.index} meals={meals} setMeals={setMeals}/>)}
 
                     <CustomButton 
-                        onPressFunction={addFoodInputComponent}
-                        title="Add another food"
+                        onPressFunction={() => addMealInputComponent()}
+                        title="Add another meal"
+                        color="#f96a3e"    
                     />
 
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'
+                        color='#1eb900'
                         onPressFunction={() => {
                             appendToDiary();
                         }}
                     />
+
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
                             title='Go to Homepage directly'
@@ -288,18 +162,9 @@ export default function FoodDiary({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-    body: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#e9c5b4',
-    },
     text: {
         fontSize: 30,
         marginBottom: 130,
         textAlign: "center",
     },
-    video_style: {
-        flex: 1,
-        alignItems: 'center',
-    }
 })

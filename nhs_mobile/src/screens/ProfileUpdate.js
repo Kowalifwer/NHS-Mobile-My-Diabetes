@@ -13,10 +13,12 @@ import {
 import * as LocalAuthentication from 'expo-local-authentication';
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
+import SmartTextInput from '../components/SmartTextInput';
 import Header from '../components/Header';
 import {user_struct, health_type_reverse_lookup} from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
+import { FloatingLabelInput } from 'react-native-floating-label-input';
 
 
 export default function Home({ navigation, route }) {
@@ -143,30 +145,28 @@ export default function Home({ navigation, route }) {
                         Your daily number of injections is {route.params?.stored_user.daily_injections}
                     </Text>
                     
-
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder= {"Update your name"}
+                    <SmartTextInput
+                        placeholder={"Update your name"}
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])} //updating the dict
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder={"Update your age"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder={"Update your height"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder={"Update your weight"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder= {"Update your NHS number"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])} //updating the dict
                     />
             

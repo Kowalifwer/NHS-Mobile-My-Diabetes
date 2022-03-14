@@ -45,10 +45,6 @@ export default function GlucoseDiary({ navigation, route }) {
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
 
-    const [feelSick, setFeelSick] = useState(false);
-    const [hypo, setHypo] = useState(false);
-    const [hypoReason, setHypoReason] = useState("");
-    const [showHypoDialog, setShowHypoDialog] = useState(false);
     const [renderInjections, setRenderInjections] = useState(false);
     
     const [help, setHelp] = useState(false)
@@ -145,9 +141,6 @@ export default function GlucoseDiary({ navigation, route }) {
                     date: diary_entry.date,
                     glucose_readings: [...glucose_input_components_data],
                     injections: [...injections_data],
-                    feel_sick: feelSick,
-                    hypo: hypo,
-                    hypo_reason: hypoReason,
                 }
 
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
@@ -272,36 +265,12 @@ export default function GlucoseDiary({ navigation, route }) {
                         </View>
                     )}
 
-                    <View style={styles.checkboxContainer}>
-                        <Text style={[styles.label, GlobalStyle.CustomFont]}>I don't feel well</Text>
-                        <CheckBox
-                            value={feelSick}
-                            onValueChange={setFeelSick}
-                            style={GlobalStyle.CheckBox}
-                        />
-                    </View>
-
-                    <DialogInput isDialogVisible={showHypoDialog}
-                        title={"Low Blood Sugar"}
-                        message={"One of your blood glucose readings was <4mmol/L, please explain why"}
-                        hintInput ={"Reason"}
-                        submitInput={ value => {
-                            setHypoReason(value);
-                            setShowHypoDialog(false);
-                        }}
-                        closeDialog={ () => setShowHypoDialog(false) }>
-                    </DialogInput>
-
                     <CustomButton
                         style={{marginTop: 40}}
                         title='add to diary'
                         color='#1eb900'
                         onPressFunction={() => {
-                            if (checkForHypo() & hypoReason == "") {
-                                setShowHypoDialog(true);
-                            } else {
-                                appendToDiary();
-                            }
+                            appendToDiary();
                         }}
                     />
 

@@ -75,7 +75,8 @@ export default function ProfileSetup({ navigation }) {
 
                     <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue, {marginBottom:25}]}> Please enter your NHS number. If you dont have an NHS number - leave this blank please.</Text>
 
-                    <SmartTextInput
+                    <TextInput
+                        style={GlobalStyle.InputField}
                         placeholder='Enter your NHS Number'
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])}

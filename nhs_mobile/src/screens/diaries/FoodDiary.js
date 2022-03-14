@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     View,
     StyleSheet,
@@ -16,7 +16,7 @@ import GlobalStyle from '../../styles/GlobalStyle';
 import {new_food_diary_entry, health_type_reverse_lookup} from '../../global_structures.js'
 import MealInputComponent from '../../components/MealInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function NewFoodDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(new_food_diary_entry)
@@ -27,14 +27,63 @@ export default function NewFoodDiary({ navigation, route }) {
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
 
+    const [help, setHelp] = useState(false)
+    const [playing, setPlaying] = useState(false);
+    const [videoIndex, setVideoIndex] = useState();
+    const [notFound, setNotFound] = useState(false);
+
+    // Used to tell user video has finished. Currently commented as not needed. If by code freeze still not needed then will delete from app
+    const onStateChange = useCallback((state) => {
+        if (state === "ended") {
+            setPlaying(false);
+            //Alert.alert("video has finished playing!");
+        }
+    }, []);
+
     useEffect(() => {
         getOrCreateNewFoodDiary();
         setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
+        findVideoIndex("Food Diary Video"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
     }, []);
 
     useEffect(() => {
         setMeals(state => ([...state, {index: nMeals, time: new Date(), meal: "", water: "", food: []}])) // increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
     }, [nMeals]);
+
+    // Set the video id that matches the video name passed into this function.
+    const findVideoIndex = (videoName) => {
+        for (var index=0; index < route.params.videos.length; index++) {
+            if (route.params.videos[index].name == videoName) {
+                setVideoIndex(index);
+                return
+            }
+        }
+        setNotFound(true);
+    }
+
+    const showHelp = () => {
+        return <View styles={styles.video_style}>
+                    <Text style={styles.video_text}>{route.params.videos[videoIndex].name}</Text>
+                    <YoutubePlayer
+                        webViewStyle={ {opacity:0.99} }
+                        height={300}
+                        play={playing}
+                        videoId={route.params.videos[videoIndex].id}
+                    />
+                </View>
+    }
+
+    const toggleHelp = () => {
+        if (notFound === false) {
+            if (help === true) {
+                setHelp(false);
+            } else {
+                setHelp(true);
+            }
+        } else {
+            Alert.alert("Help Video Not Found. Please contact clinician")
+        }
+    }
 
     const getOrCreateNewFoodDiary = async () => {
         try {
@@ -107,6 +156,19 @@ export default function NewFoodDiary({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
+                    
+                    <CustomButton
+                        title="Help"
+                        onPressFunction={() => toggleHelp()}
+                        color='#761076'
+                    />
+                </View>
+
+                <View styles={styles.video_style}>
+                    {(help === true && notFound === false) && showHelp()}
+                </View>
+
+                <View style={GlobalStyle.BodyGeneral}>
 
                     {showDatePicker && (
                         <DateTimePicker
@@ -131,7 +193,7 @@ export default function NewFoodDiary({ navigation, route }) {
                         color="#008c8c"
                     />
 
-                    {meals.map((input_component) => <MealInputComponent key={input_component.index} id={input_component.index} meals={meals} setMeals={setMeals}/>)}
+                    {meals.map((input_component, i) => <MealInputComponent key={i} id={input_component.index} meals={meals} setMeals={setMeals}/>)}
 
                     <CustomButton 
                         onPressFunction={() => addMealInputComponent()}

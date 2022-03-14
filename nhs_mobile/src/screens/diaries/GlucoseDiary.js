@@ -23,7 +23,6 @@ import GlucoseInputComponent from '../../components/GlucoseInputComponent';
 import InjectionInputComponent from "../../components/InjectionInputComponent";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from "expo-checkbox"
-import temp from '../temp';
 import DialogInput from 'react-native-dialog-input';
 import YoutubePlayer from "react-native-youtube-iframe";
 

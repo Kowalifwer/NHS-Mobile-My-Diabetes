@@ -2,14 +2,14 @@ import React from 'react';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 
 const SmartTextInput = (props) => {
-    const [input_state, setInputState] = React.useState('');
-    
+    const [input_state, setInputState] = React.useState(props.value);
+
     return (
         <FloatingLabelInput
             {...props}
             label={(props.label) ? props.label : props.placeholder}
             placeholder={null}
-            value={(props.value) ? props.value : input_state}
+            value={input_state}
             hintTextColor={'#999999'}
             containerStyles = {{
                 width: 350,
@@ -43,7 +43,8 @@ const SmartTextInput = (props) => {
                 fontSize: 20,
             }}
 
-            onChange={(text) => setInputState(text)}
+            // onChange={(event) => {console.log(event.target.value); setInputState(event.text)}}
+            onChangeText={(text) => {console.log(text); setInputState(text); props.onChangeText(text)}}
         />
     )
 }

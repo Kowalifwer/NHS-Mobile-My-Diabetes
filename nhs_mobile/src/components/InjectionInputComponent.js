@@ -92,7 +92,8 @@ const InjectionInputComponent = props => {
                 }}
             />
 
-            <SmartTextInput
+            <TextInput
+                style={GlobalStyle.InputField}
                 placeholder="Units"
                 keyboardType="numeric"
                 onChangeText={(value) => {

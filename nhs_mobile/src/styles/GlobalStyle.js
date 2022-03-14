@@ -19,9 +19,10 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#e9c5b4',
+        width: "100%",
     },
     InputField: {
-        width: 350,
+        width: '95%',
         borderWidth: 1,
         borderColor: '#555',
         borderRadius: 10,

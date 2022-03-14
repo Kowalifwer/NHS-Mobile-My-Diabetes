@@ -13,10 +13,14 @@ import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
+import { compute_glucose_metrics } from '../global_functions';
 
 
 export default function MyProfile({ navigation }) {
     
+    useEffect(() => {
+        compute_glucose_metrics();
+    }, [])
 
     return (
         <SafeAreaView style={styles.body}>

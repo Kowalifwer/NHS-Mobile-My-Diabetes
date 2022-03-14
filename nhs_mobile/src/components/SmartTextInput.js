@@ -16,7 +16,7 @@ const SmartTextInput = (props) => {
                 borderWidth: 1,
                 borderColor: '#17a09d',
                 borderRadius: 10,
-                height: 40,
+                height: 50,
                 backgroundColor: '#ffffff',
                 fontSize: 30,
                 marginTop: 20,
@@ -28,9 +28,9 @@ const SmartTextInput = (props) => {
             customLabelStyles={{
                 colorFocused: '#17a09d',
                 colorBlurred: '#5B5B5B',
-                fontSizeFocused: 25,
-                fontSizeBlurred: 25,
-                topFocused: -40,
+                fontSizeFocused: 28,
+                fontSizeBlurred: 28,
+                topFocused: -45,
                 leftFocused: -12,
             }}
             labelStyles={{

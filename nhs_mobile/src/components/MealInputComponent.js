@@ -11,7 +11,7 @@ import CustomButton from './CustomButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
 import FoodInputComponent from './FoodInputComponent';
-
+import SmartTextInput from './SmartTextInput';
 
 const MealInputComponent = props => {
     let {id, meals, setMeals} = props
@@ -111,8 +111,7 @@ const MealInputComponent = props => {
             />
 
             {/* WATER INPUT */}
-            <TextInput
-                style={GlobalStyle.InputField}
+            <SmartTextInput
                 placeholder='Water (ml)'
                 keyboardType = 'numeric'
                 onChangeText={value => {

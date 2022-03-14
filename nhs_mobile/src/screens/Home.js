@@ -85,8 +85,8 @@ export default function Home({ navigation, route }) {
         
             <Header></Header>
             
-            <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                    Welcome {stored_user.name}!
+            <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    Welcome, {stored_user.name}!
             </Text>
 
             

@@ -119,29 +119,29 @@ export default function Home({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont,styles.text,{fontSize: 50, color: "lime"}]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Orange, {marginBottom: 75}]}>
                         Profile Settings
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Welcome {stored_user.name} !
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                        Welcome, {stored_user.name} !
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        You are {stored_user.age} years old.
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        You are{"\n"} {stored_user.age} years old.
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your height is {stored_user.height} cm
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your height is{"\n"} {stored_user.height} cm
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your weight is {stored_user.weight} kg
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your weight is{"\n"} {stored_user.weight} kg
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your NHS number is {stored_user.nhs_number} kg
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your NHS number is:{"\n"} {stored_user.nhs_number}
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
-                        Your diabetes status is: {health_type_reverse_lookup[route.params?.stored_user.health_type]}
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your diabetes status is:{"\n"} {health_type_reverse_lookup[route.params?.stored_user.health_type]}
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont, styles.text, {color: "red"}]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
                         Your daily number of injections is {route.params?.stored_user.daily_injections}
                     </Text>
                     
@@ -176,6 +176,7 @@ export default function Home({ navigation, route }) {
                         color='#ff7f00'
                         onPressFunction={updateUserData}
                     />
+                    
                     <CustomButton
                         title='Delete Profile'
                         color='#f40100'
@@ -204,6 +205,8 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 40,
         margin: 10,
+        marginTop: 25,
+        marginBottom: 25,
         textAlign: 'center',
     },
 })

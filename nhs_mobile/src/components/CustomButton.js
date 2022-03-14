@@ -30,9 +30,10 @@ const CustomButton = (props) => {
 const styles = StyleSheet.create({
     text: {
         color: '#ffffff',
-        fontSize: 20,
+        fontSize: 22,
         textAlign: 'center',
-        marginTop: -5,
+        marginTop: -2.5,
+        fontFamily: 'Atkinson',
     },
     button: {
         width: deviceWidth * 0.92,

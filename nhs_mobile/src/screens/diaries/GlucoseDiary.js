@@ -211,8 +211,8 @@ export default function GlucoseDiary({ navigation, route }) {
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
 
-                    <Text style={[GlobalStyle.CustomFont, styles.text]}>
-                        Glucose Diary - Readings
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                        Glucose Diary
                     </Text>
 
                     <CustomButton
@@ -260,7 +260,7 @@ export default function GlucoseDiary({ navigation, route }) {
 
                     {renderInjections && (
                         <View>
-                            <Text style={[GlobalStyle.CustomFont, styles.text]}>
+                            <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue, {marginTop: 100}]}>
                                 Injections
                             </Text>
                             {injections_data.map((input_component, i) => <InjectionInputComponent key={i} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
@@ -308,7 +308,7 @@ export default function GlucoseDiary({ navigation, route }) {
                 </View>
                 <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                     <CustomButton
-                        title='Go to Homepage directly'
+                        title='Homepage'
                         color='#761076'
                         onPressFunction={() => navigation.navigate("Home")}
                     />
@@ -321,7 +321,8 @@ export default function GlucoseDiary({ navigation, route }) {
 const styles = StyleSheet.create({
     text: {
         fontSize: 30,
-        marginBottom: 130,
+        marginBottom: 45,
+        marginTop: 15,
         textAlign: "center",
     },
     checkboxContainer: {

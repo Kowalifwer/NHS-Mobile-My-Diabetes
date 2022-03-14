@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
-
+import SmartTextInput from './SmartTextInput';
 
 const InjectionInputComponent = props => {
     let {setInjectionsData, injectionsData, id, medicine_list} = props
@@ -31,7 +31,7 @@ const InjectionInputComponent = props => {
     return (
         <View style={GlobalStyle.BodyGeneral}>
             
-            <Text style={[GlobalStyle.CustomFont]}>
+            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Cyan]}>
                 Injection {id+1}
             </Text>
 
@@ -92,8 +92,7 @@ const InjectionInputComponent = props => {
                 }}
             />
 
-            <TextInput
-                style={GlobalStyle.InputField}
+            <SmartTextInput
                 placeholder="Units"
                 keyboardType="numeric"
                 onChangeText={(value) => {

@@ -13,6 +13,7 @@ import GlobalStyle from '../styles/GlobalStyle';
 import CustomButton from '../components/CustomButton';
 import DropdownStyle from '../styles/DropdownStyle';
 import DropDownPicker from 'react-native-dropdown-picker';
+import SmartTextInput from '../components/SmartTextInput';
 
 const ConditionalProfileView = props => {
     let {setData, setDynamicUser, account_type} = props;
@@ -38,32 +39,27 @@ const ConditionalProfileView = props => {
     //a shared view that is used in multiple control flows
     const shared_view = () => {
         return(<View style={[styles.body, {marginTop: 50}]}>
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder='Enter your name'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder='Enter your age'
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder='Enter your height (cm)'
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder='Enter your weight (kg)'
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
 
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder='Medicine Name'
                         value={medicineInput}
                         onChangeText={(value) => setmedicineInput(value)}

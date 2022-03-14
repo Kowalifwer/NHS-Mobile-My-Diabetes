@@ -40,10 +40,10 @@ export default function Diaries({ navigation, route }) {
             <ScrollView>
                 <View style={styles.body}>
                     <Header/>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text,GlobalStyle.Cyan]}>
                         My Diaries Page
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
                         Here you can view your diaries and make changes to them.
                     </Text>
                     
@@ -65,7 +65,7 @@ export default function Diaries({ navigation, route }) {
 
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 200}}>
                         <CustomButton
-                            title='Go to Homepage directly'
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                         />
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 30,
-        marginBottom: 130,
+        marginBottom: 30,
         textAlign: "center",
     },
 })

@@ -45,7 +45,7 @@ export default function Videos({ navigation, route }) {
                 <View styles={styles.body}>
                     {route.params?.video.map( vid =>(
                         <View key={vid.id}>
-                                <Text style={styles.video_text}>{vid.name}</Text>
+                                <Text style={[styles.video_text, GlobalStyle.Blue]}>{vid.name}</Text>
                                 <YoutubePlayer
                                         webViewStyle={ {opacity:0.99} }
                                         height={300}
@@ -58,7 +58,7 @@ export default function Videos({ navigation, route }) {
                 </View>
 
                 <CustomButton
-                        title='Go to Homepage directly'
+                        title='Homepage'
                         color='#761076'
                         onPressFunction={() => navigation.navigate("Home")}
                 />
@@ -83,5 +83,6 @@ const styles = StyleSheet.create({
     video_text: {
         fontSize: 25,
         textAlign: "center",
+        marginBottom: 20,
     },
 })

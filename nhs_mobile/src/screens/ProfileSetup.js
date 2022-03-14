@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
 import {user_struct} from '../global_structures.js'
+import SmartTextInput from '../components/SmartTextInput';
 
 export default function ProfileSetup({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
@@ -64,24 +65,23 @@ export default function ProfileSetup({ navigation }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Orange]}>
                         Profile setup page.
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
                         Note that you do not need to fill all the fields. It is recommended though since it will allow us to prefil data for you in other places,
                         such as any documents or diaries that you create within the app.
                     </Text>
 
-                    <Text style={{fontSize: 20, margin: 5, color: "#FF00FF"}}> Please enter your NHS number. If you dont have an NHS number - leave this blank please :)</Text>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue, {marginBottom:25}]}> Please enter your NHS number. If you dont have an NHS number - leave this blank please.</Text>
 
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder='Enter your NHS Number'
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])}
                     />
 
-                    <Text style={{fontSize: 20, margin: 5, color: "#FF00FF"}}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
                         Please describe which of the options from the list below applies to you the most.
                         Please try to give the most accurate answer, as this decision will tailor how the application will assist you with your diabetes.
                     </Text>
@@ -112,7 +112,7 @@ export default function ProfileSetup({ navigation }) {
 
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 200}}>
                         <CustomButton
-                            title='Go to Homepage directly'
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                         />
@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 30,
-        marginBottom: 130,
+        marginBottom: 15,
+        marginHorizontal: 5,
         textAlign: "center",
     },
 })

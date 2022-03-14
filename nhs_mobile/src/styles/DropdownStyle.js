@@ -4,7 +4,7 @@ export default StyleSheet.create({
     style: {
         backgroundColor: "white",
         borderWidth: 1,
-        borderColor: "black",
+        borderColor: "#17a09d",
         borderRadius: 10,
         width: 350,
         minHeight: 40,
@@ -14,6 +14,7 @@ export default StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15,
         paddingBottom: 5,
+        marginBottom: 15,
     },
     containerStyle: {
         width: 350,
@@ -24,7 +25,8 @@ export default StyleSheet.create({
     },  
     textStyle: {
         fontSize: 15,
-        textAlign: "center"
+        textAlign: "center",
+        fontFamily: "Atkinson",
     },
     labelStyle: {
         fontWeight: "bold"
@@ -38,7 +40,7 @@ export default StyleSheet.create({
     },
     selectedItemContainerStyle: {
         backgroundColor: "#D3D3D3",
-        paddingLeft: 15
+        paddingLeft: 15,
     },
     selectedItemLabelStyle: {
         fontWeight: "bold",

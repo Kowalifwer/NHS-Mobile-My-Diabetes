@@ -36,7 +36,7 @@ export default function Resources({ navigation }) {
                     </Text>
 
                     <CustomButton
-                            title='Go to Homepage directly'
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                     />

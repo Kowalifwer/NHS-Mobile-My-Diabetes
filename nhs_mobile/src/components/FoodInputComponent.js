@@ -11,6 +11,7 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 import BarcodeScannerComponent from '../components/BarcodeScannerComponent';
 import CustomButton from '../components/CustomButton';
+import SmartTextInput from '../components/SmartTextInput';
 import {object_is_empty} from '../global_structures.js'
 // this is the food input which gets added to the page when user clicks the + button
 
@@ -42,9 +43,8 @@ const FoodInputComponent = (props) => {
             }
             {/* Render all inputs here! All logic is dealt with, please define components above if neccesary */}
             {render_input_components.map((val, index) => 
-                <TextInput
+                <SmartTextInput
                     key={index}
-                    style={GlobalStyle.InputField}
                     placeholder={val.placeholder}
                     defaultValue={(val.is_nutrient) ? query_object_for_food_component(food_input_components_data[id]["scanned_item_object"]["nutrients"], val.component_update_key) : query_object_for_food_component(food_input_components_data[id]["scanned_item_object"], val.component_update_key)}
                     onChangeText={(value) => {
@@ -59,8 +59,6 @@ const FoodInputComponent = (props) => {
                         })))
                     }}
                     keyboardType={(val.is_numeric) ? "numeric" : "default"}
-                    // multiline={true}
-                    // numberOfLines={1}
                 />
             )}
             

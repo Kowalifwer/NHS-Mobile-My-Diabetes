@@ -30,7 +30,6 @@ export default function Diaries({ navigation, route }) {
                 const user = await AsyncStorage.getItem('UserData');
                 console.log(user + " is stored user");
                 setStoredUser(JSON.parse(user));
-                //console.log(route.params.paramKey);
             })();
     }, []);
 

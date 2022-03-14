@@ -83,7 +83,7 @@ export default function Settings({ navigation }) {
 
                     <Header></Header>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
                         Settings Page
                     </Text>
 
@@ -106,7 +106,7 @@ export default function Settings({ navigation }) {
                     />
 
                     <CustomButton
-                        title='Go to Homepage directly'
+                        title='Homepage'
                         color='#761076'
                         onPressFunction={() => navigation.navigate("Home")}
                     />

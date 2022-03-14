@@ -14,6 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
+import SmartTextInput from './SmartTextInput';
 
 // this is the food input which gets added to the page when user clicks the + button
 const BPInputComponent = props => {
@@ -46,7 +47,7 @@ const BPInputComponent = props => {
                 selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
                 showArrowIcon={true}
                 showTickIcon={true}
-                placeholder="Which arm did you take the reading from?"
+                placeholder="Which arm used for reading?"
                 open={arm_open}
                 value={arm_value}
                 items={arm_type}
@@ -59,8 +60,7 @@ const BPInputComponent = props => {
                     } return val;
                 })))}
             />
-            <TextInput
-                style={GlobalStyle.InputField}
+            <SmartTextInput
                 placeholder="systolic"
                 keyboardType="numeric"
                 onChangeText={(value) => {
@@ -71,8 +71,7 @@ const BPInputComponent = props => {
                     })))
                 }}
             />
-            <TextInput
-                style={GlobalStyle.InputField}
+            <SmartTextInput
                 placeholder="diastolic"
                 keyboardType="numeric"
                 onChangeText={(value) => {

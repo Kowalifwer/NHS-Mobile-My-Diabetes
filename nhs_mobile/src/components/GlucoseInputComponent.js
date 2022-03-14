@@ -12,6 +12,7 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
+import SmartTextInput from './SmartTextInput';
 
 
 const GlucoseInputComponent = props => {
@@ -47,8 +48,7 @@ const GlucoseInputComponent = props => {
                 />
             )}
 
-            <TextInput
-                style={GlobalStyle.InputField}
+            <SmartTextInput
                 placeholder="Reading (mmol/L)"
                 keyboardType="numeric"
                 onChangeText={(value) => {

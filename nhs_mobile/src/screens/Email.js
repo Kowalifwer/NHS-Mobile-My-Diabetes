@@ -638,7 +638,7 @@ export default function Email({navigation, route}) {
 
                 <View style={styles.body}>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Cyan]}>
                         Select which diary(s) to send to a doctor from your diary list
                     </Text>
                     <DropDownPicker
@@ -668,7 +668,7 @@ export default function Email({navigation, route}) {
                         zIndex={2000}
                     />
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Cyan]}>
                         Send and email to a doctor from your doctors list
                     </Text>
                     <DropDownPicker
@@ -703,18 +703,18 @@ export default function Email({navigation, route}) {
 
                     <StatusBar style="auto" />
 
-                    <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20, marginHorizontal: 20}]}>If you didnt set up any doctors, you can do so using the button below</Text>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue, {marginTop:45}]}>If you didnt set up any doctors, you can do so using the button below</Text>
 
-                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 50,}}>
+                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 50}}>
                         <CustomButton
                             title='Setup email recipients'
-                            color='#761076'
+                            color="#6495ED"
                             onPressFunction={() => navigation.navigate("EmailSetup")}
                         />
                         <CustomButton
-                                title='Return to Homepage'
-                                color='#761076'
-                                onPressFunction={() => navigation.navigate("Home")}
+                            title='Return to Homepage'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Home")}
                         />
                     </View>
                 </View>

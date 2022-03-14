@@ -417,17 +417,17 @@ export default function Results({ navigation, route }) {
 
     const showDiaryButtons = () => {
         return <View>
-            <HomePageButtonSlim
-            title="Blood Pressure Diary"
-            onPressFunction={() => showDisclaimer("Blood Pressure")}
+            <CustomButton
+                title="Blood Pressure Diary"
+                onPressFunction={() => showDisclaimer("Blood Pressure")}
             />
 
-            <HomePageButtonSlim
+            <CustomButton
                 title="Glucose Diary"
                 onPressFunction={() => showDisclaimer("Glucose Diary")}
             />
 
-            <HomePageButtonSlim
+            <CustomButton
                 title="Food Diary"
                 onPressFunction={() => showDisclaimer("Food Diary")}
             />
@@ -443,7 +443,7 @@ export default function Results({ navigation, route }) {
 
                     <Header></Header>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
                         Select Diary to View
                     </Text>
 
@@ -451,6 +451,7 @@ export default function Results({ navigation, route }) {
                         title="Help"
                         onPressFunction={() => toggleHelp()}
                         color='#761076'
+                        style={{marginBottom: 40}}
                     />
 
                 </View>
@@ -464,9 +465,10 @@ export default function Results({ navigation, route }) {
                     {loaded === true && showDiaryButtons()}
 
                     <CustomButton
-                        title='Go to Homepage directly'
+                        title='Homepage'
                         color='#761076'
                         onPressFunction={() => navigation.navigate("Home")}
+                        style={{marginTop: 40}}
                     />
 
                 </View>
@@ -485,7 +487,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 30,
-        marginBottom: 130,
+        marginBottom: 45,
         textAlign: "center",
     },
     video_style: {

@@ -12,17 +12,26 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
-
+import DropDownPicker from 'react-native-dropdown-picker';
+import DropdownStyle from '../styles/DropdownStyle';
+import SmartTextInput from './SmartTextInput';
 
 const InjectionInputComponent = props => {
-    let {setInjectionsData, injectionsData, id} = props
+    let {setInjectionsData, injectionsData, id, medicine_list} = props
 
     const [show_time_picker, setShowTimePicker] = useState(false);
 
+    const [insulin_open, setOpen] = useState(false);
+    const [insulin_value, setValue] = useState(null);
+    const [insulin_type, setType] = useState([
+        {label: "Long" , value: "long"},
+        {label: "Fast" , value: "fast"},
+    ])
+
     return (
-        <View>
+        <View style={GlobalStyle.BodyGeneral}>
             
-            <Text style={[GlobalStyle.CustomFont]}>
+            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Cyan]}>
                 Injection {id+1}
             </Text>
 
@@ -55,10 +64,26 @@ const InjectionInputComponent = props => {
                 color="#008c8c"
             />
 
-            <TextInput
-                style={GlobalStyle.InputField}
-                placeholder="Insulin type (long/fast)"
-                onChangeText={(value) => {
+            <DropDownPicker
+                dropDownDirection="BOTTOM"
+                style={DropdownStyle.style}
+                containerStyle={DropdownStyle.containerStyle}
+                placeholderStyle={DropdownStyle.placeholderStyle}
+                textStyle={DropdownStyle.textStyle}
+                labelStyle={DropdownStyle.labelStyle}
+                listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                showArrowIcon={true}
+                showTickIcon={true}
+                placeholder="Injection type"
+                open={insulin_open}
+                value={insulin_value}
+                items={insulin_type}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setType}
+                onChangeValue={(value) => {
                     setInjectionsData(state => (state.map(val => {
                         if (val.index == id) {
                             return {...val, ['type']: value.trim()}
@@ -67,8 +92,7 @@ const InjectionInputComponent = props => {
                 }}
             />
 
-            <TextInput
-                style={GlobalStyle.InputField}
+            <SmartTextInput
                 placeholder="Units"
                 keyboardType="numeric"
                 onChangeText={(value) => {

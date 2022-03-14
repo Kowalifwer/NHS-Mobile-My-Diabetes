@@ -13,10 +13,12 @@ import {
 import * as LocalAuthentication from 'expo-local-authentication';
 import CustomButton from '../components/CustomButton';
 import GlobalStyle from '../styles/GlobalStyle';
+import SmartTextInput from '../components/SmartTextInput';
 import Header from '../components/Header';
 import {user_struct, health_type_reverse_lookup} from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
+import { FloatingLabelInput } from 'react-native-floating-label-input';
 
 
 export default function Home({ navigation, route }) {
@@ -117,56 +119,54 @@ export default function Home({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont,styles.text,{fontSize: 50, color: "lime"}]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Orange, {marginBottom: 75}]}>
                         Profile Settings
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Welcome {stored_user.name} !
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                        Welcome, {stored_user.name} !
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        You are {stored_user.age} years old.
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        You are{"\n"} {stored_user.age} years old.
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your height is {stored_user.height} cm
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your height is{"\n"} {stored_user.height} cm
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your weight is {stored_user.weight} kg
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your weight is{"\n"} {stored_user.weight} kg
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Your NHS number is {stored_user.nhs_number} kg
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your NHS number is:{"\n"} {stored_user.nhs_number}
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, {color: "red"}]}>
-                        Your diabetes status is: {health_type_reverse_lookup[route.params?.stored_user.health_type]}
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                        Your diabetes status is:{"\n"} {health_type_reverse_lookup[route.params?.stored_user.health_type]}
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont, styles.text, {color: "red"}]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
                         Your daily number of injections is {route.params?.stored_user.daily_injections}
                     </Text>
                     
-
-                    <TextInput
-                        style={GlobalStyle.InputField}
-                        placeholder= {"Update your name"}
+                    <SmartTextInput
+                        placeholder={"Update your name"}
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])} //updating the dict
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder={"Update your age"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder={"Update your height"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder={"Update your weight"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder= {"Update your NHS number"}
+                        keyboardType="numeric"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])} //updating the dict
                     />
             
@@ -176,6 +176,7 @@ export default function Home({ navigation, route }) {
                         color='#ff7f00'
                         onPressFunction={updateUserData}
                     />
+                    
                     <CustomButton
                         title='Delete Profile'
                         color='#f40100'
@@ -204,6 +205,8 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 40,
         margin: 10,
+        marginTop: 25,
+        marginBottom: 25,
         textAlign: 'center',
     },
 })

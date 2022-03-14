@@ -39,6 +39,9 @@ export default StyleSheet.create({
     Cyan: {
         color: "#17a09d"
     },
+    Blue: {
+        color: "#6495ED"
+    },
     Large: {
         fontSize: 40,
     },

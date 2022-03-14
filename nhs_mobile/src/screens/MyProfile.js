@@ -27,16 +27,16 @@ export default function MyProfile({ navigation }) {
 
                     <Header></Header>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Cyan, {marginTop: 40}]}>
                         My Profile Page
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
                         Used to show user key statistics from Blood Pressure and Glucose Diaries. NEED TO IMPLEMENT
                     </Text>
 
                     <CustomButton
-                            title='Go to Homepage directly'
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                     />

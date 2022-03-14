@@ -1,7 +1,5 @@
 import React from 'react';
-import GlobalStyle from '../styles/GlobalStyle';
-import { TextInput } from 'react-native';
-
+import SmartTextInput from './SmartTextInput';
 
 class NumberInput extends React.Component {
     constructor(props, diary_name) {
@@ -27,8 +25,7 @@ class NumberInput extends React.Component {
 
     render() {
         return (
-            <TextInput
-                style={ GlobalStyle.InputField }
+            <SmartTextInput
                 value={ this.state.input_text }
                 keyboardType = 'numeric'
                 placeholder={ this.props.label }

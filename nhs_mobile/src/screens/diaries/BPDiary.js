@@ -191,8 +191,8 @@ export default function BPDiary({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
-                    <Text style={[GlobalStyle.CustomFont, styles.text]}>
-                        Blood Pressure Diary page
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                        Blood Pressure Diary
                     </Text>
                     
                     <CustomButton
@@ -240,7 +240,7 @@ export default function BPDiary({ navigation, route }) {
 
                     <CustomButton
                         style={{marginTop: 40}}
-                        title='add to diary'
+                        title='Add entry to diary!'
                         color='#1eb900'
                         onPressFunction={() => {
                             appendToDiary();
@@ -249,7 +249,7 @@ export default function BPDiary({ navigation, route }) {
 
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
-                            title='Go to Homepage directly'
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                         />
@@ -263,7 +263,7 @@ export default function BPDiary({ navigation, route }) {
 const styles = StyleSheet.create({
     text: {
         fontSize: 30,
-        marginBottom: 130,
+        marginBottom: 45,
         textAlign: "center",
     },
     video_style: {

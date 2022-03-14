@@ -9,6 +9,7 @@ import {
     Keyboard,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import DropdownStyle from '../../styles/DropdownStyle';
 import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
@@ -156,6 +157,7 @@ export default function NewFoodDiary({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
+                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginBottom:45, marginTop:15}]}>Food Diary</Text>
                     
                     <CustomButton
                         title="Help"
@@ -203,7 +205,7 @@ export default function NewFoodDiary({ navigation, route }) {
 
                     <CustomButton
                         style={{marginTop: 40}}
-                        title='add to diary'
+                        title='Add entry to diary!'
                         color='#1eb900'
                         onPressFunction={() => {
                             appendToDiary();
@@ -212,7 +214,7 @@ export default function NewFoodDiary({ navigation, route }) {
 
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
-                            title='Go to Homepage directly'
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                         />

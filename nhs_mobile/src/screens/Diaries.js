@@ -19,7 +19,7 @@ import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
 import {diary_list} from '../global_structures.js'
 
-export default function Diaries({ navigation }) {
+export default function Diaries({ navigation, route }) {
     const [stored_user, setStoredUser] = useState(null)
 
     // console.log("diary_list: \n", diary_list);
@@ -32,6 +32,8 @@ export default function Diaries({ navigation }) {
                 setStoredUser(JSON.parse(user));
             })();
     }, []);
+
+
 
     return (
         <SafeAreaView style={styles.body}>
@@ -53,7 +55,7 @@ export default function Diaries({ navigation }) {
                                 navigation.navigate(item.screen_name, { // we can pass paramters to the .navigate function here, such as the number of insulin readings etc.. to then use in the respective Diary screen.
                                     daily_injections: (stored_user.daily_injections) ? stored_user.daily_injections : "-1",
                                     health_type: (stored_user.health_type) ? stored_user.health_type : "-1",
-                                    medicine_list: (stored_user.medicine_list) ? stored_user.medicine_list : [],
+                                    videos: route.params.video,
                                 })
                             }}
                             title={item.verbose_name}

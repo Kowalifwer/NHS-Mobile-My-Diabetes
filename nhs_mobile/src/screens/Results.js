@@ -1,4 +1,3 @@
-import * as MailComposer from 'expo-mail-composer';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
     View,
@@ -8,58 +7,38 @@ import {
     Alert,
     SafeAreaView, 
     ScrollView,
-    StatusBar,
-    Button,
-    Vibration
+    Vibration,
 } from 'react-native';
-import * as LocalAuthentication from 'expo-local-authentication';
-import DropDownPicker from 'react-native-dropdown-picker';
+
 import CustomButton from '../components/CustomButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import HomePageButtonSlim from '../components/HomePageButtonSlim';
 import Header from '../components/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
-import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
-import XLSX from 'xlsx';
-import { Asset } from 'expo-asset';
-import { manipulateAsync } from 'expo-image-manipulator';
 import YoutubePlayer from "react-native-youtube-iframe";
+import XLSX from 'xlsx';
+import { manipulateAsync } from 'expo-image-manipulator';
+import { Asset } from 'expo-asset';
+import Constants from 'expo-constants';
 
-export default function Email({navigation, route}) {
+export default function Results({ navigation, route }) {
 
-    DropDownPicker.setListMode("SCROLLVIEW");
-    
-    const stored_user = route.params?.stored_user //can access all current user data from this variable.
-    const [selectedRecipient, setSelectedRecipient] = useState("");
-    const [selectedDiary, setSelectedDiary] = useState("");
-    
-    const [imageHTML, setImageHTML] = useState();
-    const [currentDate, setCurrentDate] = useState("");
-
-    //variables to check if diaries are enmpty
-    const [isBPEmpty, setIsBPEmpty] = useState(false);
-    const [isFoodEmpty, setIsFoodEmpty] = useState(false);
-    const [isGlucoseEmpty, setIsGlucoseEmpty] = useState(false);
-
-    //Stores each html table data for each diary. To be used in each html variable
-    const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", waterResultsHTML: "", glucoseResultsHTML: "", glucoseInjectionsHTML: ""});
-
-    // Stores each excel files URI to be used as an Email Attachement
-    const [excelURIS, setExcelURIS] = useState({bloodpressure: "", food: "", glucose: ""});
-    
-    const [email, setEmail] = useState([]);
-
-    // Used for DropDownPicker. Automatically closes and opens picker depending on these values.
-    const [diary_open, setDiaryOpen] = useState(false);
-    const [diary_value, setDiaryValue] = useState(null);
-    const [email_open, setEmailOpen] = useState(false);
-    const [email_value, setEmailValue] = useState(null);
+    const stored_user = route.params?.stored_user
 
     const [help, setHelp] = useState(false)
     const [playing, setPlaying] = useState(false);
     const [videoIndex, setVideoIndex] = useState();
     const [notFound, setNotFound] = useState(false);
+
+    const [imageHTML, setImageHTML] = useState();
+    const [htmlTableData, setHtmlTableData] = useState({bloodPressureDailyResultsHTML: "", bloodPressureAverageResultsHTML: "", foodResultsHTML: "", waterResultsHTML: "", glucoseResultsHTML: "", glucoseInjectionsHTML: ""});
+
+    const [loaded, setLoaded] = useState(false);
+
+    //variables to check if diaries are enmpty
+    const [isBPEmpty, setIsBPEmpty] = useState(false);
+    const [isFoodEmpty, setIsFoodEmpty] = useState(false);
+    const [isGlucoseEmpty, setIsGlucoseEmpty] = useState(false);
 
     // Used to tell user video has finished. Currently commented as not needed. If by code freeze still not needed then will delete from app
     const onStateChange = useCallback((state) => {
@@ -69,32 +48,35 @@ export default function Email({navigation, route}) {
         }
     }, []);
 
-    // depends on what diary is actually presented to user NEED TO FIX AFTER MERGE
-    const [diaryItems, setDiaryItems] = useState([
-        {label: 'Blood Pressure', value: 'Blood Pressure'},
-        {label: 'Food Diary', value: 'Food Diary'},
-        {label: 'Glucose Diary', value: 'Glucose Diary'}
-    ]);
-
-    // For DropDownPicker to close a picker when another opened
-    const onEmailOpen = useCallback(() => {
-        setDiaryOpen(false);
-    }, []);
-
-    const onDiaryOpen = useCallback(() => {
-        setEmailOpen(false);
-    }, []);
-
     useEffect(async () => {
-        setImageHTML(await generateImageHTML());
-        setCurrentDate(generateCurrentDate());
-        getUserData();
-        convertDiaryData();
         findVideoIndex("Help Section"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
+        setImageHTML(await generateImageHTML());
+        await convertDiaryData().then(setLoaded(true));
     }, []);
 
-     // Set the video id that matches the video name passed into this function.
-     const findVideoIndex = (videoName) => {
+    // Changes image to be used in the html's into base64 and into html code. This is done because Expo Print has no facility to add local images so this workaround was made.
+    async function generateImageHTML() {
+        const asset = Asset.fromModule(require('../../assets/my_diabetes.jpg'));
+        const image = await manipulateAsync(
+            asset.localUri ?? asset.uri,
+            [],
+            {base64: true}
+        );
+
+        return `<img src="data:image/jpeg;base64,${image.base64}" class="center"/>`;
+    }
+
+    // General function to get Data from AsyncStorage. Depending on variable passed it will get data on different listings in AsyncStorage.
+    const getData = async (jsonDataType) => {
+        try {
+          const jsonValue = await AsyncStorage.getItem(jsonDataType)
+          return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+          // error reading value
+        }
+    }
+
+    const findVideoIndex = (videoName) => {
         for (var index=0; index < route.params.video.length; index++) {
             if (route.params.video[index].name == videoName) {
                 setVideoIndex(index);
@@ -128,7 +110,6 @@ export default function Email({navigation, route}) {
         }
     }
 
-    // changes html to be transformed to pdf depending on what diary user selected
     const changeHTMLContent = (currentDiary) => {
         var currentHTMLTableData = [];
 
@@ -183,7 +164,6 @@ export default function Email({navigation, route}) {
                 ${imageHTML}
                 <h1>Diary: ${currentDiary}</h1>
                 <h1>NHS Number: ${stored_user.nhs_number} </h1>
-                <h1>Date Generated: ${currentDate}</h1>
                 
                 <table>
                     ${currentHTMLTableData[0]}
@@ -201,51 +181,6 @@ export default function Email({navigation, route}) {
         `
     }
 
-    // Changes image to be used in the html's into base64 and into html code. This is done because Expo Print has no facility to add local images so this workaround was made.
-    async function generateImageHTML() {
-        const asset = Asset.fromModule(require('../../assets/my_diabetes.jpg'));
-        const image = await manipulateAsync(
-            asset.localUri ?? asset.uri,
-            [],
-            {base64: true}
-        );
-
-        return `<img src="data:image/jpeg;base64,${image.base64}" class="center"/>`;
-    }
-
-    // Generates current date to be added to html of the diaries
-    function generateCurrentDate() {
-        const n = new Date();
-        const y = n.getFullYear();
-        const m = n.getMonth() + 1;
-        const d = n.getDate();
-        return d + "/" + m + "/" + y;
-    }
-
-    // General function to get Data from AsyncStorage. Depending on variable passed it will get data on different listings in AsyncStorage.
-    const getData = async (jsonDataType) => {
-        try {
-          const jsonValue = await AsyncStorage.getItem(jsonDataType)
-          return jsonValue != null ? JSON.parse(jsonValue) : null;
-        } catch(e) {
-          // error reading value
-        }
-    }
-
-    // Gets email recepients AsyncStorage
-    const getUserData = async () => {
-        try {
-            var recipients = await getData('EmailData');
-            console.log(recipients)
-            setEmail([]);
-            for (var i = 0; i < recipients.length; i++) {
-                setEmail(state => [...state, {label: recipients[i], value: recipients[i]}])
-            }
-        } catch(e) {
-        // error reading value
-        }
-    }
-    
     // Adding Data to Blood Pressure Excel variable from its JSON
     const bloodPressureJSONtoArr = (dailyResultsExcel, averageResultsExcel, bloodPressureArrData) => {
         
@@ -401,13 +336,6 @@ export default function Email({navigation, route}) {
         (foodJSON == null) ? setIsFoodEmpty(true) : foodJSONtoArr(foodEXCEL, waterEXCEL, foodJSON);
         (glucoseJSON == null || glucoseJSON.length == 0) ? setIsGlucoseEmpty(true) : glucoseJSONtoArr(glucoseResultsEXCEL, glucoseInjectionsEXCEL, glucoseJSON);
 
-    // Create Excel Document from Excel Diary and appends to a global uri variable to be used in other functions
-
-        //creates work book for each diary
-        var bloodPressureWB = XLSX.utils.book_new();
-        var foodWB = XLSX.utils.book_new();
-        var glucoseWB = XLSX.utils.book_new();
-
         //Creates a options variable to skip the autogenerated excel headers
         const opts = {
             skipHeader: true,
@@ -421,53 +349,6 @@ export default function Email({navigation, route}) {
         var glucoseResultsWS = XLSX.utils.json_to_sheet(glucoseResultsEXCEL, opts);
         var glucoseInjectionsWS = XLSX.utils.json_to_sheet(glucoseInjectionsEXCEL, opts);
 
-        //Append the work sheets to it's work book
-        XLSX.utils.book_append_sheet(bloodPressureWB,bloodPressureDailyResultsWS, "Blood Pressure Daily Results");
-        XLSX.utils.book_append_sheet(bloodPressureWB,bloodPressureAverageResultsWS, "Blood Pressure Average Results");
-        XLSX.utils.book_append_sheet(foodWB,foodResultsWS, "Food Results");
-        XLSX.utils.book_append_sheet(foodWB,waterResultsWS, "Water Results");
-        XLSX.utils.book_append_sheet(glucoseWB,glucoseResultsWS, "Glucose Daily Results");
-        XLSX.utils.book_append_sheet(glucoseWB,glucoseInjectionsWS, "Glucose Injections Results");
-
-        //Writes work book data to each work book
-        const bloodPressureWBOUT = XLSX.write(bloodPressureWB, {
-            type: 'base64',
-            bookType: 'xlsx'
-        });
-
-        const foodWBOUT = XLSX.write(foodWB, {
-            type: 'base64',
-            bookType: 'xlsx'
-        });
-
-        const glucoseWBOUT = XLSX.write(glucoseWB, {
-            type: 'base64',
-            bookType: 'xlsx'
-        });
-
-        //Creates URI for each excel file to be used elsewhere
-        const bloodPressureURI = FileSystem.cacheDirectory + `BloodPressureDiary_${currentDate.replace(/\//g, '-')}.xlsx`;
-        const foodURI = FileSystem.cacheDirectory + `FoodDiary_${currentDate.replace(/\//g, '-')}.xlsx`;
-        const glucoseURI = FileSystem.cacheDirectory + `GlucoseDiary_${currentDate.replace(/\//g, '-')}.xlsx`;
-        
-        FileSystem.writeAsStringAsync(bloodPressureURI, bloodPressureWBOUT, {
-            encoding: FileSystem.EncodingType.Base64
-            });
-
-        FileSystem.writeAsStringAsync(foodURI, foodWBOUT, {
-            encoding: FileSystem.EncodingType.Base64
-            });
-
-        FileSystem.writeAsStringAsync(glucoseURI, glucoseWBOUT, {
-            encoding: FileSystem.EncodingType.Base64
-            });
-        
-        //appends bloood pressure uri to excelURIS object to be used in composeMail function
-        setExcelURIS({bloodpressure: bloodPressureURI,
-            food: foodURI,
-            glucose: glucoseURI
-        });
-  
     // Converts the excel work sheet data to html and sets the global variable to be used in the html variable for each diary
         
         // converts to work sheet to html
@@ -489,236 +370,109 @@ export default function Email({navigation, route}) {
 
     }
 
-    const createPDF = async(diaryName) => {
-        
-        //makes html code to pdf and saves to Filesystem Cache Directory, sizes are for A4 paper in pixels
-        const file_object = await Print.printToFileAsync({
-            html: changeHTMLContent(diaryName),
-            height: 842,
-            width: 595,
-        });
-
-        //renames the file to its diary name with the current date by replacing the string after the last slash with diary name (with spaces taken out) and current date (slash / between the number replaced with a dash -)
-        const pdfName = `${file_object.uri.slice(
-            0,
-            file_object.uri.lastIndexOf('/') + 1)+diaryName.replace(/ /g, '')}_${currentDate.replace(/\//g, '-')}.pdf`
-
-        await FileSystem.moveAsync({
-            from: file_object.uri,
-            to: pdfName,
-        })
-
-        return pdfName;
-    }
 
     // Alerts user if diary is empty when trying to compose an email
     const alertIfDiaryEmpty = (diaryToCheck) => {
         if (diaryToCheck == "Blood Pressure" && isBPEmpty == true) {
-            Alert.alert("ERROR: Blood Pressure Diary is Empty. Can't create attachement.");
+            Alert.alert("ERROR: Blood Pressure Diary is Empty. Can't show results.");
             Vibration.vibrate();
             return "exit";
         }
         if (diaryToCheck == "Food Diary" && isFoodEmpty == true) {
-            Alert.alert("ERROR: Food Diary is Empty. Can't create attachement");
+            Alert.alert("ERROR: Food Diary is Empty. Can't show results.");
             Vibration.vibrate();
             return "exit"
         }
         if (diaryToCheck == "Glucose Diary" && isGlucoseEmpty == true) {
-            Alert.alert("ERROR: Glucose Diary is Empty. Can't create attachement");
+            Alert.alert("ERROR: Glucose Diary is Empty. Can't show results.");
             Vibration.vibrate();
             return "exit"
         }
     }
 
-    const validateEmail = () => {
-        Alert.alert("Disclaimer", "Sending this email involves sending your medical data. This is your own responsibility so proceed at your own risk.", [
+    const showDisclaimer = (diaryName) => {
+        Alert.alert("Disclaimer", "Clicking this button will show you your medical data. Proceed at your own risk.", [
             {
                 text: 'Cancel',
                 onPress: () => console.log("Cancel"),
                 style: 'cancel',
             },
-            {text: 'Proceed', onPress: () => composeMail()}
+            {text: 'Proceed', onPress: () => showPDF(diaryName)}
         ]);
     }
 
-    const validateSelection = () => {
-        if (selectedDiary == "") {
-            Vibration.vibrate();
-            Alert.alert("No Diary Selected");
-        } else if (selectedRecipient == null) {
-            Vibration.vibrate();
-            Alert.alert("No Recepient Selected");
-        } else {
-            return "valid";
-        }
-    }
+    const showPDF = (diaryName) => {
 
-    //Composes Email based on diary chosen by user
-    const composeMail = async() => {
+        if (alertIfDiaryEmpty(diaryName) === "exit") {
+            return;
+        }
+
+        navigation.navigate("PDF", {
+            HTML: changeHTMLContent(diaryName),
+            videos: route.params.video,
+            stored_user: stored_user,
+        })
         
-        // Checks if selected diaries and recipient is selected first before composing email
-        if (validateSelection() == "valid") {
-
-            let URIS = []; // combination of pdf and excel URIs to be used in the attachements part of Expo Compose
-            let pdfURIS = {bloodpressure: "", fooddiary: "", glucosediary: ""};
-            const diarySubject = selectedDiary.toString().replace(/,/g, ' + '); //used in subject of email
-
-            //Depending on number of diaries chosen to be attached as a pdf, this section converts each diary into pdf, creates URIs for each, renames the URI and appends the URI to an array of pdf URIs to be used as an attachement
-            for (let i=0; i<selectedDiary.length; i++) {
-                
-                // Check if diary selected is empty before proceeding
-                if (alertIfDiaryEmpty(selectedDiary[i]) === "exit") {
-                    return;
-                }
-
-                // Calls the function that creates the pdf and stores the returned uri in appropriate place to be used as attachement later
-                pdfURIS[selectedDiary[i].replace(/ /g, '').toLowerCase()] = await createPDF(selectedDiary[i]);
-
-            }
-
-            //Appends the pdf and excel diary uris to one array URIS to be used as attachements.
-            for (var index in selectedDiary) {
-                if (selectedDiary[index] == "Blood Pressure" && isBPEmpty != true) {
-                    URIS.push(excelURIS.bloodpressure)
-                    URIS.push(pdfURIS.bloodpressure)
-                }
-                if (selectedDiary[index] == "Food Diary" && isFoodEmpty != true) {
-                    URIS.push(excelURIS.food)
-                    URIS.push(pdfURIS.fooddiary)
-                }
-                if (selectedDiary[index] == "Glucose Diary" && isGlucoseEmpty != true) {
-                    URIS.push(excelURIS.glucose)
-                    URIS.push(pdfURIS.glucosediary)
-                }
-            }
-
-            // This section composes the email with the recepient, email subject and attachemments
-            try{
-
-                const compatible = await LocalAuthentication.hasHardwareAsync();
-                if (!compatible) throw 'This device is not compatible for biometric authentication';
-
-                const enrolled = await LocalAuthentication.isEnrolledAsync();
-                if (!enrolled) throw 'This device does not have biometric authentication enabled';
-
-                const result = await LocalAuthentication.authenticateAsync();
-                if(result.success){
-                    let emailResult = await MailComposer.composeAsync({
-                        recipients: (selectedRecipient != null) ? [selectedRecipient] : [],
-                        subject: stored_user.nhs_number == "" ? diarySubject + ' PDF/EXCEL #N/A' : diarySubject + ' PDF/EXCEL #' + stored_user.nhs_number,
-                        attachments: URIS,
-                    });
-                    (emailResult.status === 'sent') ? Alert.alert(`Email sent successfully to ${selectedRecipient}` ) : Alert.alert('Email has not been sent')
-                }
-                else{
-                    Alert.alert("Failure!", "Could not send email.")
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        }
     }
 
-    return (   
+    const showDiaryButtons = () => {
+        return <View>
+            <HomePageButtonSlim
+            title="Blood Pressure Diary"
+            onPressFunction={() => showDisclaimer("Blood Pressure")}
+            />
+
+            <HomePageButtonSlim
+                title="Glucose Diary"
+                onPressFunction={() => showDisclaimer("Glucose Diary")}
+            />
+
+            <HomePageButtonSlim
+                title="Food Diary"
+                onPressFunction={() => showDisclaimer("Food Diary")}
+            />
+        </View>
+    }
+
+    return (
         <SafeAreaView style={styles.body}>
+
             <ScrollView>
+
                 <View style={styles.body}>
+
                     <Header></Header>
 
-                    <CustomButton
-                            title="Help"
-                            onPressFunction={() => toggleHelp()}
-                            color='#761076'
-                    />
-                </View>
+                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                        Select Diary to View
+                    </Text>
 
+                    <CustomButton
+                        title="Help"
+                        onPressFunction={() => toggleHelp()}
+                        color='#761076'
+                    />
+
+                </View>
+                
                 <View styles={styles.video_style}>
                     {(help === true && notFound === false) && showHelp()}
                 </View>
 
                 <View style={styles.body}>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Select which diary(s) to send to a doctor from your diary list
-                    </Text>
-                    <DropDownPicker
-                        multiple={true}
-                        min={0}
-                        max={3}
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
-                        placeholder="Select from diary list!"
-                        open={diary_open}
-                        onOpen={onDiaryOpen}
-                        value={diary_value}
-                        items={diaryItems}
-                        setOpen={setDiaryOpen}
-                        setValue={setDiaryValue}
-                        setItems={setDiaryItems}
-                        onChangeValue={value => setSelectedDiary(value)}
-                        zIndex={2000}
-                    />
-
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
-                        Send and email to a doctor from your doctors list
-                    </Text>
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
-                        placeholder="Select from doctors list!"
-                        open={email_open}
-                        onOpen = {onEmailOpen}
-                        value={email_value}
-                        items={email}
-                        setOpen={setEmailOpen}
-                        setValue={setEmailValue}
-                        setItems={setEmail}
-                        onChangeValue={value => setSelectedRecipient(value)}
-                        zIndex={1000}
-                    />
+                    {loaded === true && showDiaryButtons()}
 
                     <CustomButton
-                        onPressFunction={() => validateEmail()}
-                        color="#ff0f00"
-                        title="Compose Email"
+                        title='Go to Homepage directly'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Home")}
                     />
 
-                    <StatusBar style="auto" />
-
-                    <Text style={[GlobalStyle.CustomFont, {marginTop: 40, fontSize: 20, marginHorizontal: 20}]}>If you didnt set up any doctors, you can do so using the button below</Text>
-
-                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 50,}}>
-                        <CustomButton
-                            title='Setup email recipients'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("EmailSetup")}
-                        />
-                        <CustomButton
-                                title='Return to Homepage'
-                                color='#761076'
-                                onPressFunction={() => navigation.navigate("Home")}
-                        />
-                    </View>
                 </View>
+
             </ScrollView>
+
         </SafeAreaView>
     )
 }
@@ -730,12 +484,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#e9c5b4',
     },
     text: {
-        fontSize: 25,
-        margin: 10,
-        textAlign: 'center',
+        fontSize: 30,
+        marginBottom: 130,
+        textAlign: "center",
     },
     video_style: {
         flex: 1,
         alignItems: 'center',
-    },
+    }
 })

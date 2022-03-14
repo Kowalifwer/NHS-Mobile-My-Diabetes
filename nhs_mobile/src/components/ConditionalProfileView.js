@@ -46,19 +46,19 @@ const ConditionalProfileView = props => {
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Enter your age'
-                        keyboardType='numeric'
+                        keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Enter your height (cm)'
-                        keyboardType='numeric'
+                        keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
                     />
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Enter your weight (kg)'
-                        keyboardType='numeric'
+                        keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
 

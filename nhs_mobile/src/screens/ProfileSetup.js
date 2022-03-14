@@ -77,7 +77,7 @@ export default function ProfileSetup({ navigation }) {
                     <TextInput
                         style={GlobalStyle.InputField}
                         placeholder='Enter your NHS Number'
-                        keyboardType='numeric'
+                        keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])}
                     />
 

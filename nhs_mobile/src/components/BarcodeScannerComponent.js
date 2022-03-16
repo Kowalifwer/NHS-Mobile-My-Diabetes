@@ -9,7 +9,7 @@ import CustomButton from '../components/CustomButton';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 const BarcodeScannerComponent = (props) => {
-    let {setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props;
+    let {setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open, setScannedData} = props;
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -21,6 +21,13 @@ const BarcodeScannerComponent = (props) => {
         .then(data => {
             if (data["status"] == 1) {
                 //WE CAN FETCH DIFFERENT LANGUAGES AS WELL IF NECESSARY!!
+                let nutrients = {
+                    protein: data["product"]["nutriments"]["proteins_100g"],
+                    sugar: data["product"]["nutriments"]["sugars_100g"],
+                    carb: data["product"]["nutriments"]["carbohydrates_100g"],
+                    fat: data["product"]["nutriments"]["fat_100g"],
+                    energy: data["product"]["nutriments"]["energy-kcal_100g"], //energy-kcal_100g
+                }
                 return product_data_parsed = {
                     name: data["product"]["product_name"],
                     image: data["product"]["image_url"],
@@ -34,7 +41,7 @@ const BarcodeScannerComponent = (props) => {
                     product_url: `https://world.openfoodfacts.org/product/${ean_barcode}`,
                     api_url: url,
                     ean_barcode: ean_barcode,
-                    nutrients: data["product"]["nutriments"],
+                    nutrients: nutrients,
                 }
             }
             else {
@@ -59,6 +66,7 @@ const BarcodeScannerComponent = (props) => {
                     return {...val, ['scanned_item_object']: result}
                 } return val;
             })))
+            setScannedData(result);
             setBarcodeScannerOpen([false, 0])
         }).catch(error => Alert.alert("Product not found. Please try to scan again or close the scanner and input data manually. Sorry for the inconvenience."))
     };

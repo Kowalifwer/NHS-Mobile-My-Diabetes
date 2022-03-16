@@ -74,6 +74,15 @@ const GlucoseInputComponent = props => {
                 placeholder="Reading (mmol/L)"
                 keyboardType="numeric"
                 onChangeText={(value) => {
+                    setGlucoseComponentsData(state => (state.map(val => {
+                        if (val.index == id) {
+                            return {...val, ['reading']: value.trim(), ["hypo"]: hypo, ["hypoReason"]: hypoReason}
+                        } return val;
+                    })))
+                }}
+                // check if reading indicates hypoglycemia after ending input
+                onEndEditing={(event) => {
+                    let value = event.nativeEvent.text
                     if (parseInt(value) <= 4) {
                         setHypo(true);
                         setShowHypoDialog(true);
@@ -82,11 +91,6 @@ const GlucoseInputComponent = props => {
                         setHypoReason("");
                         afterHypo("");
                     }
-                    setGlucoseComponentsData(state => (state.map(val => {
-                        if (val.index == id) {
-                            return {...val, ['reading']: value.trim(), ["hypo"]: hypo, ["hypoReason"]: hypoReason}
-                        } return val;
-                    })))
                 }}
             />
 

@@ -18,12 +18,43 @@ import Header from '../components/Header';
 import {user_struct, health_type_reverse_lookup} from '../global_structures.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownStyle from '../styles/DropdownStyle';
-import { FloatingLabelInput } from 'react-native-floating-label-input';
 
 
 export default function Home({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [stored_user, setStoredUser] = useState(user_struct)
+
+    const [medicineInput, setMedicineInput] = useState(null);
+    const [medicineList, setMedicineList] = useState([]);
+
+    const [medicine_open, setMedicineOpen] = useState(false);
+    const [medicine_value, setMedicineValue] = useState(null);
+    const [medicine_type, setMedicineType] = useState([])
+
+    useEffect(() => {
+        setDynamicUser(state => ({ ...state, ["medicine_list"]: medicineList }));
+    }, [medicineList]);
+
+    const modifyMedicineList = () => {
+        setMedicineList(state => [...state, medicineInput])
+        setMedicineType(state => [...state, {label: medicineInput, value: medicineInput}]) //FOR THE DROPDOWN
+        setMedicineInput(null);
+        Alert.alert(medicineInput + " added to your Medicine List! Feel free to add more if neccesary.")
+    }
+
+    const removeMedicines = () => {
+        let new_medicine_list = [...medicineList]
+        medicine_value.forEach(medicine_name => {
+            new_medicine_list.splice(new_medicine_list.indexOf(medicine_name), 1)
+        })
+        console.log(new_medicine_list)
+        setMedicineType(new_medicine_list.map(medicine_name => {
+            return {label: medicine_name, value: medicine_name}
+        }))
+        setMedicineList(new_medicine_list)
+        setMedicineValue(null)
+        Alert.alert(`${medicineList.length - new_medicine_list.length} Medicines have been removed from your Medicine List!`)
+    }
 
     useEffect(() => {
         getUserData();
@@ -38,7 +69,10 @@ export default function Home({ navigation, route }) {
                     
                     if (value != null) {
                         let user = JSON.parse(value);
-                        console.log(user);
+                        setMedicineType(user["medicine_list"].map(medicine_name => {
+                            return {label: medicine_name, value: medicine_name}
+                        }))
+                        setMedicineList(user["medicine_list"])
                         setStoredUser(user)
                         return user
                     }
@@ -61,7 +95,6 @@ export default function Home({ navigation, route }) {
             console.log("All fields empty!")
         } else {
             try {
-
                 const compatible = await LocalAuthentication.hasHardwareAsync();
                 if (!compatible) throw 'This device is not compatible for biometric authentication';
 
@@ -78,6 +111,7 @@ export default function Home({ navigation, route }) {
                             user[key] = dynamic_user[key]
                     }
                     await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
+                    setDynamicUser(user_struct)
                     getUserData()
                     console.log("Data updated")
                     Alert.alert('Success!', 'Your data has been updated.');
@@ -104,6 +138,8 @@ export default function Home({ navigation, route }) {
                 console.log("CLEARED UserData - output below")
                 getUserData()
                 await AsyncStorage.removeItem("UserData");
+                Alert.alert('Success!', 'Your User data has been cleared! Redirecting to the setup page.')
+
                 navigation.navigate('ProfileSetup');
             }
             else{
@@ -141,34 +177,110 @@ export default function Home({ navigation, route }) {
                         Your diabetes status is:{"\n"} {health_type_reverse_lookup[route.params?.stored_user.health_type]}
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
-                        Your daily number of injections is {route.params?.stored_user.daily_injections}
+                    {stored_user.daily_injections ? 
+                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                            Your daily number of injections is {route.params?.stored_user.daily_injections}
+                        </Text> :
+                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                            You do not inject insulin.
+                        </Text>
+                    }
+
+                    {stored_user.medicine_list.length > 0 && 
+                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                            Medicine that you are currently using:
+                        </Text>
+                    }
+                    {stored_user.medicine_list.map((medicine, index) => {
+                        return (<Text style={[GlobalStyle.CustomFont, GlobalStyle.Orange]}>
+                            Medication {index+1}: {medicine}
+                        </Text>)})
+                    }
+
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Cyan, {marginTop: 50, marginBottom: 50}]}>
+                        You can update all this data below!
                     </Text>
-                    
+
                     <SmartTextInput
+                        value={dynamic_user.name}
                         placeholder={"Update your name"}
+                        hint="Name"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])} //updating the dict
                     />
                     <SmartTextInput
+                        value={dynamic_user.age}
                         placeholder={"Update your age"}
                         keyboardType="numeric"
+                        hint="Age (years)"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
                     />
                     <SmartTextInput
+                        value={dynamic_user.height}
                         placeholder={"Update your height"}
                         keyboardType="numeric"
+                        hint="Height (cm)"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
                     />
                     <SmartTextInput
+                        value={dynamic_user.weight}
                         placeholder={"Update your weight"}
                         keyboardType="numeric"
+                        hint="Weight (kg)"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
                     <SmartTextInput
+                        value={dynamic_user.nhs_number}
                         placeholder= {"Update your NHS number"}
                         keyboardType="numeric"
+                        mask = "999 999 9999"
+                        hint="NHS Number"
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])} //updating the dict
                     />
+
+                    {(stored_user.health_type != 1) &&
+                        <View style={[styles.body, {marginTop: 40, marginBottom: 75}]}>
+                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>If you need to update your medicine list - please do so in the section below</Text>
+                            <SmartTextInput
+                                value={medicineInput}
+                                hint={`Name of medication number ${medicineList.length+1}`}
+                                placeholder='Medicine Name'
+                                onChangeText={(value) => setMedicineInput(value)}
+                            />
+
+                            <CustomButton
+                                style={{marginTop: 0, marginBottom: 25}}
+                                title={`Press to add medication ${medicineList.length+1} to list`}
+                                onPressFunction={modifyMedicineList}
+                            />
+
+                            <DropDownPicker
+                                multiple={true}
+                                dropDownDirection="BOTTOM"
+                                style={DropdownStyle.style}
+                                containerStyle={DropdownStyle.containerStyle}
+                                placeholderStyle={DropdownStyle.placeholderStyle}
+                                textStyle={DropdownStyle.textStyle}
+                                labelStyle={DropdownStyle.labelStyle}
+                                listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                                showArrowIcon={true}
+                                showTickIcon={true}
+                                placeholder="Preview medicine list..."
+                                open={medicine_open}
+                                value={medicine_value}
+                                items={medicine_type}
+                                setOpen={setMedicineOpen}
+                                setValue={setMedicineValue}
+                                setItems={setMedicineType}
+                            />
+
+                            <CustomButton
+                                color='red'
+                                title={`Press to remove selected medications from list`}
+                                onPressFunction={removeMedicines}
+                            />
+                        </View>}
             
                     <CustomButton
                         style={{marginTop: 40}}
@@ -185,7 +297,13 @@ export default function Home({ navigation, route }) {
 
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
-                            title='Return to Homepage'
+                            title='Return to Settings'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Settings")}
+                        />
+
+                        <CustomButton
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                         />

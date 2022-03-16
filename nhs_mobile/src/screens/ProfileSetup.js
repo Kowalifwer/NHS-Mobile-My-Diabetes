@@ -21,7 +21,6 @@ import SmartTextInput from '../components/SmartTextInput';
 
 export default function ProfileSetup({ navigation }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
-    // console.log("xd")
 
     DropDownPicker.setListMode("SCROLLVIEW");
     useEffect(() => {
@@ -45,6 +44,9 @@ export default function ProfileSetup({ navigation }) {
         try {
             console.log(dynamic_user)
             await AsyncStorage.setItem('UserData', JSON.stringify(dynamic_user));
+            setDynamicUser(user_struct) //reset the state - important!!
+            setOpen(false);
+            setValue(null);
             navigation.navigate('Home');
         } catch (error) {
             console.log(error);
@@ -61,9 +63,9 @@ export default function ProfileSetup({ navigation }) {
       ])
 
     return (
-        <SafeAreaView style={styles.body}>
+        <SafeAreaView style={[styles.body]}>
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
-                <View style={styles.body}>
+                <View style={[styles.body, {paddingBottom: 200}]}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Orange]}>
                         Profile setup page.
@@ -75,10 +77,12 @@ export default function ProfileSetup({ navigation }) {
 
                     <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue, {marginBottom:25}]}> Please enter your NHS number. If you dont have an NHS number - leave this blank please.</Text>
 
-                    <TextInput
-                        style={GlobalStyle.InputField}
+                    <SmartTextInput
                         placeholder='Enter your NHS Number'
+                        maxLength={12}
+                        value={dynamic_user.nhs_number}
                         keyboardType = 'numeric'
+                        mask = '999 999 9999'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])}
                     />
 
@@ -109,15 +113,7 @@ export default function ProfileSetup({ navigation }) {
                         onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["health_type"]:value }), [])}
                     />
 
-                    <ConditionalProfileView style={styles.body} account_type = {health_type_value} setData={setData} setDynamicUser={setDynamicUser}/>
-
-                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 200}}>
-                        <CustomButton
-                            title='Homepage'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Home")}
-                        />
-                    </View>
+                    <ConditionalProfileView style={styles.body} account_type = {health_type_value} setData={setData} dynamic_user={dynamic_user} setDynamicUser={setDynamicUser}/>
                 </View>
             </ScrollView>
         </SafeAreaView>

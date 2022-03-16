@@ -197,14 +197,14 @@ export default function NewFoodDiary({ navigation, route }) {
 
                     {meals.map((input_component, i) => <MealInputComponent key={i} id={input_component.index} meals={meals} setMeals={setMeals}/>)}
 
-                    <CustomButton 
+                    <CustomButton
+                        style={{marginTop: 80}}
                         onPressFunction={() => addMealInputComponent()}
                         title="Add another meal"
                         color="#f96a3e"    
                     />
 
                     <CustomButton
-                        style={{marginTop: 40}}
                         title='Add entry to diary!'
                         color='#1eb900'
                         onPressFunction={() => {
@@ -212,7 +212,7 @@ export default function NewFoodDiary({ navigation, route }) {
                         }}
                     />
 
-                    <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
+                    <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100, marginTop:80}}>
                         <CustomButton
                             title='Homepage'
                             color='#761076'

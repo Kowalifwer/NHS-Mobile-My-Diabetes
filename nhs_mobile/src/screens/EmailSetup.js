@@ -90,7 +90,7 @@ export default function EmailSetup({ navigation }) {
                 if (add_recipient.length > 0)
                     current_list.push(add_recipient)
                 console.log(current_list)
-                Alert.alert(add_recipient + " Added succesfully")
+                Alert.alert(add_recipient + " #Added succesfully")
                 storeData(current_list)
             }
             else{
@@ -180,7 +180,12 @@ export default function EmailSetup({ navigation }) {
                         onPressFunction={() => {removeItem(remove_recipient)}}
                     />
 
-                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 50,}}>
+                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 50}}>
+                        <CustomButton
+                            title='Return to Settings'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Settings")}
+                        />
                         <CustomButton
                             title='Home'
                             color='#761076'

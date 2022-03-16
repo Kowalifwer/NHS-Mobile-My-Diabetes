@@ -297,7 +297,13 @@ export default function Home({ navigation, route }) {
 
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
                         <CustomButton
-                            title='Return to Homepage'
+                            title='Return to Settings'
+                            color='#761076'
+                            onPressFunction={() => navigation.navigate("Settings")}
+                        />
+
+                        <CustomButton
+                            title='Homepage'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                         />

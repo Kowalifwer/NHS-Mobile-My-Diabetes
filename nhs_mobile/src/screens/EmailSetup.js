@@ -16,11 +16,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
 import DropdownStyle from '../styles/DropdownStyle';
+import SmartTextInput from '../components/SmartTextInput';
 import user_struct from '../global_structures.js'
 
 
 export default function EmailSetup({ navigation }) {
-
     const [add_recipient, setAddRecipient] = useState("")
     const [remove_recipient, setRemoveRecipient] = useState("")
 
@@ -90,7 +90,7 @@ export default function EmailSetup({ navigation }) {
                 if (add_recipient.length > 0)
                     current_list.push(add_recipient)
                 console.log(current_list)
-                Alert.alert(add_recipient + "Added succesfully")
+                Alert.alert(add_recipient + " Added succesfully")
                 storeData(current_list)
             }
             else{
@@ -135,13 +135,14 @@ export default function EmailSetup({ navigation }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
                         Setup your doctors' emails here
                     </Text>
-                    <TextInput
-                        style={[GlobalStyle.InputField, {marginBottom: 5}]}
+                    
+                    <SmartTextInput
                         placeholder='Input doctors email'
                         value={add_recipient}
+                        hint={`Add doctor number ${email.length + 1}`}
                         onChangeText={value => setAddRecipient(value)}
                     />
                     <CustomButton
@@ -174,14 +175,14 @@ export default function EmailSetup({ navigation }) {
                     />
                     <CustomButton
                         style={{marginBottom: 40}}
-                        title='Remove selected list doctor'
+                        title='Remove selected doctor!'
                         color='red'
                         onPressFunction={() => {removeItem(remove_recipient)}}
                     />
 
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 50,}}>
                         <CustomButton
-                            title='Return to Homepage'
+                            title='Home'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Home")}
                         />
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 30,
-        marginBottom: 130,
+        marginBottom: 45,
         textAlign: "center",
     },
 })

@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     View,
     StyleSheet,
@@ -16,9 +16,10 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import SmartTextInput from '../components/SmartTextInput';
 
 const ConditionalProfileView = props => {
-    let {setData, setDynamicUser, account_type} = props;
+    let {setData, dynamic_user, setDynamicUser, account_type} = props;
 
-    const [medicineInput, setmedicineInput] = useState(null);
+    const [medicineInput, setMedicineInput] = useState(null);
+    const [medicineList, setMedicineList] = useState([]);
 
     const [daily_injections_open, setOpen] = useState(false);
     const [daily_injections_value, setValue] = useState(null);
@@ -30,49 +31,110 @@ const ConditionalProfileView = props => {
         {label: '5 or more', value: '5'}
     ]);
 
+    const [medicine_open, setMedicineOpen] = useState(false);
+    const [medicine_value, setMedicineValue] = useState(null);
+    const [medicine_type, setMedicineType] = useState([])
+
+    useEffect(() => {
+        setDynamicUser(state => ({ ...state, ["medicine_list"]: medicineList }));
+    }, [medicineList]);
+
     const modifyMedicineList = () => {
-        setDynamicUser(state => ({ ...state, ["medicine_list"]: [...state["medicine_list"], medicineInput] }))
-        setmedicineInput(null);
-        console.log(medicineInput)
+        setMedicineList(state => [...state, medicineInput])
+        setMedicineType(state => [...state, {label: medicineInput, value: medicineInput}]) //FOR THE DROPDOWN
+        setMedicineInput(null);
         Alert.alert(medicineInput + " added to your Medicine List! Feel free to add more if neccesary.")
     }
+
+    const removeMedicines = () => {
+        let new_medicine_list = [...medicineList]
+        medicine_value.forEach(medicine_name => {
+            new_medicine_list.splice(new_medicine_list.indexOf(medicine_name), 1)
+        })
+        console.log(new_medicine_list)
+        setMedicineType(new_medicine_list.map(medicine_name => {
+            return {label: medicine_name, value: medicine_name}
+        }))
+        setMedicineList(new_medicine_list)
+        setMedicineValue(null)
+        Alert.alert(`${medicineList.length - new_medicine_list.length} Medicines have been removed from your Medicine List!`)
+    }
+
     //a shared view that is used in multiple control flows
     const shared_view = () => {
         return(<View style={[styles.body, {marginTop: 50}]}>
                     <SmartTextInput
                         placeholder='Enter your name'
+                        value={dynamic_user.name}
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["name"]:value }), [])}
                     />
                     <SmartTextInput
                         placeholder='Enter your age'
+                        value={dynamic_user.age}
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["age"]:value }), [])}
                     />
                     <SmartTextInput
                         placeholder='Enter your height (cm)'
+                        value={dynamic_user.height}
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["height"]:value }), [])}
                     />
                     <SmartTextInput
                         placeholder='Enter your weight (kg)'
+                        value={dynamic_user.weight}
                         keyboardType = 'numeric'
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
 
-                    <SmartTextInput
-                        placeholder='Medicine Name'
-                        value={medicineInput}
-                        onChangeText={(value) => setmedicineInput(value)}
-                    />
+                    {account_type != 1 && 
+                        <View style={[styles.body, {marginTop: 40}]}>
+                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please add your medicines in the section below</Text>
+                            <SmartTextInput
+                                value={medicineInput}
+                                hint={`Name of medication number ${medicineList.length+1}`}
+                                placeholder='Medicine Name'
+                                onChangeText={(value) => setMedicineInput(value)}
+                            />
+
+                            <CustomButton
+                                style={{marginTop: 0, marginBottom: 25}}
+                                title={`Press to add medication ${medicineList.length+1} to list`}
+                                onPressFunction={modifyMedicineList}
+                            />
+
+                            <DropDownPicker
+                                multiple={true}
+                                dropDownDirection="BOTTOM"
+                                style={DropdownStyle.style}
+                                containerStyle={DropdownStyle.containerStyle}
+                                placeholderStyle={DropdownStyle.placeholderStyle}
+                                textStyle={DropdownStyle.textStyle}
+                                labelStyle={DropdownStyle.labelStyle}
+                                listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                                showArrowIcon={true}
+                                showTickIcon={true}
+                                placeholder="Preview medicine list..."
+                                open={medicine_open}
+                                value={medicine_value}
+                                items={medicine_type}
+                                setOpen={setMedicineOpen}
+                                setValue={setMedicineValue}
+                                setItems={setMedicineType}
+                            />
+
+                            <CustomButton
+                                color='red'
+                                title={`Press to remove selected medications from list`}
+                                onPressFunction={removeMedicines}
+                            />
+                        </View>
+                    }
 
                     <CustomButton
-                        style={{marginTop: 40}}
-                        title='Press to add medicine'
-                        onPressFunction={modifyMedicineList}
-                    />
-
-                    <CustomButton
-                        style={{marginTop: 40}}
+                        style={{marginTop: 50}}
                         title='Setup your profile!'
                         color='#1eb900'
                         onPressFunction={setData}
@@ -97,7 +159,7 @@ const ConditionalProfileView = props => {
                         selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
                         showArrowIcon={true}
                         showTickIcon={true}
-                        placeholder="How many times a day do you inject?"
+                        placeholder="How many daily injections?"
                         open={daily_injections_open}
                         value={daily_injections_value}
                         items={daily_injections}

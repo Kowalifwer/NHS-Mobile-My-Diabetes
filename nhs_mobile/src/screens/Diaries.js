@@ -63,7 +63,7 @@ export default function Diaries({ navigation, route }) {
                         />
                     )}
 
-                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 200}}>
+                    <View style={{display: 'flex', flexDirection: 'column', marginTop: 100}}>
                         <CustomButton
                             title='Homepage'
                             color='#761076'

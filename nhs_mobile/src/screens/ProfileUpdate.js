@@ -237,49 +237,50 @@ export default function Home({ navigation, route }) {
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])} //updating the dict
                     />
 
-                    <View style={[styles.body, {marginTop: 40, marginBottom: 75}]}>
-                        <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>If you need to update your medicine list - please do so in the section below</Text>
-                        <SmartTextInput
-                            value={medicineInput}
-                            hint={`Name of medication number ${medicineList.length+1}`}
-                            placeholder='Medicine Name'
-                            onChangeText={(value) => setMedicineInput(value)}
-                        />
+                    {(stored_user.health_type != 1) &&
+                        <View style={[styles.body, {marginTop: 40, marginBottom: 75}]}>
+                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>If you need to update your medicine list - please do so in the section below</Text>
+                            <SmartTextInput
+                                value={medicineInput}
+                                hint={`Name of medication number ${medicineList.length+1}`}
+                                placeholder='Medicine Name'
+                                onChangeText={(value) => setMedicineInput(value)}
+                            />
 
-                        <CustomButton
-                            style={{marginTop: 0, marginBottom: 25}}
-                            title={`Press to add medication ${medicineList.length+1} to list`}
-                            onPressFunction={modifyMedicineList}
-                        />
+                            <CustomButton
+                                style={{marginTop: 0, marginBottom: 25}}
+                                title={`Press to add medication ${medicineList.length+1} to list`}
+                                onPressFunction={modifyMedicineList}
+                            />
 
-                        <DropDownPicker
-                            multiple={true}
-                            dropDownDirection="BOTTOM"
-                            style={DropdownStyle.style}
-                            containerStyle={DropdownStyle.containerStyle}
-                            placeholderStyle={DropdownStyle.placeholderStyle}
-                            textStyle={DropdownStyle.textStyle}
-                            labelStyle={DropdownStyle.labelStyle}
-                            listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                            selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                            selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                            showArrowIcon={true}
-                            showTickIcon={true}
-                            placeholder="Preview medicine list..."
-                            open={medicine_open}
-                            value={medicine_value}
-                            items={medicine_type}
-                            setOpen={setMedicineOpen}
-                            setValue={setMedicineValue}
-                            setItems={setMedicineType}
-                        />
+                            <DropDownPicker
+                                multiple={true}
+                                dropDownDirection="BOTTOM"
+                                style={DropdownStyle.style}
+                                containerStyle={DropdownStyle.containerStyle}
+                                placeholderStyle={DropdownStyle.placeholderStyle}
+                                textStyle={DropdownStyle.textStyle}
+                                labelStyle={DropdownStyle.labelStyle}
+                                listItemContainerStyle={DropdownStyle.itemContainerStyle}
+                                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
+                                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
+                                showArrowIcon={true}
+                                showTickIcon={true}
+                                placeholder="Preview medicine list..."
+                                open={medicine_open}
+                                value={medicine_value}
+                                items={medicine_type}
+                                setOpen={setMedicineOpen}
+                                setValue={setMedicineValue}
+                                setItems={setMedicineType}
+                            />
 
-                        <CustomButton
-                            color='red'
-                            title={`Press to remove selected medications from list`}
-                            onPressFunction={removeMedicines}
-                        />
-                    </View>
+                            <CustomButton
+                                color='red'
+                                title={`Press to remove selected medications from list`}
+                                onPressFunction={removeMedicines}
+                            />
+                        </View>}
             
                     <CustomButton
                         style={{marginTop: 40}}

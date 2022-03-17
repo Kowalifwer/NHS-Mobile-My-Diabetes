@@ -4,16 +4,12 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
-    SafeAreaView, 
-    ScrollView,
 } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import CustomButton from '../components/CustomButton';
-import DropdownStyle from '../styles/DropdownStyle';
-import DropDownPicker from 'react-native-dropdown-picker';
 import SmartTextInput from '../components/SmartTextInput';
+import CustomDropDownPicker from '../components/CustomDropDownPicker';
 
 const ConditionalProfileView = props => {
     let {setData, dynamic_user, setDynamicUser, account_type} = props;
@@ -103,19 +99,8 @@ const ConditionalProfileView = props => {
                                 onPressFunction={modifyMedicineList}
                             />
 
-                            <DropDownPicker
+                            <CustomDropDownPicker
                                 multiple={true}
-                                dropDownDirection="BOTTOM"
-                                style={DropdownStyle.style}
-                                containerStyle={DropdownStyle.containerStyle}
-                                placeholderStyle={DropdownStyle.placeholderStyle}
-                                textStyle={DropdownStyle.textStyle}
-                                labelStyle={DropdownStyle.labelStyle}
-                                listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                                showArrowIcon={true}
-                                showTickIcon={true}
                                 placeholder="Preview medicine list..."
                                 open={medicine_open}
                                 value={medicine_value}
@@ -147,18 +132,7 @@ const ConditionalProfileView = props => {
         return shared_view()
     case "3": //IF USER TAKES INSULIN - TAKE THIS PATH
         return (<View style={styles.body}>
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={[DropdownStyle.style, {marginTop: 20}]}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
+                    <CustomDropDownPicker
                         placeholder="How many daily injections?"
                         open={daily_injections_open}
                         value={daily_injections_value}

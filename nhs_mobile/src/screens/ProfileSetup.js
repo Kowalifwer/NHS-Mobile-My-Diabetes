@@ -3,26 +3,22 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
-    Alert,
     SafeAreaView, 
     ScrollView,
     Keyboard,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import CustomButton from '../components/CustomButton';
 import ConditionalProfileView from '../components/ConditionalProfileView';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
 import {user_struct} from '../global_structures.js'
 import SmartTextInput from '../components/SmartTextInput';
+import CustomDropDownPicker from '../components/CustomDropDownPicker';
 
 export default function ProfileSetup({ navigation }) {
+
     const [dynamic_user, setDynamicUser] = useState(user_struct)
 
-    DropDownPicker.setListMode("SCROLLVIEW");
     useEffect(() => {
         getUserData();
     }, []);
@@ -91,22 +87,11 @@ export default function ProfileSetup({ navigation }) {
                         Please try to give the most accurate answer, as this decision will tailor how the application will assist you with your diabetes.
                     </Text>
 
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
+                    <CustomDropDownPicker
                         placeholder="Please select what applies to you the most"
-                        open={health_type_open}
-                        value={health_type_value}
-                        items={health_type}
+                        open={(health_type_open)}
+                        value={(health_type_value)}
+                        items={(health_type)}
                         setOpen={setOpen}
                         setValue={setValue}
                         setItems={setHealthType}

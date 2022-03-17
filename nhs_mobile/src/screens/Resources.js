@@ -3,15 +3,12 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
-    Alert,
     SafeAreaView, 
     ScrollView,
 } from 'react-native';
 
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 
 
@@ -27,11 +24,11 @@ export default function Resources({ navigation }) {
 
                     <Header></Header>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text,GlobalStyle.Orange]}>
                         Resources Page
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
                         Resources here based on initial medication selections. TO BE IMPLEMENTED
                     </Text>
 

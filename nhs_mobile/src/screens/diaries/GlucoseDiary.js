@@ -1,29 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import ReactDOM, { render } from "react-dom";
 import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
     SafeAreaView, 
     ScrollView,
-    Button,
     Keyboard,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
-import DropdownStyle from '../../styles/DropdownStyle';
-import user_struct from '../../global_structures.js';
 // import {glucose_diary_entry} from '../../global_structures.js'; // for some reason this is just giving undefined for the useState
 import GlucoseInputComponent from '../../components/GlucoseInputComponent';
 import InjectionInputComponent from "../../components/InjectionInputComponent";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import CheckBox from "expo-checkbox"
-import DialogInput from 'react-native-dialog-input';
 import YoutubePlayer from "react-native-youtube-iframe";
 
 const glucose_diary_entry = {

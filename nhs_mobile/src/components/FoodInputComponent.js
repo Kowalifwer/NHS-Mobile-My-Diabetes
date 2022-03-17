@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     View,
-    StyleSheet,
     Text,
-    TextInput,
-    Alert,
-    SafeAreaView, 
-    ScrollView,
 } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import BarcodeScannerComponent from '../components/BarcodeScannerComponent';
@@ -22,13 +17,12 @@ const query_object_for_food_component = (object, key) => {
 }
 
 //define all inputs in here!
-
-
 const FoodInputComponent = (props) => {
     const {food_input_components_data, setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props
     const [scanned_data, setScannedData] = useState(null);
 
-    const [render_input_components, set_render_input_components] = useState([
+    //Define the state of all the input components. Components will be rendered from this array.
+    const [render_input_components, setRenderInputComponents] = useState([
         {placeholder: "Food Name", is_numeric: false, component_update_key: "name", is_nutrient: false, current_value: ""},
         {placeholder: "Amount (g)", is_numeric: true, component_update_key: "amount", is_nutrient: false, current_value: ""},
         {placeholder: "Protein (per 100g)", is_numeric: true, component_update_key: "protein", is_nutrient: true, current_value: ""},
@@ -40,7 +34,7 @@ const FoodInputComponent = (props) => {
 
     useEffect(() => { //If scanned data changes - make sure to update the input fields as well!
         if (scanned_data) {
-            set_render_input_components(state => (state.map(entry => {
+            setRenderInputComponents(state => (state.map(entry => {
                 return {...entry, current_value: (entry.is_nutrient) ? query_object_for_food_component(scanned_data["nutrients"], entry.component_update_key) : query_object_for_food_component(scanned_data, entry.component_update_key)}
             })));
         }
@@ -68,7 +62,7 @@ const FoodInputComponent = (props) => {
                                 }
                             } return entry;
                         })));
-                        set_render_input_components(state => (state.map(entry => {
+                        setRenderInputComponents(state => (state.map(entry => {
                             if (entry.component_update_key == val.component_update_key) {
                                 return {...entry, current_value: value}
                             } return entry;

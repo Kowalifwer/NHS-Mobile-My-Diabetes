@@ -1,7 +1,6 @@
 import {} from 'mathjs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 /*
 
     metrics to compute:

@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
@@ -25,10 +24,12 @@ import Results from './screens/Results';
 import PDF from './screens/PDF';
 import { useEffect } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const Stack = createStackNavigator();
 
 function App() {
+  DropDownPicker.setListMode("SCROLLVIEW");
 
   useEffect(() => {
     changeScreenOrientation();

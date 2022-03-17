@@ -5,7 +5,6 @@ import {
     View,
     Text,
     Alert,
-    TextInput,
     SafeAreaView,
     ScrollView,
     Keyboard,
@@ -16,9 +15,7 @@ import GlobalStyle from '../styles/GlobalStyle';
 import SmartTextInput from '../components/SmartTextInput';
 import Header from '../components/Header';
 import {user_struct, health_type_reverse_lookup} from '../global_structures.js';
-import DropDownPicker from 'react-native-dropdown-picker';
-import DropdownStyle from '../styles/DropdownStyle';
-
+import CustomDropDownPicker from '../components/CustomDropDownPicker';
 
 export default function Home({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
@@ -253,19 +250,8 @@ export default function Home({ navigation, route }) {
                                 onPressFunction={modifyMedicineList}
                             />
 
-                            <DropDownPicker
+                            <CustomDropDownPicker
                                 multiple={true}
-                                dropDownDirection="BOTTOM"
-                                style={DropdownStyle.style}
-                                containerStyle={DropdownStyle.containerStyle}
-                                placeholderStyle={DropdownStyle.placeholderStyle}
-                                textStyle={DropdownStyle.textStyle}
-                                labelStyle={DropdownStyle.labelStyle}
-                                listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                                showArrowIcon={true}
-                                showTickIcon={true}
                                 placeholder="Preview medicine list..."
                                 open={medicine_open}
                                 value={medicine_value}

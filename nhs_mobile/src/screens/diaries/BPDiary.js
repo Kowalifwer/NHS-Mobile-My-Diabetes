@@ -1,23 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import ReactDOM from "react-dom";
 import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
     SafeAreaView, 
     ScrollView,
-    Button,
     Keyboard,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';
 import GlobalStyle from '../../styles/GlobalStyle';
-import DropdownStyle from '../../styles/DropdownStyle';
-import user_struct from '../../global_structures.js';
 import {bp_diary_entry} from '../../global_structures.js';
 import BPInputComponent from '../../components/BPInputComponent';
 import DateTimePicker from '@react-native-community/datetimepicker';

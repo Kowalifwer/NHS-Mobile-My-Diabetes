@@ -73,7 +73,7 @@ const GlucoseInputComponent = props => {
                 title="Enter Time"
             />
 
-            {/*  */}
+            {/* numeric text input for the blood glucose reading */}
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder="Reading (mmol/L)"
@@ -99,6 +99,7 @@ const GlucoseInputComponent = props => {
                 }}
             />
 
+            {/* checkbox for the "feel sick" parameter */}
             <View style={styles.checkboxContainer}>
                 <Text style={[styles.label, GlobalStyle.CustomFont]}>I don't feel well</Text>
                 <CheckBox
@@ -115,6 +116,7 @@ const GlucoseInputComponent = props => {
                 />
             </View>
 
+            {/* popup to query user why their reading is below the minimum for healthy blood glucose */}
             <DialogInput isDialogVisible={showHypoDialog}
                 title={"Low Blood Sugar"}
                 message={"This reading is below 4mmol/L, please explain why"}
@@ -145,10 +147,7 @@ const styles = StyleSheet.create({
         marginTop: 50,
         justifyContent: "center",
         alignItems: "center",
-      },
-    // checkbox: {
-    //     alignSelf: "center",
-    // },
+    },
     label: {
         margin: 8,
     },

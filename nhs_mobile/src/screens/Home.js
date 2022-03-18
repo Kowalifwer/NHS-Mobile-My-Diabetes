@@ -33,7 +33,7 @@ export default function Home({ navigation, route }) {
             redirect: "follow",
         };
         
-        return fetch("https://v1.nocodeapi.com/testing333333/yt/QIfFhBLBEQOnFOYc/channelVideos?maxResults=50", requestOptions) //the https link is the API Key
+        return fetch("https://v1.nocodeapi.com/deploymenttest/yt/TComXwmzFWMJVSIK/channelVideos?maxResults=50", requestOptions) //the https link is the API Key
         .then(response => response.json())
         .then(result => {
             

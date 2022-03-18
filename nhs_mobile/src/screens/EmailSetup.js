@@ -167,6 +167,11 @@ export default function EmailSetup({ navigation }) {
 
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 50}}>
                         <CustomButton
+                            title='Email my Doctor page'
+                            color='#6495ED'
+                            onPressFunction={() => navigation.navigate("Email")}
+                        />
+                        <CustomButton
                             title='Return to Settings'
                             color='#761076'
                             onPressFunction={() => navigation.navigate("Settings")}

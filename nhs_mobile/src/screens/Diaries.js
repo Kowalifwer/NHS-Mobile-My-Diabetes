@@ -47,6 +47,7 @@ export default function Diaries({ navigation, route }) {
                                     daily_injections: (stored_user.daily_injections) ? stored_user.daily_injections : "-1",
                                     health_type: (stored_user.health_type) ? stored_user.health_type : "-1",
                                     videos: route.params.video,
+                                    medicine_list: (stored_user.medicine_list) ? stored_user.medicine_list : [],
                                 })
                             }}
                             title={item.verbose_name}

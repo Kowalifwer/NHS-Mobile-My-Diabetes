@@ -113,7 +113,7 @@ const ConditionalProfileView = props => {
                         setItems={setDailyInjections}
                         onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["daily_injections"]:value }), [])}
                     />
-                    {(!daily_injections_value) && <View style={{height: 200}}></View>}
+                    {(!daily_injections_value) && <View style={{height: 225}}></View>}
 
                     {daily_injections_value != null && //MAKE SURE USER SPECIFIES HOW MANY TIMES THEY INJECT DAILY - THEN MOVE ONTO THE REST.
                         shared_view()

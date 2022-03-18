@@ -156,7 +156,7 @@ export default function Home({ navigation, route }) {
                 animationType="slide"
                 visible={medicine_popup_visible}
                 onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
+                    
                     setModalVisible(!modalVisible);
                 }}
                 presentationStyle = "fullScreen"
@@ -173,7 +173,7 @@ export default function Home({ navigation, route }) {
                     <CustomButton
                         style={{marginTop: 0, marginBottom: 75}}
                         title={`Press to add medication to your list!`}
-                        onPressFunction={modifyMedicineList}
+                        onPressFunction={() => (medicineInput) ? modifyMedicineList() : Alert.alert("Please make sure to fill up the input field above!")}
                     />
 
                     <CustomDropDownPicker
@@ -190,15 +190,17 @@ export default function Home({ navigation, route }) {
                     <CustomButton
                         color='red'
                         title={`Press to remove selected medications from list`}
-                        onPressFunction={removeMedicines}
+                        onPressFunction={() => (medicine_value && medicine_value.length > 0) ? removeMedicines() : Alert.alert("Please make sure to select at least one medication from the list above, to remove!")}
+                    />
+
+                    <CustomButton
+                        style={{marginTop: 10, marginBottom:35, padding: 25}}
+                        color='green'
+                        title={`Medication setup complete!`}
+                        onPressFunction={() => setMedicinePopupVisible(false)}
                     />
                 </View>
-                <CustomButton
-                    style={{marginTop: 0, marginBottom:35}}
-                    color='green'
-                    title={`Medication setup complete!`}
-                    onPressFunction={() => setMedicinePopupVisible(false)}
-                />
+                
             </Modal>
                 <View style={styles.body}>
                     <Header></Header>

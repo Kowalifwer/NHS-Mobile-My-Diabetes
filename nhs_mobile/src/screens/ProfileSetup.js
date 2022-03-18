@@ -100,12 +100,12 @@ export default function ProfileSetup({ navigation }) {
             new_email_list.splice(new_email_list.indexOf(email_name), 1)
         })
         console.log(new_email_list)
-        setMedicineType(new_email_list.map(email_name => {
+        setEmailType(new_email_list.map(email_name => {
             return {label: email_name, value: email_name}
         }))
         setEmailList(new_email_list)
         setEmailValue(null)
-        Alert.alert(`${emailList.length - new_email_list.length} Medicines have been removed from your Medicine List!`)
+        Alert.alert(`${emailList.length - new_email_list.length} Emails have been removed from your Emails List!`)
     }
 
     return (
@@ -115,7 +115,7 @@ export default function ProfileSetup({ navigation }) {
                     animationType="slide"
                     visible={medicine_popup_visible}
                     onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
+                        
                         setMedicinePopupVisible(!medicine_popup_visible);
                     }}
                     presentationStyle = "fullScreen"
@@ -132,7 +132,7 @@ export default function ProfileSetup({ navigation }) {
                         <CustomButton
                             style={{marginTop: 0, marginBottom: 75}}
                             title={`Press to add medication to your list!`}
-                            onPressFunction={modifyMedicineList}
+                            onPressFunction={() => (medicineInput) ? modifyMedicineList() : Alert.alert("Please make sure to fill up the input field above!")}
                         />
 
                         <CustomDropDownPicker
@@ -149,22 +149,23 @@ export default function ProfileSetup({ navigation }) {
                         <CustomButton
                             color='red'
                             title={`Press to remove selected medications from list`}
-                            onPressFunction={removeMedicines}
+                            onPressFunction={() => (medicine_value && medicine_value.length > 0) ? removeMedicines() : Alert.alert("Please make sure to select at least one medication from the list above, to remove!")}
+                        />
+
+                        <CustomButton
+                            style={{marginTop: 10, marginBottom:35, padding: 25}}
+                            color='green'
+                            title={`Medication setup complete!`}
+                            onPressFunction={() => setMedicinePopupVisible(false)}
                         />
                     </View>
-                    <CustomButton
-                        style={{marginTop: 0, marginBottom:35}}
-                        color='green'
-                        title={`Medication setup complete!`}
-                        onPressFunction={() => setMedicinePopupVisible(false)}
-                    />
+                    
                 </Modal>
 
                 <Modal
                     animationType="slide"
                     visible={email_popup_visible}
                     onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
                         setEmailPopupVisible(!email_popup_visible);
                     }}
                     presentationStyle = "fullScreen"
@@ -181,7 +182,7 @@ export default function ProfileSetup({ navigation }) {
                         <CustomButton
                             style={{marginTop: 0, marginBottom: 75}}
                             title={`Press to add email to your list!`}
-                            onPressFunction={modifyEmailList}
+                            onPressFunction={() => (emailInput) ? modifyEmailList() : Alert.alert("Please make sure to fill up the input field above!")}
                         />
 
                         <CustomDropDownPicker
@@ -198,15 +199,17 @@ export default function ProfileSetup({ navigation }) {
                         <CustomButton
                             color='red'
                             title={`Press to remove selected emails from list`}
-                            onPressFunction={removeEmails}
+                            onPressFunction={() => (email_value && email_value.length>0) ? removeEmails() : Alert.alert("Please make sure to select at least one email from the list above, to remove!")}
+                        />
+
+                        <CustomButton
+                            style={{marginTop: 10, marginBottom:35, padding: 25}}
+                            color='green'
+                            title={`Email setup complete!`}
+                            onPressFunction={() => setEmailPopupVisible(false)}
                         />
                     </View>
-                    <CustomButton
-                        style={{marginTop: 0, marginBottom:35}}
-                        color='green'
-                        title={`Email setup complete!`}
-                        onPressFunction={() => setEmailPopupVisible(false)}
-                    />
+                    
                 </Modal>
 
                 <View style={[GlobalStyle.BodyGeneral, {paddingBottom: 10}]}>
@@ -244,7 +247,7 @@ export default function ProfileSetup({ navigation }) {
                         onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["health_type"]:value }), [])}
                     />
 
-                    {(!health_type_value || health_type_value=="4") && <View style={{height: 150}}></View>}
+                    {(!health_type_value || health_type_value=="4") && <View style={{height: 200}}></View>}
 
                     <ConditionalProfileView emailList={emailList} setEmailPopupVisible={setEmailPopupVisible} setMedicinePopupVisible={setMedicinePopupVisible} style={styles.body} account_type = {health_type_value} setData={setData} dynamic_user={dynamic_user} setDynamicUser={setDynamicUser}/>
                 </View>

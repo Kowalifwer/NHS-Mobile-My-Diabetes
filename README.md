@@ -35,13 +35,13 @@ node --version
 
 * If **Node** is installed it will return the node version. If returned ***'node' is not recognised*** then install [**Node**](https://nodejs.org/en/) from [https://nodejs.org/en/](https://nodejs.org/en/). (***we used version 16.14.2 LTS***) Follow the instructions given. *Note: Installation may take a few minutes.*
 
-* After **Node** has ***completed*** installing then in Command Prompt (CMD) install **expo** by typing:
+* After **Node** has ***completed*** installing then **OPEN a new** Command Prompt (CMD) and install **expo** by typing:
 ```bash
 npm install -g expo-cli
 ```
 * *If this line does not work for you then you may need to restart your computer to allow **Node** to be fully installed.*
-*
-
+* This will also take a few minutes to install so be patient.
+* After this has installed, we will get the get the project files. If you are getting the files from **GitLab** then follow the next instruction. Otherwise, skip the **GIT** instructions.
 
 #### macOS
 

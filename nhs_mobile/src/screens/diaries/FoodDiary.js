@@ -131,11 +131,13 @@ export default function NewFoodDiary({ navigation, route }) {
 
                 if (existing_diary_entry == null) {
                     final_entry = {
+                        key: diary_entry.date.toLocaleDateString('en-GB'),
                         date: diary_entry.date,
                         meals: meals
                     }
                 } else {
                     final_entry = {
+                        key: diary_entry.date.toLocaleDateString('en-GB'),
                         date: diary_entry.date,
                         meals: meals.concat(existing_diary_entry.meals),
                     }

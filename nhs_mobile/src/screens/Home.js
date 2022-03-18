@@ -125,6 +125,10 @@ export default function Home({ navigation, route }) {
                         title='Resources'
                         onPressFunction={() => navigation.navigate("Resources")}
                     />
+                    <HomePageButton
+                        title='Edit Diaries'
+                        onPressFunction={() => navigation.navigate("EditDiaries")}
+                    />
                 </View>
             </View>  
 

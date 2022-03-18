@@ -23,6 +23,7 @@ import Videos from './screens/Videos';
 import temp from './screens/temp';
 import Results from './screens/Results';
 import PDF from './screens/PDF';
+import EditDiaries from './screens/EditDiaries';
 import { useEffect } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
@@ -186,6 +187,13 @@ function App() {
           }}
           component={PDF}
         />     
+        <Stack.Screen
+          name="EditDiaries"
+          options={{
+            headerShown: false,
+          }}
+          component={EditDiaries}
+        />          
       </Stack.Navigator>
     </NavigationContainer>
   )

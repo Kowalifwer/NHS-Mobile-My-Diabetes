@@ -155,6 +155,7 @@ export default function BPDiary({ navigation, route }) {
                 }
 
                 let final_entry = {
+                    key: diary_entry.date.toLocaleDateString('en-GB'),
                     date: diary_entry.date,
                     morning: bp_readings_morning,
                     afternoon: bp_readings_afternoon,

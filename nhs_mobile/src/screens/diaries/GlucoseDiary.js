@@ -138,6 +138,7 @@ export default function GlucoseDiary({ navigation, route }) {
                 const diary = JSON.parse(await AsyncStorage.getItem('GlucoseDiary'))
 
                 let final_entry = {
+                    key: diary_entry.date.toLocaleDateString('en-GB'),
                     date: diary_entry.date,
                     glucose_readings: [...glucose_input_components_data],
                     injections: [...injections_data],

@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import {
     View,
     Text,
-    TextInput,
 } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -13,6 +12,8 @@ import DropdownStyle from '../styles/DropdownStyle';
 import FoodInputComponent from './FoodInputComponent';
 import SmartTextInput from './SmartTextInput';
 
+
+// this component renders a list of food input components which comprise one meal
 const MealInputComponent = props => {
     let {id, meals, setMeals} = props
     const [show_time_picker, setShowTimePicker] = useState(false)

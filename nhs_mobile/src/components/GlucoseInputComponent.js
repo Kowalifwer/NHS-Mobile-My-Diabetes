@@ -16,6 +16,7 @@ import CheckBox from "expo-checkbox";
 import DialogInput from 'react-native-dialog-input';
 
 
+// glucose input component 
 const GlucoseInputComponent = props => {
     let {setGlucoseComponentsData, glucoseReadings, id} = props
 
@@ -25,6 +26,8 @@ const GlucoseInputComponent = props => {
     const [hypoReason, setHypoReason] = useState("");
     const [showHypoDialog, setShowHypoDialog] = useState(false);
 
+    // function to be run after user has entered a value which qualifies as hypoglycemic,
+    // it sets the hypo and reason values in the reading
     const afterHypo = (reason = "") => {
         setGlucoseComponentsData(state => (state.map(val => {
             if (val.index == id) {
@@ -36,11 +39,11 @@ const GlucoseInputComponent = props => {
 
     return (
         <View style={GlobalStyle.BodyGeneral}>
-            
             <Text style={[GlobalStyle.CustomFont, GlobalStyle.Cyan, {marginTop:20, marginBottom: 20}]}>
                 Blood Glucose Reading {id+1}
             </Text>
 
+            {/* time picker */}
             {show_time_picker && (
                 <DateTimePicker
                     testID="timePicker"
@@ -62,6 +65,7 @@ const GlucoseInputComponent = props => {
                 />
             )}
 
+            {/* button to show time picker */}
             <CustomButton
                 onPressFunction={() => {
                     setShowTimePicker(true);
@@ -69,6 +73,7 @@ const GlucoseInputComponent = props => {
                 title="Enter Time"
             />
 
+            {/*  */}
             <TextInput
                 style={GlobalStyle.InputField}
                 placeholder="Reading (mmol/L)"

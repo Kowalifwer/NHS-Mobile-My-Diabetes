@@ -178,7 +178,6 @@ export default function NewFoodDiary({ navigation, route }) {
                         <DateTimePicker
                             testID="datePicker"
                             value={date}
-                            // display="default"
                             mode="date"
                             style={{minWidth: 200}}
                             onChange={(event, date) => {

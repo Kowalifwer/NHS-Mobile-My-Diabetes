@@ -17,10 +17,10 @@ const InjectionInputComponent = props => {
 
     const [insulin_open, setOpen] = useState(false);
     const [insulin_value, setValue] = useState(null);
-    const [insulin_type, setType] = useState([
-        {label: "Long" , value: "long"},
-        {label: "Fast" , value: "fast"},
-    ])
+    
+    const [insulin_type, setType] = useState(medicine_list.map((medicine_name) => {
+        return {label: medicine_name , value: medicine_name}
+    }))
 
     return (
         <View style={GlobalStyle.BodyGeneral}>
@@ -59,7 +59,7 @@ const InjectionInputComponent = props => {
             />
 
             <CustomDropDownPicker
-                placeholder="Injection type"
+                placeholder="Medication used"
                 open={insulin_open}
                 value={insulin_value}
                 items={insulin_type}

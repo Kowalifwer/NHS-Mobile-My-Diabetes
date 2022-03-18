@@ -3,21 +3,16 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
-    Alert,
     SafeAreaView, 
     ScrollView,
 } from 'react-native';
 
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
-
 
 export default function CareProcess({ navigation }) {
     
-
     return (
         <SafeAreaView style={styles.body}>
 
@@ -31,14 +26,14 @@ export default function CareProcess({ navigation }) {
                         My Care Processes
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
                         Shows user key dates and information about their medical life. TO BE IMPLEMENTED.
                     </Text>
 
                     <CustomButton
-                            title='Homepage'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Home")}
+                        title='Homepage'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Home")}
                     />
 
                 </View>

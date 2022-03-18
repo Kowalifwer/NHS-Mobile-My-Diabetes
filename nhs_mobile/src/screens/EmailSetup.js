@@ -3,22 +3,18 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
     SafeAreaView, 
     ScrollView,
     Keyboard,
 } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
-import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
 import SmartTextInput from '../components/SmartTextInput';
-import user_struct from '../global_structures.js'
-
+import CustomDropDownPicker from '../components/CustomDropDownPicker';
 
 export default function EmailSetup({ navigation }) {
     const [add_recipient, setAddRecipient] = useState("")
@@ -152,18 +148,7 @@ export default function EmailSetup({ navigation }) {
                         onPressFunction={addItem}
                     />
 
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
+                    <CustomDropDownPicker
                         placeholder="Select doctors email"
                         open={email_open}
                         value={email_value}
@@ -181,6 +166,11 @@ export default function EmailSetup({ navigation }) {
                     />
 
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 50}}>
+                        <CustomButton
+                            title='Email my Doctor page'
+                            color='#6495ED'
+                            onPressFunction={() => navigation.navigate("Email")}
+                        />
                         <CustomButton
                             title='Return to Settings'
                             color='#761076'

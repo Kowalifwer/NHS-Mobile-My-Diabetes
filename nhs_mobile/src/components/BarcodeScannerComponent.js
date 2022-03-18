@@ -75,7 +75,9 @@ const BarcodeScannerComponent = (props) => {
         return <Text>Requesting for camera permission</Text>;
     }
     if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
+        setBarcodeScannerOpen([false, 0])
+        Alert.alert("Camera permission denied. Please allow camera permission in the settings to scan barcodes.");
+        return null
     }
 
     if (!barcode_scanner_open[0]) return null //make sure no barcode scanner object returned if the barcode scanner is not supposed to be open

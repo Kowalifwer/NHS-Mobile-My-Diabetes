@@ -3,15 +3,12 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
-    Alert,
     SafeAreaView, 
     ScrollView,
 } from 'react-native';
 
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 
 

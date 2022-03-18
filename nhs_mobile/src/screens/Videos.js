@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View,
     StyleSheet,
     Text,
-    Alert,
     SafeAreaView, 
     ScrollView,
 } from 'react-native';
-
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';

@@ -2,7 +2,6 @@ import * as math from 'mathjs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import stats from "statsjs";
 
-
 /*
 
     metrics to compute:

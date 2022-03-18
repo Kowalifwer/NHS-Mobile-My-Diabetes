@@ -3,8 +3,6 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
-    Alert,
     SafeAreaView, 
     ScrollView,
     Dimensions
@@ -12,7 +10,6 @@ import {
 
 import CustomButton from '../components/CustomButton';
 import Header from '../components/Header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 
 var deviceHeight = Dimensions.get("window").height;

@@ -5,18 +5,13 @@ import {
     View,
     Text,
     Alert,
-    TextInput,
     SafeAreaView,
-    ScrollView,
-    StatusBar
 } from 'react-native';
 import HomePageButton from '../components/HomePageButton';
 import HomePageButtonSlim from '../components/HomePageButtonSlim';
 import GlobalStyle from '../styles/GlobalStyle';
 import Header from '../components/Header';
 import {user_struct} from '../global_structures.js';
-import DropDownPicker from 'react-native-dropdown-picker';
-import DropdownStyle from '../styles/DropdownStyle';
 
 export default function Home({ navigation, route }) {
     const [stored_user, setStoredUser] = useState(user_struct);

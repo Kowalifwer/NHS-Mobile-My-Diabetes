@@ -2,18 +2,12 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import {
     View,
-    StyleSheet,
     Text,
-    TextInput,
-    Alert,
-    SafeAreaView, 
-    ScrollView,
 } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
-import DropDownPicker from 'react-native-dropdown-picker';
-import DropdownStyle from '../styles/DropdownStyle';
+import CustomDropDownPicker from './CustomDropDownPicker';
 import SmartTextInput from './SmartTextInput';
 
 const InjectionInputComponent = props => {
@@ -23,10 +17,10 @@ const InjectionInputComponent = props => {
 
     const [insulin_open, setOpen] = useState(false);
     const [insulin_value, setValue] = useState(null);
-    const [insulin_type, setType] = useState([
-        {label: "Long" , value: "long"},
-        {label: "Fast" , value: "fast"},
-    ])
+    
+    const [insulin_type, setType] = useState(medicine_list.map((medicine_name) => {
+        return {label: medicine_name , value: medicine_name}
+    }))
 
     return (
         <View style={GlobalStyle.BodyGeneral}>
@@ -64,19 +58,8 @@ const InjectionInputComponent = props => {
                 color="#008c8c"
             />
 
-            <DropDownPicker
-                dropDownDirection="BOTTOM"
-                style={DropdownStyle.style}
-                containerStyle={DropdownStyle.containerStyle}
-                placeholderStyle={DropdownStyle.placeholderStyle}
-                textStyle={DropdownStyle.textStyle}
-                labelStyle={DropdownStyle.labelStyle}
-                listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                showArrowIcon={true}
-                showTickIcon={true}
-                placeholder="Injection type"
+            <CustomDropDownPicker
+                placeholder="Medication used"
                 open={insulin_open}
                 value={insulin_value}
                 items={insulin_type}
@@ -92,8 +75,7 @@ const InjectionInputComponent = props => {
                 }}
             />
 
-            <TextInput
-                style={GlobalStyle.InputField}
+            <SmartTextInput
                 placeholder="Units"
                 keyboardType="numeric"
                 onChangeText={(value) => {

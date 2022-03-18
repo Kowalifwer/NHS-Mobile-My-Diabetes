@@ -8,8 +8,6 @@ import {
     ScrollView,
     Keyboard,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import DropdownStyle from '../../styles/DropdownStyle';
 import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../components/Header';

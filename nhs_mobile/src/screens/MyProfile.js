@@ -117,9 +117,9 @@ export default function MyProfile({ navigation }) {
                 
                 <View style={styles.bottomButtons}>
                     <CustomButton
-                            title='Homepage'
-                            color='#761076'
-                            onPressFunction={() => navigation.navigate("Home")}
+                        title='Homepage'
+                        color='#761076'
+                        onPressFunction={() => navigation.navigate("Home")}
                     />
                 </View>
 

@@ -60,6 +60,8 @@ export default function GlucoseDiary({ navigation, route }) {
     }
     }, []);
 
+    // this effect hook ensures that a default date is set for the current diary entry,
+    // as well as setting the diary_entry state or creating a new diary if one doesn't exist    
     useEffect(() => {
         getOrCreateGlucoseDiary();
         setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
@@ -116,19 +118,21 @@ export default function GlucoseDiary({ navigation, route }) {
         }
     }
     
+    // this async function uses AsyncStorage to retreive an existing glucose diary entry,
+    // or it creates a new one if one isn't found.    
     const getOrCreateGlucoseDiary = async () => {
         try {
             const glucose_diary = await AsyncStorage.getItem('GlucoseDiary');
             if (glucose_diary == null) {
-                console.log("glucose diary does not exist yet, creating...");
+                // console.log("glucose diary does not exist yet, creating...");
                 AsyncStorage.setItem("GlucoseDiary", JSON.stringify([]));
             }
             else {
                 // console.log("glucose diary: ", glucose_diary);
             }
         } catch (error) {
-            console.log("glucose diary getItem error");
-            console.log(error);
+            // console.log("glucose diary getItem error");
+            // console.log(error);
         }
     }
 

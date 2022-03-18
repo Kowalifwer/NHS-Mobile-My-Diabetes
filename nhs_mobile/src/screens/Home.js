@@ -20,7 +20,7 @@ import DropdownStyle from '../styles/DropdownStyle';
 
 export default function Home({ navigation, route }) {
     const [stored_user, setStoredUser] = useState(user_struct);
-    const [videoJSON,setVideoJSON] = useState(null);
+    const [videoJSON, setVideoJSON] = useState(null);
     
     useEffect(() => {
         getUserData();
@@ -105,7 +105,7 @@ export default function Home({ navigation, route }) {
                         onPressFunction={() => validateVideo("Email")}
                     />
                     <HomePageButton
-                        title='myResults'
+                        title='My Results'
                         onPressFunction={() => validateVideo("Results")}
                     />
 

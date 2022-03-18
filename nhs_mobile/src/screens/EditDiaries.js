@@ -3,8 +3,6 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
-    Alert,
     SafeAreaView, 
     ScrollView,
 } from 'react-native';
@@ -16,11 +14,13 @@ import DropdownStyle from '../styles/DropdownStyle';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
 
+import MealInputComponent from '../components/MealInputComponent';
+
 
 export default function EditDiaries({ navigation }) {
     // dropdown-related states
     const [select_diary_dropdown_open, setSelectDiaryDropdownOpen] = useState(false)
-    const [selected_diary, setSelectedDiary] = useState("")
+    const [selected_diary, setSelectedDiary] = useState(null)
     const [diary_choices, setDiaryChoice] = useState([
         {label: 'Food Diary', value: 'NewFoodDiary'},
         {label: 'Blood Pressure Diary', value: 'BPDiary'},
@@ -29,26 +29,53 @@ export default function EditDiaries({ navigation }) {
 
     // entry-related states
     const [entry_dropdown_open, setEntryDropdownOpen] = useState(false)
-    const [selected_diary_entry, setSelectedDiaryEntry] = useState("")
-    const [diary_entries, changeDiaryEntries] = useState([])
+    const [selected_diary_entry, setSelectedDiaryEntry] = useState(null)
+    const [diary_entries, changeDiaryEntries] = useState([]) // <------------------------------------------
 
-    // function to set 
+    // editor-related states
+    const [input_components, setInputComponents] = useState([])
+    const [meals, setMeals] = useState([]); // for food diary
+
+    let editor
+    if (selected_diary == "NewFoodDiary" && selected_diary_entry != null) {
+
+        editor = <View>
+            {selected_diary_entry.meals.map((input_component, i) => <MealInputComponent key={i} id={i} meals={meals} setMeals={setMeals}/>)}
+        </View>
+
+    } else if (selected_diary == "BPDiary" && selected_diary_entry != null) {
+        
+        editor = <View>
+            
+        </View>
+
+    } else if (selected_diary == "GlucoseDiary" && selected_diary_entry != null) {
+
+        editor = <View>
+            
+        </View>
+
+    }
+
+    useEffect(() => {
+        if (selected_diary == "NewFoodDiary" && selected_diary_entry != null) {
+            setMeals(selected_diary_entry["meals"])
+        }
+    }, selected_diary_entry)
+
+    // function to set selectable diary entries
     const updateDiaryEntries = async () => {
         console.log("hello :)")
         let diary = JSON.parse(await AsyncStorage.getItem(selected_diary))
-        console.log("diary: ", diary)
         let new_entries = []
         if (diary != null) {
             for (let i = 0; i < diary.length; i++) {
                 let entry = diary[i]
-                console.log("entry: ", entry)
-                new_entries.push({label: "???", value: "???"})
+                new_entries.push({label: entry.key, value: entry})
             }            
         }
         changeDiaryEntries(new_entries)
     }
-
-    useEffect(updateDiaryEntries, [selected_diary])
 
     return (
         <SafeAreaView style={styles.body}>
@@ -77,7 +104,10 @@ export default function EditDiaries({ navigation }) {
                         setOpen={setSelectDiaryDropdownOpen}
                         setValue={setSelectedDiary}
                         setItems={setDiaryChoice}
-                        // onChangeValue={updateDiaryEntries}
+                        onChangeValue={value => {
+                            setSelectedDiaryEntry(null)
+                            updateDiaryEntries(value)
+                        }}
                     />                    
 
                     {/* picker to select entry from selected diary */}
@@ -101,14 +131,18 @@ export default function EditDiaries({ navigation }) {
                         setOpen={setEntryDropdownOpen}
                         setValue={setSelectedDiaryEntry}
                         setItems={changeDiaryEntries}
-                        onChangeValue={value => console.log(value)}
+                        // onChangeValue={}
                     />   
 
                     {/* section to render the selected entry */}
 
-                    {/* button to apply edits */}
+                    {selected_diary_entry != null && (
+                        <Text>Hello :)</Text>
+                    )}
 
-                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginBottom:45, marginTop:15}]}>{diary_entries}</Text>
+                    {editor != null && editor}
+
+                    {/* button to apply edits */}
 
                     <CustomButton
                             title='Homepage'

@@ -30,8 +30,9 @@ const HomePageButtonSlim = (props) => {
 
 const styles = StyleSheet.create({
     text: {
+        fontFamily: 'Atkinson',
         color: '#ffffff',
-        fontSize: (deviceHeight * 0.1) * 0.35,
+        fontSize: (deviceHeight * 0.1) * 0.4,
         textAlign: 'center',
         margin: -5,
     },

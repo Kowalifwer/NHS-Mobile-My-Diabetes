@@ -90,7 +90,7 @@ export default function Email({navigation, route}) {
 
      // Set the video id that matches the video name passed into this function.
      const findVideoIndex = (videoName) => {
-        for (var index=0; index < route.params.video.length; index++) {
+        for (var index=0; index < route.params?.video.length; index++) {
             if (route.params.video[index].name == videoName) {
                 setVideoIndex(index);
                 return
@@ -101,12 +101,12 @@ export default function Email({navigation, route}) {
 
     const showHelp = () => {
         return <View styles={styles.video_style}>
-                    <Text style={styles.video_text}>{route.params.video[videoIndex].name}</Text>
+                    <Text style={styles.video_text}>{route.params?.video[videoIndex].name}</Text>
                     <YoutubePlayer
                         webViewStyle={ {opacity:0.99} }
                         height={300}
                         play={playing}
-                        videoId={route.params.video[videoIndex].id}
+                        videoId={route.params?.video[videoIndex].id}
                     />
                 </View>
     }
@@ -678,9 +678,8 @@ export default function Email({navigation, route}) {
 
                     <StatusBar style="auto" />
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue, {marginTop:45}]}>If you didnt set up any doctors, you can do so using the button below</Text>
-
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 50}}>
+                        <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>If you didnt set up any doctors, you can do so using the button below</Text>
                         <CustomButton
                             title='Setup email recipients'
                             color="#6495ED"

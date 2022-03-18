@@ -20,6 +20,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#e9c5b4',
         width: "100%",
+        height: "100%",
     },
     InputField: {
         width: '95%',
@@ -42,6 +43,9 @@ export default StyleSheet.create({
     },
     Blue: {
         color: "#6495ED"
+    },
+    ErrorColor: {
+        color: "#ff0000"
     },
     Large: {
         fontSize: 40,

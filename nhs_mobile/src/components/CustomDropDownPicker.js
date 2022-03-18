@@ -36,7 +36,7 @@ const CustomDropDownPicker = (props) => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 paddingRight: 15,
-                paddingBottom: 5,
+                paddingBottom:0,
                 paddingTop: 5,
                 zIndex: 20,
             }}

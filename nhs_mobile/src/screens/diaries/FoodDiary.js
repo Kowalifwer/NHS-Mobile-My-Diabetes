@@ -104,9 +104,9 @@ export default function NewFoodDiary({ navigation, route }) {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('NewFoodDiary'));
-                console.log("diary_entry.date: ", diary_entry.date)
+                // console.log("diary_entry.date: ", diary_entry.date)
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
-                console.log("existing diary entry:\n", existing_diary_entry);
+                // console.log("existing diary entry:\n", existing_diary_entry);
 
                 // ...
 
@@ -125,16 +125,27 @@ export default function NewFoodDiary({ navigation, route }) {
                     }
                 }
 
-                let final_entry = {
-                    date: diary_entry.date,
-                    meals: meals
+                let final_entry = {}
+
+                if (existing_diary_entry == null) {
+                    final_entry = {
+                        date: diary_entry.date,
+                        meals: meals
+                    }
+                } else {
+                    final_entry = {
+                        date: diary_entry.date,
+                        meals: meals.concat(existing_diary_entry.meals),
+                    }
                 }
-                console.log("what was created:")
-                console.log(final_entry)
+
+                // console.log("what was created:")
+                // console.log(final_entry)
 
                 // ...
                 
                 diary.push(final_entry);
+                console.log("diary: ", diary)
                 await AsyncStorage.setItem("NewFoodDiary", JSON.stringify(diary))
                 navigation.navigate("Home");
             } catch (error) {

@@ -34,7 +34,7 @@ export default function Diaries({ navigation, route }) {
                     <Text style={[GlobalStyle.CustomFont,styles.text,GlobalStyle.Cyan]}>
                         My Diaries Page
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Here you can view your diaries and make changes to them.
                     </Text>
                     

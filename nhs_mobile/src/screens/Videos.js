@@ -43,7 +43,7 @@ export default function Videos({ navigation, route }) {
                 <View styles={styles.body}>
                     {route.params?.video.map( vid =>(
                         <View key={vid.id}>
-                                <Text style={[styles.video_text, GlobalStyle.Blue]}>{vid.name}</Text>
+                                <Text style={[styles.video_text, GlobalStyle.Black]}>{vid.name}</Text>
                                 <YoutubePlayer
                                         webViewStyle={ {opacity:0.99} }
                                         height={300}

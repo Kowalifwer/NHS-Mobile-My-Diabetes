@@ -121,7 +121,7 @@ export default function ProfileSetup({ navigation }) {
                     presentationStyle = "fullScreen"
                 >   
                     <View style={[GlobalStyle.BodyGeneral, {paddingTop: 75, marginBottom: -100}]}>
-                        <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please manage your medicines in the section below</Text>
+                        <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please manage your medicines in the section below</Text>
                         <SmartTextInput
                             value={medicineInput}
                             hint={`Name of medication number ${medicineList.length+1}`}
@@ -171,7 +171,7 @@ export default function ProfileSetup({ navigation }) {
                     presentationStyle = "fullScreen"
                 >   
                     <View style={[GlobalStyle.BodyGeneral, {paddingTop: 75, marginBottom: -100}]}>
-                        <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please manage your doctor email addresses in the section below</Text>
+                        <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please manage your doctor email addresses in the section below</Text>
                         <SmartTextInput
                             value={emailInput}
                             hint={`Email of Doctor ${emailList.length+1}`}
@@ -217,7 +217,7 @@ export default function ProfileSetup({ navigation }) {
                     <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Orange]}>
                         Profile setup page.
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue, {marginBottom: 50}]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Black, {marginBottom: 50}]}>
                         Note that you do not need to fill all the fields. It is recommended though since it will allow us to prefil data for you in other places,
                         such as any documents or diaries that you create within the app.
                     </Text>
@@ -231,7 +231,7 @@ export default function ProfileSetup({ navigation }) {
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])}
                     />
 
-                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue, {marginVertical: 35}]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Black, {marginVertical: 35}]}>
                         Please describe which of the options from the list below applies to you the most.
                         Please try to give the most accurate answer, as this decision will tailor how the application will assist you with your diabetes.
                     </Text>

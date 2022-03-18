@@ -18,14 +18,18 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function NewFoodDiary({ navigation, route }) {
+    // diary entry defaults to an empty food diary entry
     const [diary_entry, setDiaryEntry] = useState(new_food_diary_entry)
 
+    // number of meals and meals list
     const [nMeals, setNMeals] = useState(0);
-    const [meals, setMeals] = useState([]); //stores a list of objects, each object storing the data for all the fields in a BPInput component. This is also passed as prop to the component to manipulate the state of this scopre.
+    const [meals, setMeals] = useState([]);
 
+    // date and boolean to control rendering of date picker component
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
 
+    // video-related states
     const [help, setHelp] = useState(false)
     const [playing, setPlaying] = useState(false);
     const [videoIndex, setVideoIndex] = useState();
@@ -35,16 +39,18 @@ export default function NewFoodDiary({ navigation, route }) {
     const onStateChange = useCallback((state) => {
         if (state === "ended") {
             setPlaying(false);
-            //Alert.alert("video has finished playing!");
         }
     }, []);
 
+    // this effect hook ensures that a default date is set for the current diary entry,
+    // as well as setting the diary_entry state or creating a new diary if one doesn't exist
     useEffect(() => {
         getOrCreateNewFoodDiary();
         setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
-        findVideoIndex("Food Diary Video"); //CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
+        findVideoIndex("Food Diary Video"); // CHANGE NAME HERE TO RENDER ANOTHER VIDEO. If name doesnt match exactly with youtube video title then user alerted to contact clinician.
     }, []);
 
+    // this effect hook adds a new empty meal input component to the list when nMeals increases
     useEffect(() => {
         setMeals(state => ([...state, {index: nMeals, time: new Date(), meal: "", water: "", food: []}])) // increment number of inputs and then the n_inputs listener in the useEffect above will be triggered and do the necessary side effects
     }, [nMeals]);
@@ -60,6 +66,7 @@ export default function NewFoodDiary({ navigation, route }) {
         setNotFound(true);
     }
 
+    // function to render the help section
     const showHelp = () => {
         return <View styles={styles.video_style}>
                     <Text style={styles.video_text}>{route.params.videos[videoIndex].name}</Text>
@@ -72,6 +79,7 @@ export default function NewFoodDiary({ navigation, route }) {
                 </View>
     }
 
+    // function to toggle visibility of the help section
     const toggleHelp = () => {
         if (notFound === false) {
             if (help === true) {
@@ -84,15 +92,13 @@ export default function NewFoodDiary({ navigation, route }) {
         }
     }
 
+    // this async function uses AsyncStorage to retreive an existing food diary entry,
+    // or it creates a new one if one isn't found.
     const getOrCreateNewFoodDiary = async () => {
         try {
             const food_diary = await AsyncStorage.getItem('NewFoodDiary');
             if (food_diary == null) {
-                console.log("NewFoodDiary does not exist yet, creating...");
                 AsyncStorage.setItem("NewFoodDiary", JSON.stringify([]));
-            }
-            else {
-                // console.log("NewFoodDiary: ", food_diary);
             }
         } catch (error) {
             console.log("NewFoodDiary getItem error");
@@ -100,52 +106,36 @@ export default function NewFoodDiary({ navigation, route }) {
         }
     }
 
+    // this function calculates the actual quantities of nutrition info from the per 100g data the user enters
+    // it then checks for an existing diary entry, and appends to that if one exists
     const appendToDiary = async () => {
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('NewFoodDiary'));
-                // console.log("diary_entry.date: ", diary_entry.date)
                 let existing_diary_entry = diary.find(x => x.date === diary_entry.date);
-                // console.log("existing diary entry:\n", existing_diary_entry);
-
-                // ...
-
+                // loop for calculating actual nutrition info
                 for (let i = 0; i < meals.length; i++) {
                     let food = meals[i].food
                     for (let j = 0; j < food.length; j++) {
                         let foodstuff = food[j]
-                        console.log("foodstuff: ", foodstuff)
-
-                        console.log("foodstuff.energy: ", foodstuff.energy)
-                        foodstuff.energy = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.energy) / 100) // for some reason this cuts off the last digit before doing calculation
+                        foodstuff.energy = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.energy) / 100)
                         foodstuff.carb = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.carb) / 100)
                         foodstuff.fat = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.fat) / 100)
                         foodstuff.sugar = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.sugar) / 100)
                         foodstuff.protein = parseFloat(foodstuff.amount) * (parseFloat(foodstuff.protein) / 100)
                     }
                 }
-
-                let final_entry = {}
-
-                if (existing_diary_entry == null) {
-                    final_entry = {
-                        date: diary_entry.date,
-                        meals: meals
-                    }
-                } else {
-                    final_entry = {
-                        date: diary_entry.date,
-                        meals: meals.concat(existing_diary_entry.meals),
-                    }
+                // this is the object which will be appended to the user's diary
+                let final_entry = {
+                    key: diary_entry.date.toLocaleDateString('en-GB'),
+                    date: diary_entry.date,
+                    meals: meals
                 }
-
-                // console.log("what was created:")
-                // console.log(final_entry)
-
-                // ...
-                
+                // if there is an existing diary entry, append its meal data to the new diary entry
+                if (existing_diary_entry != null) {
+                    final_entry.meals.concat(existing_diary_entry.meals)
+                }
                 diary.push(final_entry);
-                console.log("diary: ", diary)
                 await AsyncStorage.setItem("NewFoodDiary", JSON.stringify(diary))
                 navigation.navigate("Home");
             } catch (error) {
@@ -153,10 +143,10 @@ export default function NewFoodDiary({ navigation, route }) {
             }
         } else {
             Alert.alert("Diary entry cannot be empty, please put data")
-            console.log("empty field in form")
         }
     }
 
+    // used to increment the number of meal input components rendered
     function addMealInputComponent() {
         setNMeals(nMeals + 1);
     }
@@ -166,8 +156,9 @@ export default function NewFoodDiary({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
-                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginBottom:45, marginTop:15}]}>Food Diary</Text>
+                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {marginBottom:45, marginTop:15}]}>Food Diary</Text>
                     
+                    {/* button to show the help section */}
                     <CustomButton
                         title="Help"
                         onPressFunction={() => toggleHelp()}
@@ -175,17 +166,18 @@ export default function NewFoodDiary({ navigation, route }) {
                     />
                 </View>
 
+                {/* this renders the help section if help == true */}
                 <View styles={styles.video_style}>
                     {(help === true && notFound === false) && showHelp()}
                 </View>
 
                 <View style={GlobalStyle.BodyGeneral}>
 
+                    {/* date picker */}
                     {showDatePicker && (
                         <DateTimePicker
                             testID="datePicker"
                             value={date}
-                            // display="default"
                             mode="date"
                             style={{minWidth: 200}}
                             onChange={(event, date) => {
@@ -198,14 +190,17 @@ export default function NewFoodDiary({ navigation, route }) {
                         />
                     )}
 
+                    {/* date picker button */}
                     <CustomButton
                         onPressFunction={() => setShowDatePicker(true)}
                         title="Enter Date"
                         color="#008c8c"
                     />
 
+                    {/* maps the meals array to mealInputComponents */}
                     {meals.map((input_component, i) => <MealInputComponent key={i} id={input_component.index} meals={meals} setMeals={setMeals}/>)}
 
+                    {/* button to increment number of mealInputComponents rendered */}
                     <CustomButton
                         style={{marginTop: 80}}
                         onPressFunction={() => addMealInputComponent()}
@@ -213,14 +208,16 @@ export default function NewFoodDiary({ navigation, route }) {
                         color="#f96a3e"    
                     />
 
+                    {/* button to append diary entry to user's diary */}
                     <CustomButton
-                        title='Add entry to diary!'
+                        title='Add to diary'
                         color='#1eb900'
                         onPressFunction={() => {
                             appendToDiary();
                         }}
                     />
 
+                    {/* return to home button */}
                     <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100, marginTop:80}}>
                         <CustomButton
                             title='Homepage'

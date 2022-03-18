@@ -11,6 +11,8 @@ import CustomDropDownPicker from './CustomDropDownPicker';
 import FoodInputComponent from './FoodInputComponent';
 import SmartTextInput from './SmartTextInput';
 
+
+// this component renders a list of food input components which comprise one meal
 const MealInputComponent = props => {
     let {id, meals, setMeals} = props
     const [show_time_picker, setShowTimePicker] = useState(false)

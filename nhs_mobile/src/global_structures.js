@@ -1,5 +1,5 @@
-//global structures
-//Stores user profile data. The equivalent in LocalStorage is 'UserData'
+// global structures
+// Stores user profile data. The equivalent in LocalStorage is 'UserData'
 const user_struct = {
     nhs_number: "",
     name: "", 
@@ -14,7 +14,8 @@ const user_struct = {
     medicine_list: [],
 }
 
-//Stores the data for 1 entry in the foor diary. The equivalent in LocalStorage is 'FoodDiary'. 'FoodDiary' in LocalStorage is an array of all the entries logged by the user.
+// Stores the data for 1 entry in the foor diary. The equivalent in LocalStorage is 'FoodDiary'.
+// 'FoodDiary' in LocalStorage is an array of all the entries logged by the user.
 const food_diary_entry = {
     date: "",
     time: "",
@@ -27,8 +28,6 @@ const new_food_diary_entry = {
     date: "",
     meals: []
 }
-
-const bp_reading_entry = {time: "", arm: "", systolic: "", diastolic: ""}
 
 const bp_diary_entry = {
     date: "",
@@ -84,8 +83,4 @@ const object_is_empty = (obj) => {
     return true;
 }
 
-export {diary_list, food_diary_entry, new_food_diary_entry, bp_diary_entry, user_struct, health_type_reverse_lookup, object_is_empty}
-// diary_paths = {}
-
-// {item: "", brand: "", amount: ""}
-// ^^^ might need to put this in food_diary_entry
+export {diary_list, food_diary_entry, new_food_diary_entry, bp_diary_entry, glucose_diary_entry, user_struct, health_type_reverse_lookup, object_is_empty}

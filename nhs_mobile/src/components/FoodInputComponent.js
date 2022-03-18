@@ -16,9 +16,10 @@ const query_object_for_food_component = (object, key) => {
     return object[key].toString()
 }
 
-//define all inputs in here!
 const FoodInputComponent = (props) => {
+    // props passed to this component during rendering, which point back to the states in meal input component
     const {food_input_components_data, setFoodInputComponentsData, id, setBarcodeScannerOpen, barcode_scanner_open} = props
+    // used for barcode scanner
     const [scanned_data, setScannedData] = useState(null);
 
     //Define the state of all the input components. Components will be rendered from this array.
@@ -30,9 +31,9 @@ const FoodInputComponent = (props) => {
         {placeholder: "Fat (per 100g)", is_numeric: true, component_update_key: "fat", is_nutrient: true, current_value: ""},
         {placeholder: "Carbohydrates (per 100g)", is_numeric: true, component_update_key: "carb", is_nutrient: true, current_value: ""},
         {placeholder: "Energy (kcal)", is_numeric: true, component_update_key: "energy", is_nutrient: true, current_value: ""},
-    ]) // the KCAL value is now called Energy with kcal as the units
+    ])
 
-    useEffect(() => { //If scanned data changes - make sure to update the input fields as well!
+    useEffect(() => { // If scanned data changes - make sure to update the input fields as well!
         if (scanned_data) {
             setRenderInputComponents(state => (state.map(entry => {
                 return {...entry, current_value: (entry.is_nutrient) ? query_object_for_food_component(scanned_data["nutrients"], entry.component_update_key) : query_object_for_food_component(scanned_data, entry.component_update_key)}

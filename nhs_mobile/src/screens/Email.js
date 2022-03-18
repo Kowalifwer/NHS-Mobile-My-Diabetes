@@ -679,7 +679,7 @@ export default function Email({navigation, route}) {
                     <StatusBar style="auto" />
 
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 50}}>
-                        <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>If you didnt set up any doctors, you can do so using the button below</Text>
+                        <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>If you didnt set up any doctors, you can do so using the button below</Text>
                         <CustomButton
                             title='Setup email recipients'
                             color="#6495ED"

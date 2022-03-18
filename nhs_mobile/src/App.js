@@ -194,7 +194,7 @@ function App() {
             headerShown: false,
           }}
           component={PDF}
-        />     
+        />       
       </Stack.Navigator>
     </NavigationContainer>
   )

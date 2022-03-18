@@ -10,11 +10,16 @@ import CustomButton from './CustomButton';
 import CustomDropDownPicker from './CustomDropDownPicker';
 import SmartTextInput from './SmartTextInput';
 
+
+// component for injection info
 const InjectionInputComponent = props => {
+    // props passed in from GlucoseDiary.js
     let {setInjectionsData, injectionsData, id, medicine_list} = props
 
+    // boolean to render the time picker or not
     const [show_time_picker, setShowTimePicker] = useState(false);
 
+    // states for rendering the insulin or not
     const [insulin_open, setOpen] = useState(false);
     const [insulin_value, setValue] = useState(null);
     
@@ -29,6 +34,7 @@ const InjectionInputComponent = props => {
                 Injection {id+1}
             </Text>
 
+            {/* date picker */}
             {show_time_picker && (
                 <DateTimePicker
                     testID="timePicker"
@@ -50,6 +56,7 @@ const InjectionInputComponent = props => {
                 />
             )}
 
+            {/* button to show the date picker */}
             <CustomButton
                 onPressFunction={() => {
                     setShowTimePicker(true);
@@ -58,6 +65,7 @@ const InjectionInputComponent = props => {
                 color="#008c8c"
             />
 
+            {/* dropdown to select the medication used */}
             <CustomDropDownPicker
                 placeholder="Medication used"
                 open={insulin_open}
@@ -75,6 +83,7 @@ const InjectionInputComponent = props => {
                 }}
             />
 
+            {/* numeric input for number of units */}
             <SmartTextInput
                 placeholder="Units"
                 keyboardType="numeric"

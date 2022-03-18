@@ -10,11 +10,13 @@ import CustomButton from './CustomButton';
 import CustomDropDownPicker from './CustomDropDownPicker';
 import SmartTextInput from './SmartTextInput';
 
-// this is the food input which gets added to the page when user clicks the + button
+
 const BPInputComponent = props => {
+    // props passed in from BPDiary.js
     let {id, setBPReadings, bp_readings} = props
     const [show_time_picker, setShowTimePicker] = useState(false);
 
+    // state for dropdown for selecting which arm taking reading from
     const [arm_open, setOpen] = useState(false);
     const [arm_value, setValue] = useState(null);
     const [arm_type, setArmType] = useState([
@@ -29,6 +31,7 @@ const BPInputComponent = props => {
                 Blood Pressure Reading {id+1}
             </Text>
             
+            {/* dropdown for picking which arm you are taking a reading from */}
             <CustomDropDownPicker
                 placeholder="Which arm used for reading?"
                 open={arm_open}
@@ -43,6 +46,7 @@ const BPInputComponent = props => {
                     } return val;
                 })))}
             />
+            {/* systolic reading input */}
             <SmartTextInput
                 placeholder="systolic"
                 keyboardType="numeric"
@@ -54,6 +58,7 @@ const BPInputComponent = props => {
                     })))
                 }}
             />
+            {/* diastolic reading input */}
             <SmartTextInput
                 placeholder="diastolic"
                 keyboardType="numeric"
@@ -65,6 +70,7 @@ const BPInputComponent = props => {
                     })))
                 }}
             />
+            {/* time picker for what time you took the reading */}
             {show_time_picker && 
                 <DateTimePicker
                     testID="timePicker"
@@ -85,6 +91,7 @@ const BPInputComponent = props => {
                     }
                 />
             }
+            {/* button to show the time picker */}
             <CustomButton
                 onPressFunction={() => setShowTimePicker(true)}
                 title="Enter Time"

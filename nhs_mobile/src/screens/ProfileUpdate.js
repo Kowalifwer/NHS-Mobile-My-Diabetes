@@ -8,6 +8,7 @@ import {
     SafeAreaView,
     ScrollView,
     Keyboard,
+    Modal,
 } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 import CustomButton from '../components/CustomButton';
@@ -20,6 +21,8 @@ import CustomDropDownPicker from '../components/CustomDropDownPicker';
 export default function Home({ navigation, route }) {
     const [dynamic_user, setDynamicUser] = useState(user_struct)
     const [stored_user, setStoredUser] = useState(user_struct)
+
+    const [medicine_popup_visible, setMedicinePopupVisible] = useState(false);
 
     const [medicineInput, setMedicineInput] = useState(null);
     const [medicineList, setMedicineList] = useState([]);
@@ -136,7 +139,6 @@ export default function Home({ navigation, route }) {
                 getUserData()
                 await AsyncStorage.removeItem("UserData");
                 Alert.alert('Success!', 'Your User data has been cleared! Redirecting to the setup page.')
-
                 navigation.navigate('ProfileSetup');
             }
             else{
@@ -150,6 +152,54 @@ export default function Home({ navigation, route }) {
     return (
         <SafeAreaView style={styles.body}>
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
+            <Modal
+                animationType="slide"
+                visible={medicine_popup_visible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
+                }}
+                presentationStyle = "fullScreen"
+            >   
+                <View style={[GlobalStyle.BodyGeneral, {paddingTop: 75, marginBottom: -100}]}>
+                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please manage your medicines in the section below</Text>
+                    <SmartTextInput
+                        value={medicineInput}
+                        hint={`Name of medication number ${medicineList.length+1}`}
+                        placeholder='Medicine Name'
+                        onChangeText={(value) => setMedicineInput(value)}
+                    />
+
+                    <CustomButton
+                        style={{marginTop: 0, marginBottom: 75}}
+                        title={`Press to add medication to your list!`}
+                        onPressFunction={modifyMedicineList}
+                    />
+
+                    <CustomDropDownPicker
+                        multiple={true}
+                        placeholder="Preview medicine list..."
+                        open={medicine_open}
+                        value={medicine_value}
+                        items={medicine_type}
+                        setOpen={setMedicineOpen}
+                        setValue={setMedicineValue}
+                        setItems={setMedicineType}
+                    />
+
+                    <CustomButton
+                        color='red'
+                        title={`Press to remove selected medications from list`}
+                        onPressFunction={removeMedicines}
+                    />
+                </View>
+                <CustomButton
+                    style={{marginTop: 0, marginBottom:35}}
+                    color='green'
+                    title={`Medication setup complete!`}
+                    onPressFunction={() => setMedicinePopupVisible(false)}
+                />
+            </Modal>
                 <View style={styles.body}>
                     <Header></Header>
                     <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Orange, {marginBottom: 75}]}>
@@ -189,7 +239,7 @@ export default function Home({ navigation, route }) {
                         </Text>
                     }
                     {stored_user.medicine_list.map((medicine, index) => {
-                        return (<Text style={[GlobalStyle.CustomFont, GlobalStyle.Orange]}>
+                        return (<Text key={index}  style={[GlobalStyle.CustomFont, GlobalStyle.Orange]}>
                             Medication {index+1}: {medicine}
                         </Text>)})
                     }
@@ -234,40 +284,14 @@ export default function Home({ navigation, route }) {
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["nhs_number"]:value }), [])} //updating the dict
                     />
 
-                    {(stored_user.health_type != 1) &&
-                        <View style={[styles.body, {marginTop: 40, marginBottom: 75}]}>
-                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>If you need to update your medicine list - please do so in the section below</Text>
-                            <SmartTextInput
-                                value={medicineInput}
-                                hint={`Name of medication number ${medicineList.length+1}`}
-                                placeholder='Medicine Name'
-                                onChangeText={(value) => setMedicineInput(value)}
-                            />
+                    {stored_user.medicine_list.length > 0 && 
+                        <CustomButton
+                            style={{marginTop: 50, marginBottom: 25}}
+                            title={`Press to update your medication!`}
+                            onPressFunction={() => setMedicinePopupVisible(true)}
+                        />
+                    }
 
-                            <CustomButton
-                                style={{marginTop: 0, marginBottom: 25}}
-                                title={`Press to add medication ${medicineList.length+1} to list`}
-                                onPressFunction={modifyMedicineList}
-                            />
-
-                            <CustomDropDownPicker
-                                multiple={true}
-                                placeholder="Preview medicine list..."
-                                open={medicine_open}
-                                value={medicine_value}
-                                items={medicine_type}
-                                setOpen={setMedicineOpen}
-                                setValue={setMedicineValue}
-                                setItems={setMedicineType}
-                            />
-
-                            <CustomButton
-                                color='red'
-                                title={`Press to remove selected medications from list`}
-                                onPressFunction={removeMedicines}
-                            />
-                        </View>}
-            
                     <CustomButton
                         style={{marginTop: 40}}
                         title='Update Profile'

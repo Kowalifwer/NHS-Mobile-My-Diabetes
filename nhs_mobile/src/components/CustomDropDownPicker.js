@@ -38,6 +38,7 @@ const CustomDropDownPicker = (props) => {
                 paddingRight: 15,
                 paddingBottom: 5,
                 paddingTop: 5,
+                zIndex: 20,
             }}
             selectedItemLabelStyle={{
                 backgroundColor: "#D3D3D3",

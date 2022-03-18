@@ -40,6 +40,16 @@ const FoodInputComponent = (props) => {
         }
     }, [scanned_data]);
 
+    useEffect(() => { //If input fields change - make sure to update the parent object state that holds all the data.
+        if (render_input_components.some(component => component.current_value != "")) {
+            let copy_state = [...food_input_components_data]
+            render_input_components.forEach((render_component) => {
+                copy_state[id][render_component.component_update_key] = render_component.current_value
+            })
+            setFoodInputComponentsData(copy_state);
+        };
+    }, [render_input_components]);
+
     return (
         <View style={GlobalStyle.BodyGeneral}>
             {(object_is_empty(food_input_components_data[id]["scanned_item_object"])) ? 
@@ -53,15 +63,6 @@ const FoodInputComponent = (props) => {
                     value={val.current_value}
                     placeholder={val.placeholder}
                     onChangeText={(value) => {
-                        setFoodInputComponentsData(state => (state.map(entry => { //updates the food_input_components_data
-                            if (entry.index == id) {
-                                if (val.is_numeric) {
-                                    return {...entry, [val.component_update_key]: parseFloat(value)}
-                                } else {
-                                    return {...entry, [val.component_update_key]: value}
-                                }
-                            } return entry;
-                        })));
                         setRenderInputComponents(state => (state.map(entry => {
                             if (entry.component_update_key == val.component_update_key) {
                                 return {...entry, current_value: value}

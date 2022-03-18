@@ -12,10 +12,7 @@ import SmartTextInput from '../components/SmartTextInput';
 import CustomDropDownPicker from '../components/CustomDropDownPicker';
 
 const ConditionalProfileView = props => {
-    let {setData, dynamic_user, setDynamicUser, account_type} = props;
-
-    const [medicineInput, setMedicineInput] = useState(null);
-    const [medicineList, setMedicineList] = useState([]);
+    let {setData, dynamic_user, setDynamicUser, account_type, setMedicinePopupVisible, setEmailPopupVisible, emailList} = props;
 
     const [daily_injections_open, setOpen] = useState(false);
     const [daily_injections_value, setValue] = useState(null);
@@ -26,35 +23,6 @@ const ConditionalProfileView = props => {
         {label: '4', value: '4'},
         {label: '5 or more', value: '5'}
     ]);
-
-    const [medicine_open, setMedicineOpen] = useState(false);
-    const [medicine_value, setMedicineValue] = useState(null);
-    const [medicine_type, setMedicineType] = useState([])
-
-    useEffect(() => {
-        setDynamicUser(state => ({ ...state, ["medicine_list"]: medicineList }));
-    }, [medicineList]);
-
-    const modifyMedicineList = () => {
-        setMedicineList(state => [...state, medicineInput])
-        setMedicineType(state => [...state, {label: medicineInput, value: medicineInput}]) //FOR THE DROPDOWN
-        setMedicineInput(null);
-        Alert.alert(medicineInput + " added to your Medicine List! Feel free to add more if neccesary.")
-    }
-
-    const removeMedicines = () => {
-        let new_medicine_list = [...medicineList]
-        medicine_value.forEach(medicine_name => {
-            new_medicine_list.splice(new_medicine_list.indexOf(medicine_name), 1)
-        })
-        console.log(new_medicine_list)
-        setMedicineType(new_medicine_list.map(medicine_name => {
-            return {label: medicine_name, value: medicine_name}
-        }))
-        setMedicineList(new_medicine_list)
-        setMedicineValue(null)
-        Alert.alert(`${medicineList.length - new_medicine_list.length} Medicines have been removed from your Medicine List!`)
-    }
 
     //a shared view that is used in multiple control flows
     const shared_view = () => {
@@ -83,44 +51,47 @@ const ConditionalProfileView = props => {
                         onChangeText={(value) => setDynamicUser(state => ({ ...state, ["weight"]:value }), [])}
                     />
 
-                    {account_type != 1 && 
-                        <View style={[styles.body, {marginTop: 40}]}>
-                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please add your medicines in the section below</Text>
-                            <SmartTextInput
-                                value={medicineInput}
-                                hint={`Name of medication number ${medicineList.length+1}`}
-                                placeholder='Medicine Name'
-                                onChangeText={(value) => setMedicineInput(value)}
-                            />
-
+                    {account_type != 1 &&
+                        <>
+                            {dynamic_user.medicine_list.length > 0 && 
+                                <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginTop:25, marginBottom: 25, textAlign:"center"}]}>
+                                    Medicine that you are currently using:
+                                </Text>
+                            }
+                            {dynamic_user.medicine_list.map((medicine, index) => {
+                                return (<Text key={index} style={[GlobalStyle.CustomFont, GlobalStyle.Orange]}>
+                                    Medication {index+1}: {medicine}
+                                </Text>)})
+                            }
                             <CustomButton
-                                style={{marginTop: 0, marginBottom: 25}}
-                                title={`Press to add medication ${medicineList.length+1} to list`}
-                                onPressFunction={modifyMedicineList}
+                                style={{marginTop: 50, marginBottom: 25}}
+                                title={`Press to setup your medication!`}
+                                onPressFunction={() => setMedicinePopupVisible(true)}
                             />
-
-                            <CustomDropDownPicker
-                                multiple={true}
-                                placeholder="Preview medicine list..."
-                                open={medicine_open}
-                                value={medicine_value}
-                                items={medicine_type}
-                                setOpen={setMedicineOpen}
-                                setValue={setMedicineValue}
-                                setItems={setMedicineType}
-                            />
-
-                            <CustomButton
-                                color='red'
-                                title={`Press to remove selected medications from list`}
-                                onPressFunction={removeMedicines}
-                            />
-                        </View>
+                        </>
                     }
 
+                    <>
+                        {emailList.length > 0 && 
+                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginTop:25, marginBottom: 25, textAlign:"center"}]}>
+                                Emails that you can send reports to:
+                            </Text>
+                        }
+                        {emailList.map((email, index) => {
+                            return (<Text key={index} style={[GlobalStyle.CustomFont, GlobalStyle.Orange]}>
+                                Email {index+1}: {email}
+                            </Text>)})
+                        }
+                        <CustomButton
+                            style={{marginTop: 50, marginBottom: 25}}
+                            title={`Press to setup your doctor's emails!`}
+                            onPressFunction={() => setEmailPopupVisible(true)}
+                        />
+                    </>
+
                     <CustomButton
-                        style={{marginTop: 50}}
-                        title='Setup your profile!'
+                        style={{marginTop: 50, paddingVertical: 15}}
+                        title='Finalize profile!'
                         color='#1eb900'
                         onPressFunction={setData}
                     />
@@ -142,13 +113,13 @@ const ConditionalProfileView = props => {
                         setItems={setDailyInjections}
                         onChangeValue={(value) => setDynamicUser(state => ({ ...state, ["daily_injections"]:value }), [])}
                     />
+                    {(!daily_injections_value) && <View style={{height: 200}}></View>}
 
                     {daily_injections_value != null && //MAKE SURE USER SPECIFIES HOW MANY TIMES THEY INJECT DAILY - THEN MOVE ONTO THE REST.
                         shared_view()
                     }
                 </View>)
     default:
-        console.log("None")
         return null;
     }
 };

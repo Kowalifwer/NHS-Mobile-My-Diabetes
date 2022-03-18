@@ -101,11 +101,11 @@ const compute_glucose_metrics = async () => {
         else if (13.9 < reading) {glucose_metrics["num_l2hyper"] += 1}
     }
 
-    glucose_metrics["percent_in_TIR"] = glucose_metrics["num_in_TIR"] / glucose_metrics["number"] * 100
-    glucose_metrics["percent_l2hyper"] = glucose_metrics["num_l2hyper"] / glucose_metrics["number"] * 100
-    glucose_metrics["percent_l1hyper"] = glucose_metrics["num_l1hyper"] / glucose_metrics["number"] * 100
-    glucose_metrics["percent_l2hypo"] = glucose_metrics["num_l2hypo"] / glucose_metrics["number"] * 100
-    glucose_metrics["percent_l1hypo"] = glucose_metrics["num_l1hypo"] / glucose_metrics["number"] * 100
+    glucose_metrics["percent_in_TIR"] = (glucose_metrics["num_in_TIR"] / glucose_metrics["number"] * 100).toFixed(2)
+    glucose_metrics["percent_l2hyper"] = (glucose_metrics["num_l2hyper"] / glucose_metrics["number"] * 100).toFixed(2)
+    glucose_metrics["percent_l1hyper"] = (glucose_metrics["num_l1hyper"] / glucose_metrics["number"] * 100).toFixed(2)
+    glucose_metrics["percent_l2hypo"] = (glucose_metrics["num_l2hypo"] / glucose_metrics["number"] * 100).toFixed(2)
+    glucose_metrics["percent_l1hypo"] = (glucose_metrics["num_l1hypo"] / glucose_metrics["number"] * 100).toFixed(2)
 
     // console.log("raw values: ", readings)
     // console.log("glucose_metrics: ", glucose_metrics)

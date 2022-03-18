@@ -46,6 +46,8 @@ export default function BPDiary({ navigation, route }) {
     }
     }, []);
 
+    // this effect hook ensures that a default date is set for the current diary entry,
+    // as well as setting the diary_entry state or creating a new diary if one doesn't exist    
     useEffect(() => {
         getOrCreateBPDiary();
         setDiaryEntry(state => ({ ...state, ["date"]: date }), [])
@@ -67,6 +69,7 @@ export default function BPDiary({ navigation, route }) {
         setNotFound(true);
     }
 
+    // function to render the help section
     const showHelp = () => {
         return <View styles={styles.video_style}>
                     <Text style={styles.video_text}>{route.params.videos[videoIndex].name}</Text>
@@ -79,6 +82,7 @@ export default function BPDiary({ navigation, route }) {
                 </View>
     }
 
+    // function to toggle visibility of the help section
     const toggleHelp = () => {
         if (notFound === false) {
             if (help === true) {
@@ -91,6 +95,8 @@ export default function BPDiary({ navigation, route }) {
         }
     }
 
+    // this async function uses AsyncStorage to retreive an existing blood pressure diary entry,
+    // or it creates a new one if one isn't found.    
     const getOrCreateBPDiary = async () => {
         try {
             const bp_diary = await AsyncStorage.getItem('BPDiary');
@@ -107,8 +113,9 @@ export default function BPDiary({ navigation, route }) {
         }
     }
 
+    // this function will append the entry to the blood pressure diary, or append it to an existing entry if one exists for the current date
+    // 
     const appendToDiary = async () => {
-        // console.log(diary_entry)
         if (Object.values(diary_entry).some(x => x !== '')) {
             try {
                 const diary = JSON.parse(await AsyncStorage.getItem('BPDiary'))

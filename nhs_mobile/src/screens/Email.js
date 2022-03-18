@@ -4,21 +4,18 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
     SafeAreaView, 
     ScrollView,
     StatusBar,
-    Button,
     Vibration
 } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
-import DropDownPicker from 'react-native-dropdown-picker';
+import CustomDropDownPicker from '../components/CustomDropDownPicker';
 import CustomButton from '../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
 import * as Print from 'expo-print';
 import * as FileSystem from 'expo-file-system';
 import XLSX from 'xlsx';
@@ -27,8 +24,6 @@ import { manipulateAsync } from 'expo-image-manipulator';
 import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function Email({navigation, route}) {
-
-    DropDownPicker.setListMode("SCROLLVIEW");
     
     const stored_user = route.params?.stored_user //can access all current user data from this variable.
     const [selectedRecipient, setSelectedRecipient] = useState("");
@@ -95,7 +90,7 @@ export default function Email({navigation, route}) {
 
      // Set the video id that matches the video name passed into this function.
      const findVideoIndex = (videoName) => {
-        for (var index=0; index < route.params.video.length; index++) {
+        for (var index=0; index < route.params?.video.length; index++) {
             if (route.params.video[index].name == videoName) {
                 setVideoIndex(index);
                 return
@@ -106,12 +101,12 @@ export default function Email({navigation, route}) {
 
     const showHelp = () => {
         return <View styles={styles.video_style}>
-                    <Text style={styles.video_text}>{route.params.video[videoIndex].name}</Text>
+                    <Text style={styles.video_text}>{route.params?.video[videoIndex].name}</Text>
                     <YoutubePlayer
                         webViewStyle={ {opacity:0.99} }
                         height={300}
                         play={playing}
-                        videoId={route.params.video[videoIndex].id}
+                        videoId={route.params?.video[videoIndex].id}
                     />
                 </View>
     }
@@ -641,21 +636,11 @@ export default function Email({navigation, route}) {
                     <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Cyan]}>
                         Select which diary(s) to send to a doctor from your diary list
                     </Text>
-                    <DropDownPicker
+
+                    <CustomDropDownPicker
                         multiple={true}
                         min={0}
                         max={3}
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
                         placeholder="Select from diary list!"
                         open={diary_open}
                         onOpen={onDiaryOpen}
@@ -671,18 +656,8 @@ export default function Email({navigation, route}) {
                     <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Cyan]}>
                         Send and email to a doctor from your doctors list
                     </Text>
-                    <DropDownPicker
-                        dropDownDirection="BOTTOM"
-                        style={DropdownStyle.style}
-                        containerStyle={DropdownStyle.containerStyle}
-                        placeholderStyle={DropdownStyle.placeholderStyle}
-                        textStyle={DropdownStyle.textStyle}
-                        labelStyle={DropdownStyle.labelStyle}
-                        listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                        selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                        selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                        showArrowIcon={true}
-                        showTickIcon={true}
+
+                    <CustomDropDownPicker
                         placeholder="Select from doctors list!"
                         open={email_open}
                         onOpen = {onEmailOpen}
@@ -703,9 +678,8 @@ export default function Email({navigation, route}) {
 
                     <StatusBar style="auto" />
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue, {marginTop:45}]}>If you didnt set up any doctors, you can do so using the button below</Text>
-
                     <View style={{display: 'flex', flexDirection: 'column', marginTop: 50}}>
+                        <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>If you didnt set up any doctors, you can do so using the button below</Text>
                         <CustomButton
                             title='Setup email recipients'
                             color="#6495ED"

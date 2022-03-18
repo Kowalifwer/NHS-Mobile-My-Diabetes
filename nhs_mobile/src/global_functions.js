@@ -2,7 +2,6 @@ import * as math from 'mathjs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import stats from "statsjs";
 
-
 /*
 
     metrics to compute:
@@ -52,7 +51,7 @@ const compute_glucose_metrics = async () => {
         // console.log("parsed readings: ", readings)
     } catch (error) {
         console.log("error while getting glucose diary data: ", error)
-        return
+        return null
     }
 
     // let readings = generate_random_data(20) // !! FOR TESTING <---------------------------------------------------------
@@ -60,13 +59,13 @@ const compute_glucose_metrics = async () => {
     let nums = stats(readings)
 
     const glucose_metrics = {
-        mean: nums.mean(),
-        SD: nums.stdDev(),
+        mean: nums.mean().toFixed(0),
+        SD: nums.stdDev().toFixed(0),
         median: nums.median(),
         IQR: nums.q3() - nums.q1(),
         IQR_25: nums.q1(),
         IQR_75: nums.q3(),
-        adj_SD: (nums.q3() - nums.q1()) / 1.35,
+        adj_SD: ((nums.q3() - nums.q1()) / 1.35).toFixed(2),
         // IQR_exc: null,
         // IQR_25_exc: null,
         // IQR_75_exc: null,
@@ -75,7 +74,7 @@ const compute_glucose_metrics = async () => {
         // IQR_75_inc: null,
         // adj_SD_exc: null,
         // adj_SD_inc: null,
-        CV: nums.stdDev() / nums.mean(),
+        CV: (nums.stdDev() / nums.mean()).toFixed(2),
         max: nums.max(),
         min: nums.min(),
         number: nums.size(),

@@ -7,7 +7,6 @@ import {
   StyleSheet, 
   Text, 
   View, 
-  Button,
   SafeAreaView, 
   TouchableHighlight, 
   Alert,

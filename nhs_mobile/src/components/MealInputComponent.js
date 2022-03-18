@@ -7,8 +7,7 @@ import {
 import GlobalStyle from '../styles/GlobalStyle';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from './CustomButton';
-import DropDownPicker from 'react-native-dropdown-picker';
-import DropdownStyle from '../styles/DropdownStyle';
+import CustomDropDownPicker from './CustomDropDownPicker';
 import FoodInputComponent from './FoodInputComponent';
 import SmartTextInput from './SmartTextInput';
 
@@ -85,18 +84,7 @@ const MealInputComponent = props => {
             />            
             
             {/* MEAL PICKER DROPDOWN */}
-            <DropDownPicker
-                dropDownDirection="BOTTOM"
-                style={DropdownStyle.style}
-                containerStyle={DropdownStyle.containerStyle}
-                placeholderStyle={DropdownStyle.placeholderStyle}
-                textStyle={DropdownStyle.textStyle}
-                labelStyle={DropdownStyle.labelStyle}
-                listItemContainerStyle={DropdownStyle.itemContainerStyle}
-                selectedItemLabelStyle={DropdownStyle.selectedItemLabelStyle}
-                selectedItemContainerStyle={DropdownStyle.selectedItemContainerStyle}
-                showArrowIcon={true}
-                showTickIcon={true}
+            <CustomDropDownPicker
                 placeholder="Meal"
                 open={meal_open}
                 value={meal_value}

@@ -3,20 +3,10 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
-    SafeAreaView, 
-    ScrollView,
     Modal,
-    Pressable,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from '../components/Header';
-import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
-import user_struct from '../global_structures.js'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import {object_is_empty} from '../global_structures.js';
 

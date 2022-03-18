@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import ReactDOM, { render } from "react-dom";
 import {
     View,
     StyleSheet,
@@ -23,17 +22,23 @@ import { glucose_diary_entry } from '../../global_structures';
 export default function GlucoseDiary({ navigation, route }) {
     const [diary_entry, setDiaryEntry] = useState(glucose_diary_entry)
 
+    // number of glucose inputs to render
     const [n_glucose_inputs, setNGlucoseInputs] = useState(0);
     const [glucose_input_components_data, setGlucoseComponentsData] = useState([]);
 
+    // number of injection inputs to render
     const [n_injections, setNInjections] = useState(0);
     const [injections_data, setInjectionsData] = useState([]);
 
     const [date, setDate] = useState(new Date())
     const [showDatePicker, setShowDatePicker] = useState(false)
 
-    const [renderInjections, setRenderInjections] = useState(false);
-    
+    const [renderInjections, setRenderInjections] = useState(route.params?.health_type == 3);
+
+    useEffect(() => {
+
+    }, [renderInjections]);
+
     const [help, setHelp] = useState(false)
     const [playing, setPlaying] = useState(false);
     const [videoIndex, setVideoIndex] = useState();
@@ -64,13 +69,6 @@ export default function GlucoseDiary({ navigation, route }) {
     useEffect(() => {
         setInjectionsData(state => ([...state, {index:n_injections, time: new Date(), type: "", units: ""}]) )
     }, [n_injections]);
-
-    // if user injects, render injection input components
-    AsyncStorage.getItem('UserData').then(value => {
-        if (JSON.parse(value).health_type == "3") {
-            setRenderInjections(true);
-        }
-    });
 
     // Set the video id that matches the video name passed into this function.
     const findVideoIndex = (videoName) => {
@@ -228,37 +226,42 @@ export default function GlucoseDiary({ navigation, route }) {
                     <CustomButton 
                         onPressFunction={() => addGlucoseInputComponent()}
                         title="Enter another reading"
-                        color="#f96a3e"
+                        color="#6495ED"
                     />
 
                     {/* only renders injection input components if the user selected the mode of treatment where they inject */}
                     {/* maps the array of injection data to injection input components */}
-                    {renderInjections && (
-                        <View>
+                    {(renderInjections) && (
+                        <View style={[GlobalStyle.BodyGeneral, {marginBottom: 100}]}>
                             <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue, {marginTop: 100}]}>
                                 Injections
                             </Text>
-                            {injections_data.map((input_component, i) => <InjectionInputComponent key={i} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data}/>)}
+                            {injections_data.map((input_component, i) => <InjectionInputComponent key={i} id={input_component.index} setInjectionsData={setInjectionsData} injectionsData={injections_data} medicine_list={route.params?.medicine_list}/>)}
                             <CustomButton 
                                 onPressFunction={() => addInjectionInputComponent()}
                                 title="Enter another insulin value"
-                                color="#008c8c"
+                                color="#6495ED"
                             />
                         </View>
                     )}
 
-                    {/* button to add to diary */}
-                    <CustomButton
-                        style={{marginTop: 40}}
-                        title='add to diary'
-                        color='#1eb900'
-                        onPressFunction={() => {
-                            appendToDiary();
-                        }}
-                    />
+                    {/* button to append to diary */}
+                    {(!renderInjections || (renderInjections && injections_data.every(entry => entry.type != ""))) ? 
+                        <CustomButton
+                            style={{marginTop: 40}}
+                            title='Add to diary'
+                            color='#1eb900'
+                            onPressFunction={() => {
+                                appendToDiary();
+                            }}
+                        />:
+                        <Text style={[GlobalStyle.CustomFont, GlobalStyle.ErrorColor, {marginHorizontal: 10}]}>
+                            Please specify the medicine used in your insulin injections, to be able to add to the diary
+                        </Text>
+                    }
 
                 </View>
-                <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100}}>
+                <View style={{display: 'flex', flexDirection: 'column', paddingBottom: 100, marginTop: 10}}>
                     <CustomButton
                         title='Homepage'
                         color='#761076'

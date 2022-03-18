@@ -3,7 +3,6 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
     Alert,
     SafeAreaView, 
     ScrollView,
@@ -44,7 +43,6 @@ export default function Settings({ navigation }) {
         }
     }
 
-
     var clearAll = async () => {
         try {
                 const compatible = await LocalAuthentication.hasHardwareAsync();
@@ -70,8 +68,7 @@ export default function Settings({ navigation }) {
           // clear error
           console.log(e)
         }
-        
-        
+         
       }
 
     return (

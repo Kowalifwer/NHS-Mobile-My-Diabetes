@@ -3,20 +3,13 @@ import {
     View,
     StyleSheet,
     Text,
-    TextInput,
-    Alert,
     SafeAreaView, 
     ScrollView,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import FoodDiary from './diaries/FoodDiary';
-import DropDownPicker from 'react-native-dropdown-picker';
 import CustomButton from '../components/CustomButton';
-import ConditionalProfileView from '../components/ConditionalProfileView';
 import Header from '../components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalStyle from '../styles/GlobalStyle';
-import DropdownStyle from '../styles/DropdownStyle';
 import {diary_list} from '../global_structures.js'
 
 export default function Diaries({ navigation, route }) {
@@ -32,8 +25,6 @@ export default function Diaries({ navigation, route }) {
                 setStoredUser(JSON.parse(user));
             })();
     }, []);
-
-
 
     return (
         <SafeAreaView style={styles.body}>
@@ -56,6 +47,7 @@ export default function Diaries({ navigation, route }) {
                                     daily_injections: (stored_user.daily_injections) ? stored_user.daily_injections : "-1",
                                     health_type: (stored_user.health_type) ? stored_user.health_type : "-1",
                                     videos: route.params.video,
+                                    medicine_list: (stored_user.medicine_list) ? stored_user.medicine_list : [],
                                 })
                             }}
                             title={item.verbose_name}

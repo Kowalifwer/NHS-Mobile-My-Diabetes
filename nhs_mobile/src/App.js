@@ -23,7 +23,6 @@ import temp from './screens/temp';
 import NoContentAuthScreen from './screens/NoContentAuthScreen';
 import Results from './screens/Results';
 import PDF from './screens/PDF';
-import EditDiaries from './screens/EditDiaries';
 import { useEffect } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -195,14 +194,7 @@ function App() {
             headerShown: false,
           }}
           component={PDF}
-        />     
-        <Stack.Screen
-          name="EditDiaries"
-          options={{
-            headerShown: false,
-          }}
-          component={EditDiaries}
-        />          
+        />       
       </Stack.Navigator>
     </NavigationContainer>
   )

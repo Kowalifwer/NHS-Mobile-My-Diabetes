@@ -20,12 +20,13 @@ import CareProcess from './screens/CareProcess';
 import Settings from './screens/Settings';
 import Videos from './screens/Videos';
 import temp from './screens/temp';
+import NoContentAuthScreen from './screens/NoContentAuthScreen';
 import Results from './screens/Results';
 import PDF from './screens/PDF';
 import { useEffect } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import DropDownPicker from 'react-native-dropdown-picker';
-
+import { Alert } from 'react-native-web';
 const Stack = createStackNavigator();
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
 
   useEffect(() => {
     changeScreenOrientation();
-}, []);
+  }, []);
 
   async function changeScreenOrientation() {
     await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
@@ -50,9 +51,16 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-      
-        initialRouteName="ProfileSetup"
+        initialRouteName="NoContentAuthScreen"
       >
+        <Stack.Screen
+          name="NoContentAuthScreen"
+          component={NoContentAuthScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+
         <Stack.Screen
           name="ProfileSetup"
           component={ProfileSetup}

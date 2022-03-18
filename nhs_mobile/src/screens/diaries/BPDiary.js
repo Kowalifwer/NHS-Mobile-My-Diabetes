@@ -203,7 +203,7 @@ export default function BPDiary({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
-                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginBottom:45, marginTop:15}]}>Blood Pressure Diary</Text>
+                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {marginBottom:45, marginTop:15}]}>Blood Pressure Diary</Text>
                     
                     {/* button to show the help section */}
                     <CustomButton

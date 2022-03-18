@@ -80,7 +80,7 @@ export default function Settings({ navigation }) {
 
                     <Header></Header>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Settings Page
                     </Text>
 

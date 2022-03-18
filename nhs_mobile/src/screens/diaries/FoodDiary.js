@@ -156,7 +156,7 @@ export default function NewFoodDiary({ navigation, route }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={GlobalStyle.BodyGeneral}>
                     <Header/>
-                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginBottom:45, marginTop:15}]}>Food Diary</Text>
+                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {marginBottom:45, marginTop:15}]}>Food Diary</Text>
                     
                     {/* button to show the help section */}
                     <CustomButton

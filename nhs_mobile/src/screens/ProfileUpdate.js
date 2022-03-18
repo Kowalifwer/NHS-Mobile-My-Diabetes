@@ -162,7 +162,7 @@ export default function Home({ navigation, route }) {
                 presentationStyle = "fullScreen"
             >   
                 <View style={[GlobalStyle.BodyGeneral, {paddingTop: 75, marginBottom: -100}]}>
-                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please manage your medicines in the section below</Text>
+                    <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {textAlign: "center", marginHorizontal: 20, marginBottom: 25}]}>Please manage your medicines in the section below</Text>
                     <SmartTextInput
                         value={medicineInput}
                         hint={`Name of medication number ${medicineList.length+1}`}
@@ -207,36 +207,36 @@ export default function Home({ navigation, route }) {
                     <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Orange, {marginBottom: 75}]}>
                         Profile Settings
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Black]}>
                         Welcome, {stored_user.name} !
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         You are{"\n"} {stored_user.age} years old.
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Your height is{"\n"} {stored_user.height} cm
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Your weight is{"\n"} {stored_user.weight} kg
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Your NHS number is:{"\n"} {stored_user.nhs_number}
                     </Text>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Your diabetes status is:{"\n"} {health_type_reverse_lookup[route.params?.stored_user.health_type]}
                     </Text>
 
                     {stored_user.daily_injections ? 
-                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Black]}>
                             Your daily number of injections is {route.params?.stored_user.daily_injections}
                         </Text> :
-                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Black]}>
                             You do not inject insulin.
                         </Text>
                     }
 
                     {stored_user.medicine_list.length > 0 && 
-                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Blue]}>
+                        <Text style={[GlobalStyle.CustomFont, styles.text, GlobalStyle.Black]}>
                             Medicine that you are currently using:
                         </Text>
                     }

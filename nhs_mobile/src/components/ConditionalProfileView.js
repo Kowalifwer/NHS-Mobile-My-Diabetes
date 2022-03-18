@@ -54,7 +54,7 @@ const ConditionalProfileView = props => {
                     {account_type != 1 &&
                         <>
                             {dynamic_user.medicine_list.length > 0 && 
-                                <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginTop:25, marginBottom: 25, textAlign:"center"}]}>
+                                <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {marginTop:25, marginBottom: 25, textAlign:"center"}]}>
                                     Medicine that you are currently using:
                                 </Text>
                             }
@@ -73,7 +73,7 @@ const ConditionalProfileView = props => {
 
                     <>
                         {emailList.length > 0 && 
-                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Blue, {marginTop:25, marginBottom: 25, textAlign:"center"}]}>
+                            <Text style={[GlobalStyle.CustomFont, GlobalStyle.Black, {marginTop:25, marginBottom: 25, textAlign:"center"}]}>
                                 Emails that you can send reports to:
                             </Text>
                         }

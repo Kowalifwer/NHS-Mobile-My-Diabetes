@@ -131,7 +131,7 @@ export default function EmailSetup({ navigation }) {
             <ScrollView keyboardShouldPersistTaps="never" onScrollBeginDrag={Keyboard.dismiss}>
                 <View style={styles.body}>
                     <Header></Header>
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Setup your doctors' emails here
                     </Text>
                     

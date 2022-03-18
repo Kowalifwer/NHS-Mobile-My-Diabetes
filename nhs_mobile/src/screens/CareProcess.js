@@ -26,7 +26,7 @@ export default function CareProcess({ navigation }) {
                         My Care Processes
                     </Text>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Shows user key dates and information about their medical life. TO BE IMPLEMENTED.
                     </Text>
 

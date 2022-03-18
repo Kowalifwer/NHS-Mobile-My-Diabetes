@@ -442,7 +442,7 @@ export default function Results({ navigation, route }) {
 
                     <Header></Header>
 
-                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Blue]}>
+                    <Text style={[GlobalStyle.CustomFont,styles.text, GlobalStyle.Black]}>
                         Select Diary to View
                     </Text>
 

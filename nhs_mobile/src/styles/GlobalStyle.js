@@ -47,6 +47,9 @@ export default StyleSheet.create({
     ErrorColor: {
         color: "#ff0000"
     },
+    Black: {
+        color: "#0e1111"
+    },
     Large: {
         fontSize: 40,
     },

@@ -11,6 +11,7 @@ import {
 import CustomButton from '../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { compute_glucose_metrics } from '../global_functions';
+import GlobalStyle from '../styles/GlobalStyle';
 
 var deviceHeight = Dimensions.get("window").height;
 
@@ -39,29 +40,29 @@ export default function MyProfile({ navigation }) {
       return (
           <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'column'}}>
 
-              <View style={styles.profileView}><Text style={styles.text}>Average:</Text><Text style={styles.metricText}>{metrics.mean != null ? metrics.mean : "Not enough data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Maximum:</Text><Text style={styles.metricText}>{metrics.max != null ? metrics.max : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Minimum:</Text><Text style={styles.metricText}>{metrics.min != null ? metrics.min : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Number of Readings:</Text><Text style={styles.metricText}>{metrics.number != null ? metrics.number : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Readings in TIR:</Text><Text style={styles.metricText}>{metrics.num_in_TIR != null ? metrics.num_in_TIR : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Readings in Level 1 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l1hyper != null ? metrics.num_l1hyper : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Average:</Text><Text style={styles.metricText}>{metrics.mean != null ? metrics.mean : "Not enough data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Maximum:</Text><Text style={styles.metricText}>{metrics.max != null ? metrics.max : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Minimum:</Text><Text style={styles.metricText}>{metrics.min != null ? metrics.min : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Number of Readings:</Text><Text style={styles.metricText}>{metrics.number != null ? metrics.number : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Readings in TIR:</Text><Text style={styles.metricText}>{metrics.num_in_TIR != null ? metrics.num_in_TIR : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Readings in Level 1 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l1hyper != null ? metrics.num_l1hyper : "Not Enough Data"}</Text></View>
 
-              <View style={styles.profileView}><Text style={styles.text}>Readings in Level 2 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l2hyper != null ? metrics.num_l2hyper : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Readings in Level 1 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l1hypo != null ? metrics.num_l1hypo : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Readings in Level 2 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l2hypo != null ? metrics.num_l2hypo : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>% in TIR:</Text><Text style={styles.metricText}>{metrics.percent_in_TIR != null ? metrics.percent_in_TIR : "Not Enough Data"}%</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>% in Level 1 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l1hyper != null ? metrics.percent_l1hyper : "Not Enough Data"}%</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>% in Level 2 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l2hyper != null ? metrics.percent_l2hyper : "Not Enough Data"}%</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>% in Level 1 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l1hypo != null ? metrics.percent_l1hypo : "Not Enough Data"}%</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>% in Level 2 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l2hypo != null ? metrics.percent_l2hypo : "Not Enough Data"}%</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Median:</Text><Text style={styles.metricText}>{metrics.median != null ? metrics.median : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Standard Deviation:</Text><Text style={styles.metricText}>{metrics.SD != null ? metrics.SD : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Readings in Level 2 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l2hyper != null ? metrics.num_l2hyper : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Readings in Level 1 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l1hypo != null ? metrics.num_l1hypo : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Readings in Level 2 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.num_l2hypo != null ? metrics.num_l2hypo : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>% in TIR:</Text><Text style={styles.metricText}>{metrics.percent_in_TIR != null ? metrics.percent_in_TIR : "Not Enough Data"}%</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>% in Level 1 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l1hyper != null ? metrics.percent_l1hyper : "Not Enough Data"}%</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>% in Level 2 Hyperglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l2hyper != null ? metrics.percent_l2hyper : "Not Enough Data"}%</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>% in Level 1 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l1hypo != null ? metrics.percent_l1hypo : "Not Enough Data"}%</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>% in Level 2 Hypoglycaemia:</Text><Text style={styles.metricText}>{metrics.percent_l2hypo != null ? metrics.percent_l2hypo : "Not Enough Data"}%</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Median:</Text><Text style={styles.metricText}>{metrics.median != null ? metrics.median : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Standard Deviation:</Text><Text style={styles.metricText}>{metrics.SD != null ? metrics.SD : "Not Enough Data"}</Text></View>
 
-              <View style={styles.profileView}><Text style={styles.text}>Interquartile Range Inclusive:</Text><Text style={styles.metricText}>{metrics.IQR != null ? metrics.IQR : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Interquartile Range 25th Percentile Inclusive:</Text><Text style={styles.metricText}>{metrics.IQR_25 != null ? metrics.IQR_25 : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Interquartile Range 75th Percentile Inclusive:</Text><Text style={styles.metricText}>{metrics.IQR_75 != null ? metrics.IQR_75 : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Adjusted SD Inclusive IQR/1.35:</Text><Text style={styles.metricText}>{metrics.adj_SD != null ? metrics.adj_SD : "Not Enough Data"}</Text></View>
-              <View style={styles.profileView}><Text style={styles.text}>Coefficient of Variation (CV) 100 x SD/Mean:</Text><Text style={styles.metricText}>{metrics.CV != null ? metrics.CV : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Interquartile Range Inclusive:</Text><Text style={styles.metricText}>{metrics.IQR != null ? metrics.IQR : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Interquartile Range 25th Percentile Inclusive:</Text><Text style={styles.metricText}>{metrics.IQR_25 != null ? metrics.IQR_25 : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Interquartile Range 75th Percentile Inclusive:</Text><Text style={styles.metricText}>{metrics.IQR_75 != null ? metrics.IQR_75 : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Adjusted SD Inclusive IQR/1.35:</Text><Text style={styles.metricText}>{metrics.adj_SD != null ? metrics.adj_SD : "Not Enough Data"}</Text></View>
+              <View style={styles.profileView}><Text style={[GlobalStyle.Black, GlobalStyle.CustomFont]}>Coefficient of Variation (CV) 100 x SD/Mean:</Text><Text style={styles.metricText}>{metrics.CV != null ? metrics.CV : "Not Enough Data"}</Text></View>
             
           </View>
       )
